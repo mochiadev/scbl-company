@@ -1,85 +1,90 @@
 ---
 const year = new Date().getFullYear();
 
-const columns = [
+const directory = [
   {
     heading: 'Practice',
     links: [
-      { label: 'About', href: '/about' },
+      { label: 'About',    href: '/about' },
       { label: 'Approach', href: '/about#approach' },
-      { label: 'Careers', href: '/about#careers' },
+      { label: 'Values',   href: '/about#values' },
     ],
   },
   {
     heading: 'Services',
     links: [
-      { label: 'Property Development', href: '/services/development' },
-      { label: 'Construction', href: '/services/construction' },
-      { label: 'Engineering', href: '/services/engineering' },
-      { label: 'Real Estate', href: '/services/real-estate' },
-      { label: 'Management', href: '/services/management' },
-      { label: 'Specialist', href: '/services/specialist' },
+      { label: 'Property Development',  href: '/services/development' },
+      { label: 'Construction',          href: '/services/construction' },
+      { label: 'Engineering',           href: '/services/engineering' },
+      { label: 'Real Estate',           href: '/services/real-estate' },
+      { label: 'Management',            href: '/services/management' },
+      { label: 'Specialist',            href: '/services/specialist' },
     ],
   },
   {
-    heading: 'Work',
+    heading: 'Reference',
     links: [
       { label: 'Portfolio', href: '/portfolio' },
-      { label: 'Insights', href: '/insights' },
-      { label: 'Contact', href: '/contact' },
+      { label: 'Insights',  href: '/insights' },
+      { label: 'Contact',   href: '/contact' },
     ],
   },
 ];
 ---
-<footer class="relative mt-32 border-t sc-border-firm sc-bg-canvas sc-text-primary">
-  <div class="mx-auto max-w-[1440px] px-6 pt-20 pb-10 md:px-10">
-    <div class="grid gap-12 md:grid-cols-12">
-      <div class="md:col-span-4">
-        <p class="eyebrow mb-4">Signature Crest Builders Limited</p>
-        <p class="font-display text-3xl leading-[1.1] sc-text-accent md:text-4xl">Distinct by design. Built for legacy.</p>
-        <p class="mt-6 max-w-xs text-sm sc-text-muted">
-          Premium real estate development, construction, and engineering — delivered end-to-end from a single accountable practice.
+<footer class="relative mt-24 md:mt-32 border-t sc-border-firm sc-bg-canvas sc-text-primary">
+  <div class="sc-container sc-gutter py-16 md:py-20">
+
+    <!-- Colophon head -->
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
+      <div>
+        <p class="sc-slug sc-text-accent-subdued mb-4">Signature Crest Builders Limited</p>
+        <p class="sc-heading-lg max-w-md sc-text-primary">
+          A single accountable practice. From feasibility through the fiftieth year of the asset.
         </p>
       </div>
+      <a href="/contact#form" class="sc-btn-secondary shrink-0">Begin a project</a>
+    </div>
 
-      <div class="md:col-span-8 grid grid-cols-2 gap-8 md:grid-cols-3">
-        {columns.map((col) => (
-          <div>
-            <p class="eyebrow mb-4">{col.heading}</p>
-            <ul class="space-y-2 text-sm sc-text-secondary">
-              {col.links.map((link) => (
-                <li>
-                  <a href={link.href} class="gold-underline inline-block transition-colors hover:text-[color:var(--sc-text-accent-hover)]">
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+    <!-- Directory -->
+    <div class="grid gap-10 md:gap-12 md:grid-cols-12">
+      {directory.map((col) => (
+        <div class="md:col-span-4">
+          <p class="sc-caption sc-text-accent-subdued mb-4 uppercase" style="letter-spacing: 0.12em;">
+            {col.heading}
+          </p>
+          <ul class="space-y-2 sc-small sc-text-secondary">
+            {col.links.map((link) => (
+              <li>
+                <a href={link.href} class="sc-link hover:text-[color:var(--sc-text-accent-hover)]">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
 
     <div class="hairline my-12" />
 
-    <div class="grid gap-6 text-xs sc-text-muted md:grid-cols-3">
+    <!-- Statutory / imprint -->
+    <div class="grid gap-6 sc-small sc-text-muted md:grid-cols-3">
       <div>
-        <p class="tabular sc-text-accent-subdued mb-2">Registered Office</p>
+        <p class="sc-slug sc-text-accent-subdued mb-2">Registered Office</p>
         <address class="not-italic leading-relaxed">
-          Signature Crest Builders Limited<br />
           Airport Residential<br />
           Accra, Ghana
         </address>
       </div>
       <div>
-        <p class="tabular sc-text-accent-subdued mb-2">Enquiries</p>
-        <p>
-          <a href="mailto:hello@signaturecrest.com" class="gold-underline">hello@signaturecrest.com</a>
-        </p>
+        <p class="sc-slug sc-text-accent-subdued mb-2">Correspondence</p>
+        <p><a href="mailto:hello@signaturecrest.com" class="sc-link">hello@signaturecrest.com</a></p>
+        <p><a href="mailto:press@signaturecrest.com" class="sc-link">press@signaturecrest.com</a></p>
       </div>
       <div class="md:text-right">
-        <p class="tabular sc-text-accent-subdued mb-2">© {year}</p>
-        <p>All rights reserved. A registered company.</p>
+        <p class="sc-slug sc-text-accent-subdued mb-2">Imprint</p>
+        <p>© {year} Signature Crest Builders Limited.</p>
+        <p class="opacity-70">A Ghana-registered company.</p>
       </div>
     </div>
   </div>

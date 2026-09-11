@@ -1,66 +1,67 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
 import ContactForm from '../components/ContactForm.astro';
-import Reveal from '../components/Reveal.astro';
 import MeshGlow from '../components/MeshGlow.astro';
-import GridlineFrame from '../components/GridlineFrame.astro';
 ---
 <BaseLayout
   title="Contact — Signature Crest Builders"
-  description="Begin a project with the practice. Bespoke intake for development, construction, engineering, real estate, project management, and specialist services."
+  description="Begin a project with Signature Crest. Bespoke intake by pillar; replies within one business day. Airport Residential, Accra, Ghana — with clients in the UK, US, and Canada."
 >
-  <section class="relative isolate overflow-hidden px-6 pt-32 pb-16 md:px-10 md:pt-48 md:pb-24">
-    <GridlineFrame tone="dark" columns={12} />
-    <MeshGlow position="top-right" size="xl" intensity={0.14} />
-    <div class="relative mx-auto max-w-[1440px]" data-reveal-group>
-      <Reveal><p class="eyebrow">Contact</p></Reveal>
-      <Reveal>
-        <h1 class="mt-6 max-w-4xl font-display text-[clamp(2.75rem,7vw,6.5rem)] leading-[0.98] tracking-tight sc-text-primary">
-          Begin a <span class="sc-text-accent">conversation</span>.
-        </h1>
-      </Reveal>
-      <Reveal>
-        <p class="mt-10 max-w-2xl text-lg leading-relaxed sc-text-muted">
-          The bespoke form below adapts to the pillar you select. Replies within one business day from the senior team.
-        </p>
-      </Reveal>
-    </div>
-  </section>
+  <Hero
+    runningHead={{ code: 'SCBL · C.01', rev: 'REV 01', section: 'Correspondence' }}
+    title="Begin a conversation."
+    lede="The form below adapts to the pillar you select. If you are directing a project from abroad, tell us — our process is designed for principals who cannot inspect in person."
+    variant="quiet"
+  />
 
-  <section class="relative isolate px-6 pb-24 md:px-10 md:pb-40">
-    <div class="mx-auto grid max-w-[1440px] gap-16 md:grid-cols-12" data-reveal-group>
-      <div class="md:col-span-4">
-        <Reveal>
-          <p class="tabular text-xs sc-text-accent-subdued">The practice</p>
-          <p class="mt-6 font-display text-2xl leading-[1.25] tracking-tight sc-text-primary md:text-3xl">
+  <section class="relative sc-section-tight">
+    <MeshGlow position="bottom-right" size="lg" intensity={0.05} />
+    <div class="sc-container sc-gutter grid grid-cols-12 gap-8 md:gap-14">
+      <!-- Practice datasheet -->
+      <aside class="col-span-12 md:col-span-4 space-y-10">
+        <div>
+          <p class="sc-bracket-label">The Practice</p>
+          <p class="sc-heading-md sc-text-primary mt-4 max-w-[28ch]">
             One accountable team from feasibility through the fiftieth year of the asset.
           </p>
-        </Reveal>
-        <Reveal>
-          <dl class="mt-12 space-y-6 text-sm">
-            <div>
-              <dt class="tabular text-[11px] sc-text-accent-subdued">Office</dt>
-              <dd class="mt-1 sc-text-primary">Airport Residential, Accra, Ghana</dd>
-            </div>
-            <div>
-              <dt class="tabular text-[11px] sc-text-accent-subdued">Enquiries</dt>
-              <dd class="mt-1 sc-text-primary">
-                <a href="mailto:hello@signaturecrest.com" class="gold-underline">hello@signaturecrest.com</a>
-              </dd>
-            </div>
-            <div>
-              <dt class="tabular text-[11px] sc-text-accent-subdued">Media</dt>
-              <dd class="mt-1 sc-text-primary">
-                <a href="mailto:press@signaturecrest.com" class="gold-underline">press@signaturecrest.com</a>
-              </dd>
-            </div>
-          </dl>
-        </Reveal>
-      </div>
-      <div class="md:col-span-8">
-        <Reveal>
-          <ContactForm />
-        </Reveal>
+        </div>
+
+        <dl class="border-t sc-border-hairline">
+          <div class="grid grid-cols-3 gap-4 py-4 border-b sc-border-hairline">
+            <dt class="sc-slug sc-text-accent-subdued col-span-1">Office</dt>
+            <dd class="sc-small sc-text-primary col-span-2">Airport Residential<br />Accra, Ghana</dd>
+          </div>
+          <div class="grid grid-cols-3 gap-4 py-4 border-b sc-border-hairline">
+            <dt class="sc-slug sc-text-accent-subdued col-span-1">Enquiries</dt>
+            <dd class="sc-small sc-text-primary col-span-2">
+              <a href="mailto:hello@signaturecrest.com" class="sc-link">hello@signaturecrest.com</a>
+            </dd>
+          </div>
+          <div class="grid grid-cols-3 gap-4 py-4 border-b sc-border-hairline">
+            <dt class="sc-slug sc-text-accent-subdued col-span-1">Media</dt>
+            <dd class="sc-small sc-text-primary col-span-2">
+              <a href="mailto:press@signaturecrest.com" class="sc-link">press@signaturecrest.com</a>
+            </dd>
+          </div>
+          <div class="grid grid-cols-3 gap-4 py-4 border-b sc-border-hairline">
+            <dt class="sc-slug sc-text-accent-subdued col-span-1">Response</dt>
+            <dd class="sc-small sc-text-primary col-span-2">One business day.<br />From the senior team.</dd>
+          </div>
+        </dl>
+
+        <div class="border sc-border-firm p-5">
+          <p class="sc-bracket-label mb-3">Building from abroad?</p>
+          <p class="sc-small sc-text-muted-strong leading-relaxed">
+            If you are directing a project from London, Toronto, New York, or elsewhere, note it in the enquiry. Our diaspora engagement includes documented land diligence, scheduled photo and video reports, milestone-based payments, and a single point of contact in your time zone.
+          </p>
+        </div>
+      </aside>
+
+      <!-- Form -->
+      <div class="col-span-12 md:col-span-8">
+        <p class="sc-bracket-label mb-8">Enquiry — begin</p>
+        <ContactForm />
       </div>
     </div>
   </section>

@@ -2,183 +2,159 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import RunningHead from '../components/RunningHead.astro';
 import PillarBento from '../components/PillarBento.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import InsightCard from '../components/InsightCard.astro';
-import Reveal from '../components/Reveal.astro';
 import MeshGlow from '../components/MeshGlow.astro';
-import GridlineFrame from '../components/GridlineFrame.astro';
+import Reveal from '../components/Reveal.astro';
 import { pillars } from '../lib/pillars.ts';
 
 const portfolio = await getCollection('portfolio');
-const insights = await getCollection('insights');
-
+portfolio.sort((a, b) => b.data.year - a.data.year);
 const featured = portfolio.slice(0, 3);
-const teasers = insights
-  .sort((a, b) => b.data.published.getTime() - a.data.published.getTime())
-  .slice(0, 2);
+
+const insights = await getCollection('insights');
+insights.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
+const notes = insights.slice(0, 2);
+
+const services = await getCollection('services');
+const bentoPillars = pillars.map((p) => {
+  const record = services.find((s) => s.id === p.slug || s.id.startsWith(p.slug));
+  return {
+    slug: p.slug,
+    title: p.title,
+    href: p.href,
+    icon: p.icon,
+    short: p.short,
+    subServices: (record?.data.sub_services ?? []).slice(0, 3),
+  };
+});
 ---
 <BaseLayout
-  title="Signature Crest Builders — Distinct by design. Built for legacy."
-  description="A single, accountable practice for premium real estate development, construction, and engineering — delivered end-to-end."
+  title="Signature Crest Builders — A single accountable practice"
+  description="Signature Crest Builders Limited: Ghana's integrated real-estate development, construction, and engineering practice. Six pillars, one accountable roof, built for legacy — for principals in Accra and abroad."
 >
   <Hero
-    eyebrow="Signature Crest Builders Limited"
-    title="Distinct by <em class='not-italic sc-text-accent'>design</em>. <br class='hidden md:block'/>Built for <em class='not-italic sc-text-accent'>legacy</em>."
-    lede="Architectural vision, engineering precision, and construction excellence — held in one accountable practice, from feasibility through the fiftieth year of the asset."
-    image="https://picsum.photos/seed/scbl-hero/2400/1600"
-    imageAlt="A cinematic wide-angle view of a Signature Crest development at first light."
-    primaryCta={{ label: 'Explore our practice', href: '/services' }}
-    secondaryCta={{ label: 'Selected work', href: '/portfolio' }}
+    runningHead={{ code: 'SCBL', rev: 'REV 01', section: 'Practice' }}
+    title="A single practice for the whole building lifecycle."
+    lede="Signature Crest Builders is a Ghanaian real-estate development, construction, and engineering practice. Six pillars, one accountable partner — for principals building in Accra and directing from abroad."
+    aside="Founded on integrity, excellence, and legacy. Airport Residential, Accra."
+    image="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=2400&q=80"
+    imageAlt="A warm-lit modern residence at dusk with clean rectilinear volumes and a lit portico."
+    primaryCta={{ label: 'Begin a project', href: '/contact#form' }}
+    secondaryCta={{ label: 'See the practice', href: '/services' }}
   />
 
-  <!-- Statement -->
-  <section class="relative isolate px-6 py-32 md:px-10 md:py-48">
-    <MeshGlow position="top-left" size="lg" intensity={0.08} />
-    <div class="relative mx-auto grid max-w-[1440px] gap-12 md:grid-cols-12" data-reveal-group>
-      <div class="md:col-span-4">
-        <Reveal>
-          <p class="eyebrow">One practice. Six pillars.</p>
-        </Reveal>
+  <!-- Position statement -->
+  <section class="relative sc-section-tight">
+    <div class="sc-container sc-gutter grid grid-cols-12 gap-8">
+      <div class="col-span-12 md:col-span-4">
+        <p class="sc-bracket-label">The Position</p>
       </div>
-      <div class="md:col-span-8">
-        <Reveal>
-          <p class="font-display text-3xl leading-[1.15] tracking-tight sc-text-primary md:text-5xl">
-            Signature Crest is a distinguished real estate development, construction, and engineering company —
-            <span class="sc-text-accent">dedicated to creating exceptional spaces that stand the test of time.</span>
-          </p>
-        </Reveal>
-        <Reveal>
-          <p class="mt-8 max-w-2xl text-base leading-relaxed sc-text-muted md:text-lg">
-            We combine architectural vision, engineering precision, and construction excellence to deliver projects that embody quality, integrity, and lasting value. Every structure we build carries the Signature Crest mark of distinction — a commitment to craftsmanship, trust, and legacy.
-          </p>
-        </Reveal>
+      <div class="col-span-12 md:col-span-8">
+        <p class="sc-heading-lg sc-text-primary max-w-[24ch]">
+          The Ghanaian premium build market forces principals to coordinate developer, contractor, engineer, and agency across their own time zone. We do that work under one roof — so nothing is lost at the seams.
+        </p>
+        <p class="sc-body sc-text-muted mt-8 max-w-[62ch]">
+          Land title, design, engineering, construction, real-estate advisory, and post-handover stewardship are held by one team, on one commercial position, answerable to one senior partner. The result is fewer interface failures, clearer accountability, and an asset whose long-term value is protected by the same practice that built it.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- Pillars bento -->
-  <section class="relative isolate sc-bg-ivory px-6 py-32 sc-text-primary-light md:px-10 md:py-40">
-    <GridlineFrame tone="light" columns={12} />
-    <div class="relative mx-auto max-w-[1440px]" data-reveal-group>
-      <div class="mb-16 grid gap-8 md:grid-cols-12">
-        <div class="md:col-span-4">
-          <Reveal>
-            <p class="tabular text-xs sc-text-accent-subdued">Suite of Services</p>
-          </Reveal>
+  <!-- Six pillars bento -->
+  <section class="relative sc-section sc-bg-ivory sc-text-primary-light">
+    <div class="sc-container sc-gutter">
+      <div class="grid grid-cols-12 gap-8 mb-12 md:mb-16">
+        <div class="col-span-12 md:col-span-4">
+          <p class="sc-bracket-label sc-text-accent-subdued">Suite of Services</p>
         </div>
-        <div class="md:col-span-8">
-          <Reveal>
-            <h2 class="font-display text-4xl leading-[1.05] tracking-tight md:text-6xl">
-              Six pillars. One <span class="sc-text-accent-subdued">signature</span>.
-            </h2>
-          </Reveal>
-          <Reveal>
-            <p class="mt-6 max-w-2xl text-base leading-relaxed sc-text-muted md:text-lg">
-              Development, construction, engineering, real estate, project management, and specialist practices — held under one accountable roof. No hand-offs, no split incentives, no separately-priced surprises.
-            </p>
-          </Reveal>
+        <div class="col-span-12 md:col-span-8">
+          <h2 class="sc-display-lg">Six pillars. One signature.</h2>
+          <p class="sc-lede sc-text-muted mt-6 max-w-[62ch]">
+            Development, construction, engineering, real-estate advisory, project management, and specialist practices — held under one accountable roof. No hand-offs, no split incentives, no separately-priced surprises.
+          </p>
         </div>
       </div>
-      <PillarBento
-        pillars={pillars.map((p) => ({ ...p, subServices: [] }))}
-        tone="ivory"
-      />
+      <PillarBento pillars={bentoPillars} tone="ivory" />
     </div>
   </section>
 
-  <!-- Featured projects -->
-  <section class="relative isolate px-6 py-32 md:px-10 md:py-48">
-    <MeshGlow position="bottom-right" size="lg" intensity={0.10} />
-    <div class="mx-auto max-w-[1440px]" data-reveal-group>
-      <div class="mb-20 flex items-end justify-between">
-        <Reveal>
-          <div>
-            <p class="eyebrow">Selected Work</p>
-            <h2 class="mt-4 font-display text-4xl leading-[1.05] tracking-tight sc-text-primary md:text-6xl">
-              Assets that <span class="sc-text-accent">compound</span>.
-            </h2>
-          </div>
-        </Reveal>
-        <Reveal>
-          <a href="/portfolio" class="hidden md:inline-flex items-center gap-3 text-sm sc-text-accent gold-underline">
-            All projects
-            <span>→</span>
-          </a>
-        </Reveal>
+  <!-- Selected work -->
+  <section class="relative sc-section">
+    <MeshGlow position="bottom-right" size="lg" intensity={0.06} />
+    <div class="sc-container sc-gutter">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-16">
+        <div>
+          <p class="sc-bracket-label">Selected Work</p>
+          <h2 class="sc-display-lg sc-text-primary mt-4 max-w-[22ch]">Assets built to compound, not to flip.</h2>
+        </div>
+        <a href="/portfolio" class="sc-link sc-small sc-text-accent shrink-0">See the full record</a>
       </div>
 
-      <div class="flex flex-col gap-24">
+      <div class="flex flex-col gap-14 md:gap-16">
         {featured.map((project, i) => (
-          <Reveal>
-            <ProjectCard
-              title={project.data.title}
-              slug={project.data.slug}
-              location={project.data.location}
-              year={project.data.year}
-              pillars={project.data.pillars}
-              image={project.data.hero_image}
-              aspect={i === 0 ? 'landscape' : i === 1 ? 'portrait' : 'landscape'}
-              flip={i % 2 === 1}
-            />
-          </Reveal>
+          <ProjectCard
+            index={i + 1}
+            title={project.data.title}
+            slug={project.data.slug}
+            location={project.data.location}
+            year={project.data.year}
+            pillars={project.data.pillars}
+            image={project.data.hero_image}
+            variant="index"
+            aspect={i === 1 ? 'portrait' : 'landscape'}
+          />
         ))}
       </div>
     </div>
   </section>
 
-  <!-- Insights teaser -->
-  <section class="relative isolate px-6 py-32 md:px-10 md:py-40">
-    <div class="mx-auto max-w-[1440px]" data-reveal-group>
-      <div class="mb-16 grid gap-8 md:grid-cols-12">
-        <div class="md:col-span-4">
-          <Reveal>
-            <p class="eyebrow">Field Notes</p>
-          </Reveal>
+  <!-- Insights -->
+  <section class="relative sc-section-tight">
+    <div class="sc-container sc-gutter">
+      <div class="grid grid-cols-12 gap-8 mb-8 md:mb-12">
+        <div class="col-span-12 md:col-span-4">
+          <p class="sc-bracket-label">Field Notes</p>
         </div>
-        <div class="md:col-span-8">
-          <Reveal>
-            <h2 class="font-display text-4xl leading-[1.05] tracking-tight sc-text-primary md:text-6xl">
-              The work behind <span class="sc-text-accent">the work</span>.
-            </h2>
-          </Reveal>
+        <div class="col-span-12 md:col-span-8">
+          <h2 class="sc-display-lg sc-text-primary max-w-[24ch]">The work behind the work.</h2>
         </div>
       </div>
-      <div class="grid gap-6 md:grid-cols-2">
-        {teasers.map((post) => (
-          <Reveal>
-            <InsightCard
-              title={post.data.title}
-              slug={post.data.slug}
-              pillar={post.data.pillar}
-              published={post.data.published}
-              reading_time={post.data.reading_time}
-              excerpt={post.data.excerpt}
-            />
-          </Reveal>
+      <div>
+        {notes.map((post) => (
+          <InsightCard
+            title={post.data.title}
+            slug={post.data.slug}
+            pillar={post.data.pillar}
+            published={post.data.published}
+            reading_time={post.data.reading_time}
+            excerpt={post.data.excerpt}
+            variant="row"
+          />
         ))}
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="relative isolate px-6 py-32 md:px-10 md:py-48">
-    <MeshGlow position="center" size="xl" intensity={0.14} />
-    <div class="relative mx-auto max-w-4xl text-center" data-reveal-group>
-      <Reveal>
-        <p class="eyebrow">Begin a project</p>
-      </Reveal>
-      <Reveal>
-        <h2 class="mt-6 font-display text-5xl leading-[1.02] tracking-tight sc-text-primary md:text-7xl">
-          A conversation is where every <span class="sc-text-accent">Signature Crest</span> asset begins.
-        </h2>
-      </Reveal>
-      <Reveal>
-        <a href="/contact" class="mt-12 sc-btn-primary px-8 py-4">
-          Speak with the practice
-          <span>→</span>
-        </a>
-      </Reveal>
+  <!-- Anchor — quiet closing invitation -->
+  <section class="relative sc-section">
+    <div class="sc-container sc-gutter">
+      <RunningHead code="SCBL" rev="ANCHOR" section="A conversation" />
+      <div class="grid grid-cols-12 gap-8 mt-16 md:mt-20">
+        <div class="col-span-12 md:col-span-8">
+          <h2 class="sc-display-lg sc-text-primary max-w-[26ch]">
+            A conversation is where every Signature Crest asset begins.
+          </h2>
+        </div>
+        <div class="col-span-12 md:col-span-4 md:pt-8">
+          <p class="sc-body sc-text-muted">
+            Whether you are on-site in Accra or writing from London, Toronto, or New York — the same partner receives the enquiry and stays with the project through to the fiftieth year of the asset.
+          </p>
+          <a href="/contact#form" class="sc-btn-primary mt-8">Speak with the practice</a>
+        </div>
+      </div>
     </div>
   </section>
 </BaseLayout>

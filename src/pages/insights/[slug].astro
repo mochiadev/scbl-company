@@ -1,9 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { Icon } from 'astro-icon/components';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Reveal from '../../components/Reveal.astro';
+import RunningHead from '../../components/RunningHead.astro';
 import MeshGlow from '../../components/MeshGlow.astro';
+import Reveal from '../../components/Reveal.astro';
 import { pillarBySlug } from '../../lib/pillars.ts';
 
 export async function getStaticPaths() {
@@ -11,11 +11,11 @@ export async function getStaticPaths() {
   insights.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
   return insights.map((entry, i) => {
     const next = insights[(i + 1) % insights.length];
-    return { params: { slug: entry.data.slug }, props: { entry, next } };
+    return { params: { slug: entry.data.slug }, props: { entry, next, index: i + 1 } };
   });
 }
 
-const { entry, next } = Astro.props;
+const { entry, next, index } = Astro.props;
 const { Content } = await render(entry);
 const pillarMeta = pillarBySlug.get(entry.data.pillar as any);
 const dateStr = entry.data.published.toLocaleDateString('en-GB', {
@@ -23,53 +23,57 @@ const dateStr = entry.data.published.toLocaleDateString('en-GB', {
   month: 'long',
   year: 'numeric',
 });
+const record = String(index).padStart(2, '0');
 ---
 <BaseLayout
   title={`${entry.data.title} — Signature Crest`}
   description={entry.data.excerpt}
 >
-  <article class="relative isolate">
-    <!-- Header -->
-    <header class="relative isolate overflow-hidden px-6 pt-32 pb-16 md:px-10 md:pt-48 md:pb-24">
-      <MeshGlow position="top-right" size="lg" intensity={0.12} />
-      <div class="relative mx-auto max-w-3xl" data-reveal-group>
-        <Reveal>
-          <p class="tabular text-xs sc-text-accent">
-            {pillarMeta?.title ?? entry.data.pillar} · {entry.data.reading_time} min · {dateStr}
-          </p>
-        </Reveal>
-        <Reveal>
-          <h1 class="mt-6 font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02] tracking-tight sc-text-primary">
-            {entry.data.title}
-          </h1>
-        </Reveal>
-        <Reveal>
-          <p class="mt-8 text-lg leading-relaxed sc-text-muted md:text-xl">
-            {entry.data.excerpt}
-          </p>
-        </Reveal>
+  <article class="relative">
+    <section class="relative sc-section-tight">
+      <MeshGlow position="top-right" size="lg" intensity={0.05} />
+      <div class="sc-container sc-gutter pt-12 md:pt-16" data-reveal-group>
+        <RunningHead code={`SCBL · I.${record}`} rev="REV 01" section="Field Note" />
+        <div class="sc-container-prose mx-auto pt-14 md:pt-20">
+          <Reveal>
+            <p class="sc-slug sc-text-accent-subdued">
+              {pillarMeta?.title ?? entry.data.pillar} · {entry.data.reading_time} min · {dateStr}
+            </p>
+          </Reveal>
+          <Reveal>
+            <h1 class="sc-display-lg sc-text-primary mt-6 max-w-[18ch]">
+              {entry.data.title}
+            </h1>
+          </Reveal>
+          <Reveal>
+            <p class="sc-lede-lg sc-text-secondary mt-8">
+              {entry.data.excerpt}
+            </p>
+          </Reveal>
+        </div>
       </div>
-    </header>
+    </section>
 
-    <!-- Body -->
-    <section class="relative isolate px-6 py-16 md:px-10 md:py-24">
-      <div class="mx-auto max-w-2xl text-lg leading-[1.75] sc-text-secondary sc-article" data-reveal-group>
-        <Content />
+    <section class="relative sc-section-tight">
+      <div class="sc-container sc-gutter">
+        <div class="sc-container-prose mx-auto sc-lede sc-text-secondary sc-article">
+          <Content />
+        </div>
       </div>
     </section>
   </article>
 
-  <!-- Next -->
-  <section class="relative isolate border-t sc-border-soft px-6 py-16 md:px-10 md:py-20">
-    <div class="mx-auto flex max-w-[1440px] items-end justify-between">
-      <div>
-        <p class="tabular text-xs sc-text-accent-subdued">Next essay</p>
-        <p class="mt-2 font-display text-3xl sc-text-primary md:text-4xl">{next.data.title}</p>
+  <section class="relative border-t sc-border-soft">
+    <div class="sc-container sc-gutter py-12 md:py-14">
+      <div class="grid grid-cols-12 items-end gap-6">
+        <div class="col-span-8">
+          <p class="sc-slug sc-text-accent-subdued">Next note</p>
+          <p class="sc-heading-md sc-text-primary mt-2">{next.data.title}</p>
+        </div>
+        <div class="col-span-4 text-right">
+          <a href={`/insights/${next.data.slug}`} class="sc-link sc-small sc-text-accent">Read next</a>
+        </div>
       </div>
-      <a href={`/insights/${next.data.slug}`} class="group sc-link-accent inline-flex items-center gap-3">
-        <span class="hidden md:inline text-sm tracking-widest uppercase">Read next</span>
-        <Icon name="lucide:arrow-right" class="h-6 w-6 transition-transform group-hover:translate-x-1" />
-      </a>
     </div>
   </section>
 </BaseLayout>
@@ -77,23 +81,24 @@ const dateStr = entry.data.published.toLocaleDateString('en-GB', {
 <style is:global>
   .sc-article h2 {
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
     color: var(--sc-text-accent);
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-variation-settings: "opsz" 36;
   }
   .sc-article h3 {
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: var(--sc-text-primary-on-dark);
     margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
-  .sc-article p { margin-bottom: 1.25rem; }
-  .sc-article ul { list-style: none; padding-left: 0; margin: 1.5rem 0; }
-  .sc-article ul li { padding-left: 1.5rem; position: relative; margin-bottom: 0.75rem; }
+  .sc-article p { margin-bottom: 1.15rem; }
+  .sc-article ul { list-style: none; padding-left: 0; margin: 1.25rem 0; }
+  .sc-article ul li { padding-left: 1.25rem; position: relative; margin-bottom: 0.65rem; }
   .sc-article ul li::before {
     content: "";
     position: absolute;

@@ -4,33 +4,60 @@ import PillarCard from './PillarCard.astro';
 interface Pillar {
   slug: string;
   title: string;
-  eyebrow: string;
   href: string;
   icon: string;
+  short?: string;
   subServices?: string[];
 }
 
 interface Props {
-  pillars: Pillar[];
+  pillars: Pillar[];             // expects exactly 6, in canonical order
   tone?: 'navy' | 'ivory';
 }
 
 const { pillars, tone = 'navy' } = Astro.props;
-
-const spans: Array<'sm' | 'md' | 'lg'> = ['lg', 'md', 'sm', 'sm', 'md', 'lg'];
+const [p1, p2, p3, p4, p5, p6] = pillars;
 ---
-<div class="grid grid-cols-1 gap-4 md:grid-cols-12 md:auto-rows-[minmax(220px,auto)]" data-reveal-group>
-  {pillars.map((p, i) => (
-    <div data-reveal>
-      <PillarCard
-        eyebrow={p.eyebrow}
-        title={p.title}
-        href={p.href}
-        icon={p.icon}
-        span={spans[i % spans.length]}
-        tone={tone}
-        subServices={p.subServices}
-      />
-    </div>
-  ))}
+<!--
+  Asymmetric layout — two lead tiles at 8/4 top, then a 2×2 grid of standards.
+  Not the six-identical-cards default.
+-->
+<div class="grid grid-cols-12 gap-3 md:gap-4">
+  <div class="col-span-12 md:col-span-8">
+    <PillarCard
+      index={1} title={p1.title} href={p1.href} icon={p1.icon}
+      short={p1.short} subServices={p1.subServices ?? []} tone={tone} emphasis="lead"
+    />
+  </div>
+  <div class="col-span-12 md:col-span-4">
+    <PillarCard
+      index={2} title={p2.title} href={p2.href} icon={p2.icon}
+      short={p2.short} subServices={p2.subServices ?? []} tone={tone}
+    />
+  </div>
+
+  <div class="col-span-6 md:col-span-3">
+    <PillarCard
+      index={3} title={p3.title} href={p3.href} icon={p3.icon}
+      short={p3.short} subServices={p3.subServices ?? []} tone={tone}
+    />
+  </div>
+  <div class="col-span-6 md:col-span-3">
+    <PillarCard
+      index={4} title={p4.title} href={p4.href} icon={p4.icon}
+      short={p4.short} subServices={p4.subServices ?? []} tone={tone}
+    />
+  </div>
+  <div class="col-span-6 md:col-span-3">
+    <PillarCard
+      index={5} title={p5.title} href={p5.href} icon={p5.icon}
+      short={p5.short} subServices={p5.subServices ?? []} tone={tone}
+    />
+  </div>
+  <div class="col-span-6 md:col-span-3">
+    <PillarCard
+      index={6} title={p6.title} href={p6.href} icon={p6.icon}
+      short={p6.short} subServices={p6.subServices ?? []} tone={tone}
+    />
+  </div>
 </div>

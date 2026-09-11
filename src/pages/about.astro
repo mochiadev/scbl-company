@@ -1,183 +1,143 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Reveal from '../components/Reveal.astro';
+import Hero from '../components/Hero.astro';
+import RunningHead from '../components/RunningHead.astro';
 import MeshGlow from '../components/MeshGlow.astro';
-import GridlineFrame from '../components/GridlineFrame.astro';
-import { Image } from 'astro:assets';
 
 const values = [
-  { n: '01', title: 'Integrity', body: 'Honesty, transparency, and accountability in every relationship and every project.' },
-  { n: '02', title: 'Excellence', body: 'The highest standards of design, engineering, and craftsmanship — without compromise.' },
-  { n: '03', title: 'Trust', body: 'We earn and protect confidence through consistent delivery and ethical practice.' },
-  { n: '04', title: 'Legacy', body: 'Developments and structures designed to endure — assets that hold meaning for generations.' },
-  { n: '05', title: 'Innovation', body: 'Progressive methods, sustainable practices, and intelligent design.' },
-  { n: '06', title: 'Partnership', body: 'A shared commitment to success — with clients, consultants, and stakeholders.' },
+  { key: 'A', title: 'Integrity',   body: 'Honesty, transparency, and accountability in every relationship and every project.' },
+  { key: 'B', title: 'Excellence',  body: 'The highest standards of design, engineering, and craftsmanship — without compromise.' },
+  { key: 'C', title: 'Trust',       body: 'Confidence earned and protected through consistent delivery and ethical practice.' },
+  { key: 'D', title: 'Legacy',      body: 'Structures designed to endure — assets that hold meaning for generations.' },
+  { key: 'E', title: 'Innovation',  body: 'Progressive methods, sustainable practices, and intelligent design.' },
+  { key: 'F', title: 'Partnership', body: 'A shared commitment to success with clients, consultants, and stakeholders.' },
 ];
 
 const why = [
-  'End-to-end capability across development, construction, engineering, and real estate.',
-  'Uncompromising focus on quality and long-term value.',
-  'Transparent processes and trusted project delivery.',
-  'A brand defined by distinction, craftsmanship, and legacy.',
+  { note: 'End-to-end', body: 'End-to-end capability across development, construction, engineering, and real-estate advisory.' },
+  { note: 'Quality',    body: 'Uncompromising focus on long-term value — assets built to endure, not to flip.' },
+  { note: 'Process',    body: 'Transparent process, documented progress, and trusted delivery — the antidote to abandoned-project risk.' },
+  { note: 'Legacy',     body: 'A brand defined by distinction, craftsmanship, and generational stewardship.' },
 ];
 ---
 <BaseLayout
   title="About — Signature Crest Builders"
-  description="Signature Crest Builders Limited is a real estate development, construction, and engineering practice defined by integrity, excellence, and legacy."
+  description="Signature Crest Builders Limited is a Ghanaian real-estate development, construction, and engineering practice defined by integrity, excellence, and legacy."
 >
-  <!-- Hero -->
-  <section class="relative isolate overflow-hidden px-6 pt-32 pb-24 md:px-10 md:pt-48 md:pb-32">
-    <GridlineFrame tone="dark" columns={12} />
-    <MeshGlow position="top-right" size="xl" intensity={0.14} />
-    <div class="relative mx-auto max-w-[1440px]" data-reveal-group>
-      <Reveal>
-        <p class="eyebrow">Who we are</p>
-      </Reveal>
-      <Reveal>
-        <h1 class="mt-6 max-w-4xl font-display text-[clamp(2.75rem,7vw,6rem)] leading-[0.98] tracking-tight sc-text-primary">
-          A practice built on <em class="not-italic sc-text-accent">craftsmanship</em>, trust, and legacy.
-        </h1>
-      </Reveal>
-      <Reveal>
-        <p class="mt-10 max-w-2xl text-lg leading-relaxed sc-text-muted">
-          Signature Crest Builders Limited is a distinguished real estate development, construction, and engineering company — dedicated to creating exceptional spaces that stand the test of time.
-        </p>
-      </Reveal>
-    </div>
-  </section>
+  <Hero
+    runningHead={{ code: 'SCBL · A.01', rev: 'REV 01', section: 'The Practice' }}
+    title="A practice built on craftsmanship, trust, and legacy."
+    lede="Signature Crest Builders Limited is a distinguished Ghanaian real-estate development, construction, and engineering company — dedicated to creating exceptional spaces that stand the test of time."
+    aside="Airport Residential, Accra — Ghana."
+    variant="quiet"
+  />
 
   <!-- Background -->
-  <section class="relative isolate px-6 py-24 md:px-10 md:py-32">
-    <div class="mx-auto grid max-w-[1440px] gap-12 md:grid-cols-12" data-reveal-group>
-      <div class="md:col-span-5">
-        <Reveal>
-          <p class="tabular text-xs sc-text-accent">Our Background</p>
-          <h2 class="mt-4 font-display text-4xl leading-[1.05] tracking-tight sc-text-primary md:text-5xl">
-            A clear <span class="sc-text-accent">purpose</span> from the beginning.
-          </h2>
-        </Reveal>
+  <section class="relative sc-section-tight">
+    <div class="sc-container sc-gutter grid grid-cols-12 gap-8 md:gap-12">
+      <div class="col-span-12 md:col-span-4">
+        <p class="sc-bracket-label">Our Background</p>
+        <h2 class="sc-heading-lg sc-text-primary mt-4 max-w-[18ch]">A clear purpose from the beginning.</h2>
       </div>
-      <div class="md:col-span-7 space-y-6 text-base leading-relaxed sc-text-muted md:text-lg">
-        <Reveal><p>Founded on the principles of excellence and reliability, Signature Crest Builders Limited has grown into a trusted name in premium property development and construction.</p></Reveal>
-        <Reveal><p>Our journey began with a clear purpose: to raise the standard of building and development by uniting design ambition with engineering rigour and disciplined project delivery. Today, we operate across residential, commercial, and mixed-use sectors — offering clients a seamless end-to-end experience from land acquisition and master planning through construction, engineering, and real estate solutions.</p></Reveal>
-        <Reveal><p class="sc-text-primary">At the heart of our work is a belief that great buildings are more than structures; they are enduring assets that shape communities and preserve value for generations.</p></Reveal>
+      <div class="col-span-12 md:col-span-8 space-y-6 sc-lede sc-text-secondary max-w-[62ch]">
+        <p>Founded on the principles of excellence and reliability, Signature Crest Builders Limited has grown into a trusted name in premium property development and construction in Ghana.</p>
+        <p>Our journey began with a clear purpose: to raise the standard of building and development by uniting design ambition with engineering rigour and disciplined project delivery. Today, we operate across residential, commercial, and mixed-use sectors — offering clients a seamless end-to-end experience from land acquisition and master planning through construction, engineering, and real-estate solutions.</p>
+        <p class="sc-text-primary">At the heart of our work is a belief that great buildings are more than structures; they are enduring assets that shape communities and preserve value for generations.</p>
       </div>
     </div>
   </section>
 
-  <!-- Mission / Vision -->
-  <section class="relative isolate sc-bg-ivory px-6 py-24 sc-text-primary-light md:px-10 md:py-40">
-    <GridlineFrame tone="light" columns={12} />
-    <div class="relative mx-auto grid max-w-[1440px] gap-16 md:grid-cols-2" data-reveal-group>
-      <Reveal>
-        <div>
-          <p class="tabular text-xs sc-text-accent-subdued">Mission</p>
-          <p class="mt-6 font-display text-3xl leading-[1.15] tracking-tight md:text-4xl">
-            To deliver exceptional real estate developments and construction solutions defined by superior quality, engineering integrity, and unwavering trust — creating spaces that inspire pride and stand as lasting legacies.
-          </p>
-        </div>
-      </Reveal>
-      <Reveal>
-        <div>
-          <p class="tabular text-xs sc-text-accent-subdued">Vision</p>
-          <p class="mt-6 font-display text-3xl leading-[1.15] tracking-tight md:text-4xl">
-            To be the most trusted and respected name in premium real estate development and construction — recognised for setting new benchmarks in quality, innovation, and enduring value.
-          </p>
-        </div>
-      </Reveal>
+  <!-- Mission / Vision on ivory -->
+  <section class="relative sc-section sc-bg-ivory sc-text-primary-light">
+    <div class="sc-container sc-gutter grid grid-cols-12 gap-12">
+      <div class="col-span-12 md:col-span-6">
+        <p class="sc-bracket-label sc-text-accent-subdued">Mission</p>
+        <p class="sc-heading-lg mt-6">
+          To deliver exceptional real-estate developments and construction solutions defined by superior quality, engineering integrity, and unwavering trust — creating spaces that inspire pride and stand as lasting legacies.
+        </p>
+      </div>
+      <div class="col-span-12 md:col-span-6">
+        <p class="sc-bracket-label sc-text-accent-subdued">Vision</p>
+        <p class="sc-heading-lg mt-6">
+          To be the most trusted and respected name in premium real-estate development and construction — recognised for setting new benchmarks in quality, innovation, and enduring value.
+        </p>
+      </div>
     </div>
   </section>
 
-  <!-- Values -->
-  <section class="relative isolate px-6 py-24 md:px-10 md:py-40">
-    <MeshGlow position="bottom-left" size="lg" intensity={0.10} />
-    <div class="mx-auto max-w-[1440px]" data-reveal-group>
-      <div class="mb-16 grid gap-8 md:grid-cols-12">
-        <div class="md:col-span-4">
-          <Reveal>
-            <p class="eyebrow">Core Values</p>
-          </Reveal>
-        </div>
-        <div class="md:col-span-8">
-          <Reveal>
-            <h2 class="font-display text-4xl leading-[1.05] tracking-tight sc-text-primary md:text-6xl">
-              Six commitments <span class="sc-text-accent">we do not negotiate</span>.
-            </h2>
-          </Reveal>
+  <!-- Values — lettered index (A–F), not "01/02/03" numbered -->
+  <section id="values" class="relative sc-section">
+    <MeshGlow position="top-left" size="lg" intensity={0.05} />
+    <div class="sc-container sc-gutter">
+      <div class="grid grid-cols-12 gap-8 mb-14">
+        <div class="col-span-12 md:col-span-4">
+          <p class="sc-bracket-label">Core Values</p>
+          <h2 class="sc-display-lg sc-text-primary mt-4 max-w-[20ch]">Six commitments we do not negotiate.</h2>
         </div>
       </div>
-
-      <div class="grid gap-px sc-bg-line md:grid-cols-3">
+      <div class="border-t sc-border-hairline">
         {values.map((v) => (
-          <Reveal>
-            <article class="relative flex h-full flex-col justify-between sc-bg-canvas p-8 md:p-10">
-              <p class="tabular text-xs sc-text-accent">{v.n}</p>
-              <div class="mt-8">
-                <h3 class="font-display text-2xl sc-text-primary md:text-3xl">{v.title}</h3>
-                <p class="mt-4 text-sm leading-relaxed sc-text-muted">{v.body}</p>
-              </div>
-            </article>
-          </Reveal>
+          <div class="border-b sc-border-hairline grid grid-cols-12 gap-6 py-8 md:py-10">
+            <div class="col-span-2 md:col-span-1">
+              <span class="sc-slug sc-text-accent-subdued">{v.key}</span>
+            </div>
+            <div class="col-span-10 md:col-span-4">
+              <h3 class="sc-heading-md sc-text-primary">{v.title}</h3>
+            </div>
+            <div class="col-span-12 md:col-span-7">
+              <p class="sc-body sc-text-muted-strong max-w-[52ch]">{v.body}</p>
+            </div>
+          </div>
         ))}
       </div>
     </div>
   </section>
 
   <!-- Approach -->
-  <section id="approach" class="relative isolate px-6 py-24 md:px-10 md:py-40">
-    <div class="mx-auto grid max-w-[1440px] gap-16 md:grid-cols-12" data-reveal-group>
-      <div class="md:col-span-5">
-        <Reveal>
-          <p class="eyebrow">Our Approach</p>
-          <h2 class="mt-4 font-display text-4xl leading-[1.05] tracking-tight sc-text-primary md:text-5xl">
-            Disciplined process. <br /><span class="sc-text-accent">Uncommon outcomes.</span>
-          </h2>
-        </Reveal>
+  <section id="approach" class="relative sc-section-tight">
+    <div class="sc-container sc-gutter grid grid-cols-12 gap-8 md:gap-12">
+      <div class="col-span-12 md:col-span-5">
+        <p class="sc-bracket-label">Our Approach</p>
+        <h2 class="sc-heading-lg sc-text-primary mt-4">Disciplined process. Uncommon outcomes.</h2>
       </div>
-      <div class="md:col-span-7 space-y-6 text-base leading-relaxed sc-text-muted md:text-lg">
-        <Reveal><p>At Signature Crest, we believe outstanding results come from a disciplined yet creative process.</p></Reveal>
-        <Reveal><p>We begin with deep listening and thorough planning, followed by precise engineering and meticulous construction. Our integrated model — combining real estate insight, design-and-build capability, and rigorous project management — ensures clarity, control, and quality at every stage.</p></Reveal>
-        <Reveal><p class="sc-text-primary">The result is more than a completed building. It is a Signature Crest property — thoughtfully conceived, expertly executed, and built to last.</p></Reveal>
+      <div class="col-span-12 md:col-span-7 space-y-6 sc-lede sc-text-secondary max-w-[62ch]">
+        <p>Outstanding results come from a disciplined yet creative process.</p>
+        <p>We begin with deep listening and thorough planning, followed by precise engineering and meticulous construction. Our integrated model — combining real-estate insight, design-and-build capability, and rigorous project management — ensures clarity, control, and quality at every stage.</p>
+        <p class="sc-text-primary">The result is more than a completed building. It is a Signature Crest property — thoughtfully conceived, expertly executed, and built to last.</p>
       </div>
     </div>
   </section>
 
-  <!-- Why -->
-  <section class="relative isolate sc-bg-ivory px-6 py-24 sc-text-primary-light md:px-10 md:py-40">
-    <div class="mx-auto max-w-[1440px]" data-reveal-group>
-      <Reveal>
-        <p class="tabular text-xs sc-text-accent-subdued">Why Signature Crest</p>
-        <h2 class="mt-4 font-display text-4xl leading-[1.05] tracking-tight md:text-6xl">
-          The reasons clients <span class="sc-text-accent-subdued">stay</span>.
-        </h2>
-      </Reveal>
-      <ul class="mt-16 grid gap-px sc-bg-line-light md:grid-cols-2">
-        {why.map((line, i) => (
-          <Reveal>
-            <li class="flex items-start gap-6 sc-bg-ivory p-8 md:p-10">
-              <span class="tabular text-sm sc-text-accent-subdued">{String(i + 1).padStart(2, '0')}</span>
-              <p class="text-lg leading-relaxed">{line}</p>
-            </li>
-          </Reveal>
+  <!-- Why Signature Crest -->
+  <section class="relative sc-section sc-bg-ivory sc-text-primary-light">
+    <div class="sc-container sc-gutter">
+      <p class="sc-bracket-label sc-text-accent-subdued">Why Signature Crest</p>
+      <h2 class="sc-display-lg mt-4 max-w-[22ch]">The reasons principals stay.</h2>
+      <ul class="mt-14 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+        {why.map((w) => (
+          <li class="border-t sc-border-firm-light pt-6">
+            <p class="sc-slug sc-text-accent-subdued">{w.note}</p>
+            <p class="sc-lede mt-3">{w.body}</p>
+          </li>
         ))}
       </ul>
     </div>
   </section>
 
   <!-- CTA -->
-  <section class="relative isolate px-6 py-32 md:px-10 md:py-48">
-    <div class="mx-auto max-w-3xl text-center" data-reveal-group>
-      <Reveal>
-        <h2 class="font-display text-4xl leading-[1.02] tracking-tight sc-text-primary md:text-6xl">
-          Begin a project with the <span class="sc-text-accent">practice</span>.
-        </h2>
-      </Reveal>
-      <Reveal>
-        <a href="/contact" class="mt-10 sc-btn-primary px-8 py-4">
-          Contact us
-          <span>→</span>
-        </a>
-      </Reveal>
+  <section class="relative sc-section-tight">
+    <div class="sc-container sc-gutter">
+      <RunningHead code="SCBL · A.01" rev="END" section="Begin a project" />
+      <div class="mt-14 grid grid-cols-12 gap-8">
+        <div class="col-span-12 md:col-span-8">
+          <h2 class="sc-display-lg sc-text-primary max-w-[24ch]">
+            Begin a project with the practice.
+          </h2>
+        </div>
+        <div class="col-span-12 md:col-span-4 md:pt-8">
+          <a href="/contact#form" class="sc-btn-primary">Write to us</a>
+        </div>
+      </div>
     </div>
   </section>
 </BaseLayout>

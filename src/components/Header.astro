@@ -2,97 +2,105 @@
 import { Icon } from 'astro-icon/components';
 
 const nav = [
-  { label: 'About', href: '/about' },
-  { label: 'Services', href: '/services', hasMenu: true },
+  { label: 'Practice',  href: '/about' },
+  { label: 'Services',  href: '/services' },
   { label: 'Portfolio', href: '/portfolio' },
-  { label: 'Insights', href: '/insights' },
-  { label: 'Contact', href: '/contact' },
-];
-
-const pillars = [
-  { label: 'Property Development', href: '/services/development', eyebrow: '01', icon: 'lucide:landmark' },
-  { label: 'Construction Services', href: '/services/construction', eyebrow: '02', icon: 'ph:crane-thin' },
-  { label: 'Engineering Services', href: '/services/engineering', eyebrow: '03', icon: 'ph:blueprint-thin' },
-  { label: 'Real Estate Services', href: '/services/real-estate', eyebrow: '04', icon: 'lucide:building-2' },
-  { label: 'Project & Construction Management', href: '/services/management', eyebrow: '05', icon: 'lucide:clipboard-check' },
-  { label: 'Specialist & Value-Added', href: '/services/specialist', eyebrow: '06', icon: 'ph:diamonds-four-thin' },
+  { label: 'Insights',  href: '/insights' },
+  { label: 'Contact',   href: '/contact' },
 ];
 ---
-<header class="fixed top-0 left-0 right-0 z-50 border-b sc-border-chrome sc-bg-elevated backdrop-blur-md">
-  <div class="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-5 md:px-10">
-    <a href="/" class="group flex items-center gap-3" aria-label="Signature Crest home">
-      <span class="inline-flex h-8 w-8 items-center justify-center border sc-border-accent-firm sc-text-accent text-[11px] tracking-widest">SC</span>
-      <span class="font-display text-lg sc-text-primary tracking-wide">Signature<span class="sc-text-accent"> Crest</span></span>
+<header
+  class="fixed top-0 left-0 right-0 z-50 sc-bg-elevated backdrop-blur-md border-b sc-border-chrome"
+  data-sc-header
+>
+  <div class="sc-container sc-gutter flex items-center justify-between h-16 md:h-20">
+    <a href="/" class="group flex items-center gap-3" aria-label="Signature Crest — home">
+      <span class="sc-seal" aria-hidden="true">SC</span>
+      <span class="font-display text-base md:text-lg sc-text-primary" style="font-variation-settings: 'opsz' 18;">
+        Signature Crest
+      </span>
     </a>
 
-    <nav class="hidden md:block" aria-label="Primary">
-      <ul class="flex items-center gap-8 text-sm sc-text-secondary">
-        {nav.map((item) => (
-          <li class:list={['relative', item.hasMenu ? 'group' : '']}>
-            <a
-              href={item.href}
-              class="gold-underline inline-block py-2 transition-colors duration-300 hover:text-[color:var(--sc-text-accent-hover)]"
-            >
-              {item.label}
-            </a>
-            {item.hasMenu && (
-              <div class="pointer-events-none absolute right-0 top-full w-[720px] translate-y-2 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                <div class="mt-3 border sc-border-hairline-hi sc-bg-elevated-strong p-6 shadow-2xl">
-                  <p class="eyebrow mb-4">Six pillars — one signature</p>
-                  <ul class="grid grid-cols-2 gap-x-8 gap-y-3">
-                    {pillars.map((p) => (
-                      <li>
-                        <a
-                          href={p.href}
-                          class="group/mi flex items-start gap-3 py-2 hover:text-[color:var(--sc-text-accent-hover)]"
-                        >
-                          <Icon name={p.icon} class="mt-1 h-5 w-5 sc-text-accent transition-colors group-hover/mi:text-[color:var(--sc-text-accent-hover)]" />
-                          <span>
-                            <span class="tabular text-[10px] sc-text-accent-subdued block leading-tight">{p.eyebrow}</span>
-                            <span class="sc-text-primary group-hover/mi:text-[color:var(--sc-text-accent-hover)]">{p.label}</span>
-                          </span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+    <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
+      {nav.map((item, i) => (
+        <a
+          href={item.href}
+          class="sc-small sc-text-secondary sc-link"
+          data-index={String(i + 1).padStart(2, '0')}
+        >
+          {item.label}
+        </a>
+      ))}
+      <a href="/contact#form" class="sc-btn-primary" style="padding: 0.6rem 1.2rem; min-height: auto;">
+        Begin a project
+      </a>
     </nav>
 
     <button
       type="button"
-      class="md:hidden inline-flex items-center gap-2 sc-text-primary"
+      class="md:hidden inline-flex items-center justify-center w-11 h-11 sc-text-primary sc-icon-btn"
       aria-label="Open menu"
+      aria-expanded="false"
       data-sc-menu-toggle
     >
-      <Icon name="lucide:menu" class="h-6 w-6 sc-text-accent" />
+      <span class="sr-only">Menu</span>
+      <Icon name="lucide:menu" class="w-6 h-6 sc-text-accent" data-icon-menu />
+      <Icon name="lucide:x" class="w-6 h-6 sc-text-accent hidden" data-icon-close />
     </button>
   </div>
 
   <div
     class="md:hidden hidden border-t sc-border-chrome sc-bg-canvas"
     data-sc-menu-panel
+    id="sc-mobile-menu"
   >
-    <ul class="flex flex-col divide-y divide-[color:var(--sc-border-chrome-dark)]">
-      {nav.map((item) => (
-        <li>
-          <a href={item.href} class="block px-6 py-4 sc-text-primary hover:text-[color:var(--sc-text-accent-hover)]">
-            {item.label}
-          </a>
-        </li>
-      ))}
-    </ul>
+    <nav class="sc-container sc-gutter py-6" aria-label="Mobile primary">
+      <p class="sc-slug sc-text-accent-subdued mb-6">SCBL · Directory</p>
+      <ul class="flex flex-col divide-y divide-[color:var(--sc-border-chrome-dark)]">
+        {nav.map((item, i) => (
+          <li>
+            <a
+              href={item.href}
+              class="flex items-center justify-between py-4 sc-text-primary hover:text-[color:var(--sc-text-accent-hover)] transition-colors"
+            >
+              <span class="font-display text-2xl" style="font-variation-settings: 'opsz' 24;">
+                {item.label}
+              </span>
+              <span class="sc-slug sc-text-accent-subdued">{String(i + 1).padStart(2, '0')}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href="/contact#form" class="sc-btn-primary mt-8 w-full justify-center">Begin a project</a>
+    </nav>
   </div>
 </header>
 
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('[data-sc-menu-toggle]');
   const panel = document.querySelector<HTMLElement>('[data-sc-menu-panel]');
+  const iconMenu = document.querySelector<HTMLElement>('[data-icon-menu]');
+  const iconClose = document.querySelector<HTMLElement>('[data-icon-close]');
+
+  function setOpen(open: boolean) {
+    if (!toggle || !panel) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    if (open) {
+      panel.classList.remove('hidden');
+      iconMenu?.classList.add('hidden');
+      iconClose?.classList.remove('hidden');
+    } else {
+      panel.classList.add('hidden');
+      iconMenu?.classList.remove('hidden');
+      iconClose?.classList.add('hidden');
+    }
+  }
+
   toggle?.addEventListener('click', () => {
-    panel?.classList.toggle('hidden');
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    setOpen(!open);
   });
+
+  // Close on route change
+  document.addEventListener('astro:after-swap', () => setOpen(false));
 </script>

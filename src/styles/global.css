@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 /* ============================================================================
- * SCBL Design System — three-layer tokens
+ * SCBL Design System — The Practice Ledger
  *
- *   L1 Primitives (@theme)   The seven brand colors + two font families.
- *                            Every downstream value resolves to one of these.
+ *   L1 Primitives (@theme)   The seven brand colours + two font families.
  *   L2 Semantic (:root)      Intent — surface, text, border, accent, overlay.
- *   L3 Component (:root)     Recipes — button, input, card, overlay.
+ *   L3 Component (:root)     Recipes — button, input, card, chip.
+ *   Space / Radius / Shadow  System scales.
+ *   Type scale               Fraunces (display) + Inter (body/UI).
  *   Utilities (@layer)       Short aliases so component markup stays readable.
  *
  * Exception: GridlineFrame is allowed border-neutral-800/10 and
  * border-neutral-200/50 — the one documented break from the palette.
- * MeshGlow reads --color-sc-gold directly with a parameterised intensity —
- * a deliberate primitive-level effect, not a token miss.
+ * MeshGlow reads --color-sc-gold directly with a parameterised intensity.
  * ==========================================================================*/
 
 @theme {
@@ -24,8 +24,8 @@
   --color-sc-stone: #8C857A;
   --color-sc-ink: #0E1116;
 
-  --font-display: "Playfair Display", ui-serif, Georgia, serif;
-  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-body:    "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* L2 — Semantic tokens */
@@ -60,6 +60,7 @@
 
   /* Border — light surfaces */
   --sc-border-hairline-light:   color-mix(in oklab, var(--color-sc-ink) 10%, transparent);
+  --sc-border-firm-light:       color-mix(in oklab, var(--color-sc-ink) 20%, transparent);
 
   /* Border — accent */
   --sc-border-accent:           var(--color-sc-gold);
@@ -73,6 +74,45 @@
 
   /* Overlays */
   --sc-overlay-image-bottom:    color-mix(in oklab, var(--color-sc-navy) 50%, transparent);
+
+  /* Space scale */
+  --sc-space-2xs: 0.25rem;   /* 4  */
+  --sc-space-xs:  0.5rem;    /* 8  */
+  --sc-space-sm:  0.75rem;   /* 12 */
+  --sc-space-md:  1rem;      /* 16 */
+  --sc-space-lg:  1.5rem;    /* 24 */
+  --sc-space-xl:  2rem;      /* 32 */
+  --sc-space-2xl: 3rem;      /* 48 */
+  --sc-space-3xl: 4rem;      /* 64 */
+  --sc-space-4xl: 6rem;      /* 96 */
+  --sc-space-5xl: 8rem;      /* 128 */
+  --sc-space-6xl: 12rem;     /* 192 */
+
+  /* Radius scale — used sparingly; the Ledger is mostly right-angle */
+  --sc-radius-none: 0;
+  --sc-radius-xs:   1px;
+  --sc-radius-sm:   2px;
+  --sc-radius-md:   4px;
+  --sc-radius-lg:   8px;
+  --sc-radius-pill: 999px;
+
+  /* Shadow — composed from the palette; no cliche 0/0/12/rgba(0,0,0,.1) */
+  --sc-shadow-inset-hairline: inset 0 0 0 1px var(--sc-border-hairline-dark);
+  --sc-shadow-glow-gold-soft: 0 0 40px color-mix(in oklab, var(--color-sc-gold) 12%, transparent);
+  --sc-shadow-glow-gold:      0 0 80px color-mix(in oklab, var(--color-sc-gold) 18%, transparent);
+  --sc-shadow-lift-sm:        0 4px 24px color-mix(in oklab, var(--color-sc-navy) 60%, transparent);
+  --sc-shadow-lift-md:        0 12px 48px color-mix(in oklab, var(--color-sc-navy) 70%, transparent);
+
+  /* Layout — a real container the Ledger uses everywhere */
+  --sc-container:      1440px;
+  --sc-container-tight: 960px;
+  --sc-container-prose: 720px;
+
+  /* Motion — single easing curve, three durations */
+  --sc-ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --sc-dur-quick: 200ms;
+  --sc-dur-mid:   400ms;
+  --sc-dur-slow:  700ms;
 }
 
 /* L3 — Component tokens */
@@ -111,6 +151,8 @@
     color: var(--sc-text-primary-on-dark);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Fraunces optical-size + slight softness axis defaults */
+    font-optical-sizing: auto;
   }
 
   body {
@@ -126,16 +168,107 @@
 
   a { color: inherit; text-decoration: none; }
 
-  h1, h2, h3 {
+  h1, h2, h3, h4 {
     font-family: var(--font-display);
+    font-optical-sizing: auto;
     letter-spacing: -0.02em;
   }
+
+  /* Larger touch targets on interactive controls (WCAG 2.2 min 44×44) */
+  button, [role="button"], input[type="submit"], select { min-height: 44px; }
+  button.sc-icon-btn, .sc-icon-btn { min-height: auto; }
 }
 
 @layer utilities {
   .font-display { font-family: var(--font-display); }
   .font-body    { font-family: var(--font-body); }
 
+  /* ── Type scale — Fraunces display, Inter body ─────────────────────── */
+  .sc-display-xl {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    font-weight: 500;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+  }
+  .sc-display-lg {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+    font-variation-settings: "opsz" 96, "SOFT" 30;
+  }
+  .sc-heading-lg {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    font-weight: 600;
+    font-variation-settings: "opsz" 48;
+  }
+  .sc-heading-md {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    font-variation-settings: "opsz" 24;
+  }
+  .sc-heading-sm {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+    font-weight: 600;
+    font-variation-settings: "opsz" 18;
+  }
+  .sc-lede   { font-family: var(--font-body); font-size: 1.125rem; line-height: 1.55; font-weight: 400; }
+  .sc-lede-lg { font-family: var(--font-body); font-size: 1.25rem;  line-height: 1.55; font-weight: 400; }
+  .sc-body   { font-family: var(--font-body); font-size: 1rem;      line-height: 1.6;  font-weight: 400; }
+  .sc-small  { font-family: var(--font-body); font-size: 0.875rem;  line-height: 1.5;  font-weight: 400; }
+  .sc-caption {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .sc-slug {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;   /* 11px */
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  /* Small caps for pillar/section slugs on Ledger pages */
+  .sc-smallcaps {
+    font-variant: small-caps;
+    letter-spacing: 0.08em;
+    text-transform: lowercase; /* small-caps requires lowercase base */
+  }
+
+  /* ── Container widths ─────────────────────────────────────────────── */
+  .sc-container       { max-width: var(--sc-container); margin-inline: auto; }
+  .sc-container-tight { max-width: var(--sc-container-tight); margin-inline: auto; }
+  .sc-container-prose { max-width: var(--sc-container-prose); margin-inline: auto; }
+  /* Standard page horizontal gutter */
+  .sc-gutter          { padding-inline: 1.5rem; }
+  @media (min-width: 768px) { .sc-gutter { padding-inline: 2.5rem; } }
+  @media (min-width: 1280px) { .sc-gutter { padding-inline: 4rem; } }
+
+  /* Vertical section rhythm */
+  .sc-section       { padding-block: var(--sc-space-4xl); }
+  .sc-section-tight { padding-block: var(--sc-space-3xl); }
+  @media (min-width: 768px) {
+    .sc-section       { padding-block: var(--sc-space-5xl); }
+    .sc-section-tight { padding-block: var(--sc-space-4xl); }
+  }
+
+  /* Legacy utilities used by the existing components. Kept small. */
   .eyebrow {
     font-family: var(--font-body);
     text-transform: uppercase;
@@ -144,14 +277,12 @@
     font-weight: 500;
     color: var(--sc-text-accent);
   }
-
   .tabular {
     font-variant-numeric: tabular-nums;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-family: var(--font-body);
   }
-
   .hairline {
     height: 1px;
     background: var(--sc-accent-divider);
@@ -182,60 +313,71 @@
   .sc-border-soft           { border-color: var(--sc-border-soft-dark); }
   .sc-border-firm           { border-color: var(--sc-border-firm-dark); }
   .sc-border-hairline-light { border-color: var(--sc-border-hairline-light); }
+  .sc-border-firm-light     { border-color: var(--sc-border-firm-light); }
   .sc-border-accent         { border-color: var(--sc-border-accent); }
   .sc-border-accent-soft    { border-color: var(--sc-border-accent-soft); }
   .sc-border-accent-firm    { border-color: var(--sc-border-accent-firm); }
 
-  /* Component recipes — buttons */
+  /* Component recipes — buttons (no arrow icons; typographic marker instead) */
   .sc-btn-primary {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.6rem;
     border: 1px solid var(--sc-btn-primary-border);
     background-color: var(--sc-btn-primary-bg);
     color: var(--sc-btn-primary-fg);
-    padding: 0.75rem 1.5rem;
+    padding: 0.9rem 1.75rem;
+    font-family: var(--font-body);
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.02em;
-    transition: background-color 300ms, border-color 300ms;
+    min-height: 48px;
+    transition: background-color var(--sc-dur-quick) var(--sc-ease-out),
+                border-color     var(--sc-dur-quick) var(--sc-ease-out),
+                transform        var(--sc-dur-quick) var(--sc-ease-out);
   }
   .sc-btn-primary:hover,
   .sc-btn-primary:focus-visible {
     background-color: var(--sc-btn-primary-bg-hover);
     border-color: var(--sc-btn-primary-border-hover);
   }
-  .sc-btn-primary:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
+  .sc-btn-primary:active { transform: translateY(1px); }
+  .sc-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .sc-btn-primary:focus-visible { outline: 2px solid var(--sc-border-accent-hi); outline-offset: 3px; }
 
   .sc-btn-secondary {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.6rem;
     border: 1px solid var(--sc-btn-secondary-border);
     color: var(--sc-btn-secondary-fg);
-    padding: 0.75rem 1.5rem;
+    padding: 0.9rem 1.75rem;
+    font-family: var(--font-body);
     font-size: 0.875rem;
-    transition: border-color 300ms, color 300ms;
+    letter-spacing: 0.02em;
+    min-height: 48px;
+    transition: border-color var(--sc-dur-quick) var(--sc-ease-out),
+                color        var(--sc-dur-quick) var(--sc-ease-out);
   }
   .sc-btn-secondary:hover,
   .sc-btn-secondary:focus-visible {
     border-color: var(--sc-btn-secondary-border-hover);
     color: var(--sc-btn-secondary-fg-hover);
   }
+  .sc-btn-secondary:focus-visible { outline: 2px solid var(--sc-border-accent-hi); outline-offset: 3px; }
 
-  /* Component recipes — inputs */
+  /* Inputs */
   .sc-input {
     background: transparent;
     border: 0;
     border-bottom: 1px solid var(--sc-input-border);
     color: var(--sc-input-fg);
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-block: 0.85rem;
     outline: none;
-    transition: border-color 300ms;
+    min-height: 48px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color var(--sc-dur-quick) var(--sc-ease-out);
   }
   .sc-input:focus { border-color: var(--sc-input-border-focus); }
   .sc-input::placeholder { color: var(--sc-input-placeholder); }
@@ -246,17 +388,20 @@
     color: var(--sc-input-fg);
     padding: 1rem;
     outline: none;
-    transition: border-color 300ms;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.55;
+    transition: border-color var(--sc-dur-quick) var(--sc-ease-out);
   }
   .sc-textarea:focus { border-color: var(--sc-input-border-focus); }
   .sc-textarea::placeholder { color: var(--sc-input-placeholder); }
 
-  /* Component recipes — cards */
+  /* Cards */
   .sc-card-dark {
     background-color: var(--sc-card-surface-dark);
     border: 1px solid var(--sc-card-border-dark);
     color: var(--sc-text-primary-on-dark);
-    transition: border-color 500ms;
+    transition: border-color var(--sc-dur-mid) var(--sc-ease-out);
   }
   .sc-card-dark:hover { border-color: var(--sc-card-border-dark-hover); }
 
@@ -264,7 +409,7 @@
     background-color: var(--sc-card-surface-light);
     border: 1px solid var(--sc-card-border-light);
     color: var(--sc-text-primary-on-light);
-    transition: border-color 500ms;
+    transition: border-color var(--sc-dur-mid) var(--sc-ease-out);
   }
   .sc-card-ivory:hover { border-color: var(--sc-card-border-light-hover); }
 
@@ -289,17 +434,31 @@
     background-image: linear-gradient(to top, var(--sc-overlay-image-bottom), transparent);
   }
 
-  /* Link — accent with hover to accent-hover */
-  .sc-link-accent {
-    color: var(--sc-text-accent);
-    transition: color 300ms;
+  /* Wayfinding link — no arrow. Subtle underline, colour on hover. */
+  .sc-link {
+    color: inherit;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 2px;
+    transition: color var(--sc-dur-quick) var(--sc-ease-out);
   }
-  .sc-link-accent:hover,
-  .sc-link-accent:focus-visible {
-    color: var(--sc-text-accent-hover);
-  }
+  .sc-link:hover,
+  .sc-link:focus-visible { color: var(--sc-text-accent-hover); }
 
-  /* Chip — pill-style filter buttons (portfolio filter) */
+  /* Gold expansion link — kept for legacy footer/inline links. */
+  .gold-underline {
+    background-image: linear-gradient(to right, var(--sc-text-accent), var(--sc-text-accent));
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size var(--sc-dur-mid) var(--sc-ease-out);
+  }
+  .gold-underline:hover,
+  .gold-underline:focus-visible { background-size: 100% 1px; }
+
+  /* Chip — filter pill (portfolio) */
   .sc-chip-active {
     border: 1px solid var(--sc-border-accent);
     background-color: var(--sc-text-accent);
@@ -308,7 +467,8 @@
   .sc-chip-inactive {
     border: 1px solid color-mix(in oklab, var(--color-sc-gold) 30%, transparent);
     color: var(--sc-text-primary-on-dark);
-    transition: border-color 300ms, color 300ms;
+    transition: border-color var(--sc-dur-quick) var(--sc-ease-out),
+                color        var(--sc-dur-quick) var(--sc-ease-out);
   }
   .sc-chip-inactive:hover,
   .sc-chip-inactive:focus-visible {
@@ -316,39 +476,52 @@
     color: var(--sc-text-accent-hover);
   }
 
-  /* Line — divider color used as background (grid gap-px trick) */
+  /* Gap-px divider trick */
   .sc-bg-line       { background-color: var(--sc-border-soft-dark); }
   .sc-bg-line-light { background-color: var(--sc-border-hairline-light); }
 
-  /* Motion */
+  /* Ledger-specific: bracketed section marker used across pages */
+  .sc-bracket-label {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sc-text-accent-subdued);
+    font-variant-numeric: tabular-nums;
+  }
+  .sc-bracket-label::before { content: "[ "; }
+  .sc-bracket-label::after  { content: " ]"; }
+
+  /* Ledger-specific: a hairline seal / stamp icon container */
+  .sc-seal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--sc-border-accent-firm);
+    color: var(--sc-text-accent);
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Motion — used only on hero elements now */
   .sc-reveal {
     transition:
-      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+      opacity   var(--sc-dur-slow) var(--sc-ease-out),
+      transform var(--sc-dur-slow) var(--sc-ease-out);
     will-change: opacity, transform;
   }
   .sc-reveal.is-revealed {
     opacity: 1 !important;
     transform: translate3d(0, 0, 0) !important;
   }
-
-  .gold-underline {
-    background-image: linear-gradient(to right, var(--sc-text-accent), var(--sc-text-accent));
-    background-size: 0% 1px;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition: background-size 400ms ease-out;
-  }
-  .gold-underline:hover,
-  .gold-underline:focus-visible {
-    background-size: 100% 1px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sc-reveal {
-    transition: none;
-    opacity: 1 !important;
-    transform: none !important;
-  }
+  .sc-reveal { transition: none; opacity: 1 !important; transform: none !important; }
+  .sc-btn-primary:active { transform: none; }
 }

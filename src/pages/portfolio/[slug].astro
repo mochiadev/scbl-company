@@ -1,12 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
-import { Icon } from 'astro-icon/components';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Reveal from '../../components/Reveal.astro';
-import MeshGlow from '../../components/MeshGlow.astro';
-import GridlineFrame from '../../components/GridlineFrame.astro';
+import RunningHead from '../../components/RunningHead.astro';
 import SpecBlock from '../../components/SpecBlock.astro';
+import Reveal from '../../components/Reveal.astro';
 import { pillarBySlug } from '../../lib/pillars.ts';
 
 export async function getStaticPaths() {
@@ -16,116 +14,106 @@ export async function getStaticPaths() {
     const next = portfolio[(i + 1) % portfolio.length];
     return {
       params: { slug: entry.data.slug },
-      props: { entry, next },
+      props: { entry, next, index: i + 1 },
     };
   });
 }
 
-const { entry, next } = Astro.props;
+const { entry, next, index } = Astro.props;
 const { Content } = await render(entry);
 
 const specEntries = [
-  entry.data.specs.gfa ? { label: 'GFA', value: entry.data.specs.gfa } : null,
-  entry.data.specs.concrete_grade ? { label: 'Concrete', value: entry.data.specs.concrete_grade } : null,
-  entry.data.specs.breeam ? { label: 'BREEAM', value: entry.data.specs.breeam } : null,
-  entry.data.specs.mep_scope ? { label: 'MEP', value: entry.data.specs.mep_scope } : null,
+  entry.data.specs.gfa            ? { label: 'GFA',       value: entry.data.specs.gfa } : null,
+  entry.data.specs.concrete_grade ? { label: 'Concrete',  value: entry.data.specs.concrete_grade } : null,
+  entry.data.specs.breeam         ? { label: 'BREEAM',    value: entry.data.specs.breeam } : null,
+  entry.data.specs.mep_scope      ? { label: 'MEP',       value: entry.data.specs.mep_scope } : null,
   { label: 'Location', value: entry.data.location },
-  { label: 'Year', value: String(entry.data.year) },
+  { label: 'Year',     value: String(entry.data.year) },
 ].filter(Boolean) as { label: string; value: string }[];
 
 const pillarLabels = entry.data.pillars.map((p) => pillarBySlug.get(p as any)?.title ?? p);
+const record = String(index).padStart(2, '0');
 ---
 <BaseLayout
   title={`${entry.data.title} — Signature Crest`}
-  description={`${entry.data.title} — ${entry.data.location}, ${entry.data.year}. A Signature Crest project cross-tagging ${pillarLabels.join(', ')}.`}
+  description={`${entry.data.title} — ${entry.data.location}, ${entry.data.year}. A cross-pillar project tagging ${pillarLabels.join(', ')}.`}
 >
-  <!-- Hero -->
-  <section class="relative isolate overflow-hidden px-6 pt-32 pb-16 md:px-10 md:pt-40 md:pb-24">
-    <MeshGlow position="top-left" size="xl" intensity={0.14} />
-    <div class="mx-auto max-w-[1440px]" data-reveal-group>
-      <Reveal>
-        <p class="tabular text-xs sc-text-accent">{pillarLabels.join(' · ')}</p>
-      </Reveal>
-      <Reveal>
-        <h1 class="mt-6 max-w-5xl font-display text-[clamp(2.75rem,7vw,6.5rem)] leading-[0.98] tracking-tight sc-text-primary">
-          {entry.data.title}
-        </h1>
-      </Reveal>
-      <Reveal>
-        <p class="mt-6 tabular text-sm sc-text-muted">
-          {entry.data.location} — {entry.data.year}
-        </p>
-      </Reveal>
+  <!-- Header -->
+  <section class="relative sc-section-tight">
+    <div class="sc-container sc-gutter pt-12 md:pt-16" data-reveal-group>
+      <RunningHead code={`SCBL · P.${record}`} rev="REV 01" section="Portfolio Record" />
+
+      <div class="grid grid-cols-12 gap-8 pt-14">
+        <div class="col-span-12 md:col-span-9">
+          <Reveal>
+            <p class="sc-slug sc-text-accent-subdued">Record {record} — {pillarLabels.join(' · ')}</p>
+          </Reveal>
+          <Reveal>
+            <h1 class="sc-display-xl sc-text-primary mt-6 max-w-[16ch]">{entry.data.title}</h1>
+          </Reveal>
+          <Reveal>
+            <p class="sc-lede-lg sc-text-secondary mt-6">{entry.data.location} — {entry.data.year}</p>
+          </Reveal>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Hero image -->
-  <section class="relative isolate px-6 md:px-10">
-    <div class="mx-auto max-w-[1600px]" data-reveal-group>
-      <Reveal>
-        <div class="relative aspect-[16/9] overflow-hidden">
-          <Image
-            src={entry.data.hero_image}
-            alt={`${entry.data.title} — hero photograph`}
-            width={2400}
-            height={1350}
-            widths={[900, 1400, 1800, 2400]}
-            sizes="(min-width: 1024px) 90vw, 100vw"
-            class="h-full w-full object-cover"
-            loading="eager"
-            format="webp"
-          />
-        </div>
-      </Reveal>
+  <section class="relative">
+    <div class="sc-container sc-gutter">
+      <div class="relative aspect-[16/9] overflow-hidden">
+        <Image
+          src={entry.data.hero_image}
+          alt={`${entry.data.title} — hero photograph. ${entry.data.location}, ${entry.data.year}.`}
+          width={2400}
+          height={1350}
+          widths={[900, 1400, 1800, 2400]}
+          sizes="(min-width: 1024px) 90vw, 100vw"
+          class="h-full w-full object-cover"
+          loading="eager"
+          format="webp"
+        />
+      </div>
     </div>
   </section>
 
   <!-- Narrative + spec -->
-  <section class="relative isolate px-6 py-24 md:px-10 md:py-32">
-    <GridlineFrame tone="dark" columns={12} />
-    <div class="relative mx-auto grid max-w-[1440px] gap-16 md:grid-cols-12" data-reveal-group>
-      <div class="md:col-span-7 md:col-start-2 space-y-6 text-lg leading-relaxed sc-text-secondary">
-        <Reveal>
-          <Content />
-        </Reveal>
+  <section class="relative sc-section-tight">
+    <div class="sc-container sc-gutter grid grid-cols-12 gap-8 md:gap-12">
+      <div class="col-span-12 md:col-span-8 sc-lede sc-text-secondary space-y-5 max-w-[62ch]">
+        <Content />
       </div>
-      <div class="md:col-span-4">
-        <Reveal>
-          <SpecBlock specs={specEntries} />
-        </Reveal>
+      <div class="col-span-12 md:col-span-4">
+        <SpecBlock specs={specEntries} />
       </div>
     </div>
   </section>
 
   <!-- Gallery -->
   {entry.data.gallery && entry.data.gallery.length > 0 && (
-    <section class="relative isolate sc-bg-ivory px-6 py-24 md:px-10 md:py-32">
-      <div class="mx-auto max-w-[1440px]" data-reveal-group>
-        <Reveal>
-          <p class="tabular text-xs sc-text-accent-subdued">Gallery</p>
-          <h2 class="mt-4 font-display text-3xl leading-tight tracking-tight sc-text-primary-light md:text-5xl">
-            In the <span class="sc-text-accent-subdued">detail</span>.
-          </h2>
-        </Reveal>
-        <div class="mt-16 grid gap-6 md:grid-cols-12">
+    <section class="relative sc-section sc-bg-ivory sc-text-primary-light">
+      <div class="sc-container sc-gutter">
+        <p class="sc-bracket-label sc-text-accent-subdued">Gallery</p>
+        <h2 class="sc-heading-lg mt-4">In the detail.</h2>
+
+        <div class="mt-12 grid grid-cols-12 gap-4 md:gap-6">
           {entry.data.gallery.map((src, i) => {
-            const span = i === 0 ? 'md:col-span-8' : i === 1 ? 'md:col-span-4' : 'md:col-span-6';
+            const span = i === 0 ? 'col-span-12 md:col-span-8' : i === 1 ? 'col-span-12 md:col-span-4' : 'col-span-12 md:col-span-6';
             const aspect = i === 0 ? 'aspect-[16/10]' : i === 1 ? 'aspect-[4/5]' : 'aspect-[3/2]';
             return (
-              <Reveal>
-                <div class={`relative overflow-hidden ${span} ${aspect}`}>
-                  <Image
-                    src={src}
-                    alt={`${entry.data.title} — image ${i + 1}`}
-                    width={1600}
-                    height={1000}
-                    widths={[600, 900, 1200, 1600]}
-                    sizes="(min-width: 768px) 60vw, 100vw"
-                    class="h-full w-full object-cover"
-                    format="webp"
-                  />
-                </div>
-              </Reveal>
+              <div class:list={['relative overflow-hidden', span, aspect]}>
+                <Image
+                  src={src}
+                  alt={`${entry.data.title} — gallery image ${i + 1} of ${entry.data.gallery.length}.`}
+                  width={1600}
+                  height={1000}
+                  widths={[600, 900, 1200, 1600]}
+                  sizes="(min-width: 768px) 60vw, 100vw"
+                  class="h-full w-full object-cover"
+                  format="webp"
+                />
+              </div>
             );
           })}
         </div>
@@ -134,16 +122,17 @@ const pillarLabels = entry.data.pillars.map((p) => pillarBySlug.get(p as any)?.t
   )}
 
   <!-- Next -->
-  <section class="relative isolate border-t sc-border-soft px-6 py-16 md:px-10 md:py-20">
-    <div class="mx-auto flex max-w-[1440px] items-end justify-between">
-      <div>
-        <p class="tabular text-xs sc-text-accent-subdued">Next project</p>
-        <p class="mt-2 font-display text-3xl sc-text-primary md:text-4xl">{next.data.title}</p>
+  <section class="relative border-t sc-border-soft">
+    <div class="sc-container sc-gutter py-12 md:py-14">
+      <div class="grid grid-cols-12 items-end gap-6">
+        <div class="col-span-8">
+          <p class="sc-slug sc-text-accent-subdued">Next record</p>
+          <p class="sc-heading-md sc-text-primary mt-2">{next.data.title}</p>
+        </div>
+        <div class="col-span-4 text-right">
+          <a href={`/portfolio/${next.data.slug}`} class="sc-link sc-small sc-text-accent">Continue</a>
+        </div>
       </div>
-      <a href={`/portfolio/${next.data.slug}`} class="group sc-link-accent inline-flex items-center gap-3">
-        <span class="hidden md:inline text-sm tracking-widest uppercase">Continue</span>
-        <Icon name="lucide:arrow-right" class="h-6 w-6 transition-transform group-hover:translate-x-1" />
-      </a>
     </div>
   </section>
 </BaseLayout>

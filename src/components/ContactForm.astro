@@ -1,56 +1,86 @@
 ---
 const pillars = [
-  { value: 'development', label: 'Property Development' },
+  { value: 'development',  label: 'Property Development' },
   { value: 'construction', label: 'Construction Services' },
-  { value: 'engineering', label: 'Engineering Services' },
-  { value: 'real-estate', label: 'Real Estate Services' },
-  { value: 'management', label: 'Project & Construction Management' },
-  { value: 'specialist', label: 'Specialist & Value-Added' },
+  { value: 'engineering',  label: 'Engineering Services' },
+  { value: 'real-estate',  label: 'Real Estate Services' },
+  { value: 'management',   label: 'Project & Construction Management' },
+  { value: 'specialist',   label: 'Specialist & Value-Added' },
+];
+
+const locations = [
+  { value: 'ghana',    label: 'In Ghana' },
+  { value: 'uk',       label: 'United Kingdom' },
+  { value: 'us',       label: 'United States' },
+  { value: 'canada',   label: 'Canada' },
+  { value: 'other',    label: 'Elsewhere' },
 ];
 
 const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
 ---
 <form
+  id="form"
   data-sc-contact
   data-endpoint={endpoint}
-  class="grid gap-8"
+  class="grid gap-7"
   novalidate
 >
   <div class="grid gap-6 md:grid-cols-2">
     <label class="flex flex-col gap-2">
-      <span class="eyebrow">Your Name</span>
-      <input type="text" name="name" required class="sc-input" placeholder="Full name" />
+      <span class="sc-caption sc-text-accent-subdued">Your name</span>
+      <input type="text" name="name" required class="sc-input" placeholder="Full name" autocomplete="name" />
+      <span class="sc-caption sc-text-muted hidden" data-sc-error="name">Please add your name.</span>
     </label>
     <label class="flex flex-col gap-2">
-      <span class="eyebrow">Email</span>
-      <input type="email" name="email" required class="sc-input" placeholder="you@company.com" />
+      <span class="sc-caption sc-text-accent-subdued">Email</span>
+      <input type="email" name="email" required class="sc-input" placeholder="you@company.com" autocomplete="email" />
+      <span class="sc-caption sc-text-muted hidden" data-sc-error="email">A valid email helps us reply.</span>
     </label>
   </div>
 
-  <label class="flex flex-col gap-2">
-    <span class="eyebrow">Which pillar is your enquiry about?</span>
-    <select name="pillar" required data-sc-pillar class="sc-input">
-      <option value="" class="sc-bg-canvas">Select a pillar…</option>
-      {pillars.map((p) => (
-        <option value={p.value} class="sc-bg-canvas">{p.label}</option>
-      ))}
-    </select>
-  </label>
-
-  <div data-sc-conditional data-pillar="development,construction,engineering,management,specialist" class="hidden grid gap-6 md:grid-cols-2">
+  <div class="grid gap-6 md:grid-cols-2">
     <label class="flex flex-col gap-2">
-      <span class="eyebrow">Project Location</span>
+      <span class="sc-caption sc-text-accent-subdued">Where are you writing from?</span>
+      <select name="from" class="sc-input">
+        <option value="" class="sc-bg-canvas">Select…</option>
+        {locations.map((l) => (
+          <option value={l.value} class="sc-bg-canvas">{l.label}</option>
+        ))}
+      </select>
+    </label>
+    <label class="flex flex-col gap-2">
+      <span class="sc-caption sc-text-accent-subdued">Which pillar is your enquiry about?</span>
+      <select name="pillar" required data-sc-pillar class="sc-input">
+        <option value="" class="sc-bg-canvas">Select a pillar…</option>
+        {pillars.map((p) => (
+          <option value={p.value} class="sc-bg-canvas">{p.label}</option>
+        ))}
+      </select>
+    </label>
+  </div>
+
+  <div
+    data-sc-conditional
+    data-pillar="development,construction,engineering,management,specialist"
+    class="hidden grid gap-6 md:grid-cols-2"
+  >
+    <label class="flex flex-col gap-2">
+      <span class="sc-caption sc-text-accent-subdued">Project location</span>
       <input type="text" name="location" class="sc-input" placeholder="City, district" />
     </label>
     <label class="flex flex-col gap-2">
-      <span class="eyebrow">Estimated GFA (m²)</span>
-      <input type="text" name="gfa" class="sc-input" placeholder="e.g. 4,200" />
+      <span class="sc-caption sc-text-accent-subdued">Estimated GFA (m²)</span>
+      <input type="text" name="gfa" class="sc-input" placeholder="e.g. 4,200" inputmode="numeric" />
     </label>
   </div>
 
-  <div data-sc-conditional data-pillar="real-estate" class="hidden grid gap-6 md:grid-cols-2">
+  <div
+    data-sc-conditional
+    data-pillar="real-estate"
+    class="hidden grid gap-6 md:grid-cols-2"
+  >
     <label class="flex flex-col gap-2">
-      <span class="eyebrow">Instruction Type</span>
+      <span class="sc-caption sc-text-accent-subdued">Instruction type</span>
       <select name="instruction" class="sc-input">
         <option value="" class="sc-bg-canvas">Select…</option>
         <option value="sales" class="sc-bg-canvas">Sales & Marketing</option>
@@ -60,24 +90,28 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
       </select>
     </label>
     <label class="flex flex-col gap-2">
-      <span class="eyebrow">Ticket Size (USD)</span>
+      <span class="sc-caption sc-text-accent-subdued">Ticket size (USD)</span>
       <input type="text" name="ticket" class="sc-input" placeholder="e.g. 5m–15m" />
     </label>
   </div>
 
   <label class="flex flex-col gap-2">
-    <span class="eyebrow">Tell us more</span>
-    <textarea name="message" rows="5" required class="sc-textarea" placeholder="Programme, budget range, sensitivities, timeline…"></textarea>
+    <span class="sc-caption sc-text-accent-subdued">Tell us more</span>
+    <textarea
+      name="message"
+      rows="5"
+      required
+      class="sc-textarea"
+      placeholder="Programme, budget range, sensitivities, timeline…"
+    ></textarea>
+    <span class="sc-caption sc-text-muted hidden" data-sc-error="message">A brief note lets us route your enquiry.</span>
   </label>
 
-  <div class="flex items-center justify-between border-t sc-border-soft pt-6">
-    <p class="text-xs sc-text-muted" data-sc-status role="status" aria-live="polite">
-      Replies within one business day.
+  <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-t sc-border-soft pt-6">
+    <p class="sc-small sc-text-muted" data-sc-status role="status" aria-live="polite">
+      Replies within one business day from the senior team.
     </p>
-    <button type="submit" class="sc-btn-primary group">
-      <span>Send Enquiry</span>
-      <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
-    </button>
+    <button type="submit" class="sc-btn-primary">Send enquiry</button>
   </div>
 </form>
 
@@ -92,20 +126,28 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
     conditionals.forEach((block) => {
       const raw = block.dataset.pillar ?? '';
       const allowed = raw.split(',').map((s) => s.trim());
-      if (value && allowed.includes(value)) {
-        block.classList.remove('hidden');
-      } else {
-        block.classList.add('hidden');
-      }
+      block.classList.toggle('hidden', !(value && allowed.includes(value)));
     });
   }
   pillarSelect?.addEventListener('change', syncConditional);
   syncConditional();
 
+  // Inline validation on blur
+  form?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]').forEach((field) => {
+    field.addEventListener('blur', () => {
+      const errEl = form.querySelector<HTMLElement>(`[data-sc-error="${field.name}"]`);
+      if (!errEl) return;
+      const valid = field.checkValidity();
+      errEl.classList.toggle('hidden', valid);
+      field.style.borderBottomColor = valid ? '' : 'var(--sc-text-accent-subdued)';
+    });
+  });
+
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!form.checkValidity()) {
       form.reportValidity();
+      form.querySelectorAll<HTMLInputElement>('[required]').forEach((f) => f.dispatchEvent(new Event('blur')));
       return;
     }
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -125,7 +167,7 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
       } else {
         console.log('[Signature Crest] Contact submission (no endpoint configured):', data);
       }
-      if (status) status.textContent = 'Enquiry received. We’ll be in touch within one business day.';
+      if (status) status.textContent = 'Enquiry received. We will be in touch within one business day.';
       form.reset();
       syncConditional();
     } catch (err) {

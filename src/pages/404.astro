@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RunningHead from '../components/RunningHead.astro';
+import MeshGlow from '../components/MeshGlow.astro';
+
+const links = [
+  { label: 'Practice',  href: '/about' },
+  { label: 'Services',  href: '/services' },
+  { label: 'Portfolio', href: '/portfolio' },
+  { label: 'Insights',  href: '/insights' },
+  { label: 'Contact',   href: '/contact' },
+];
+---
+<BaseLayout
+  title="Reference not found — Signature Crest"
+  description="The reference you followed has been retired or moved. Continue to the practice."
+  canonicalPath="/404"
+>
+  <section class="relative isolate overflow-hidden min-h-[80vh]">
+    <MeshGlow position="center" size="xl" intensity={0.05} />
+
+    <div class="sc-container sc-gutter pt-28 md:pt-36">
+      <RunningHead code="SCBL" rev="ERR 404" section="Reference not found" />
+    </div>
+
+    <div class="sc-container sc-gutter grid grid-cols-12 gap-8 pt-16 md:pt-24 pb-24 md:pb-32">
+      <div class="col-span-12 md:col-span-8">
+        <p class="sc-slug sc-text-accent-subdued">Archive · 404</p>
+        <h1 class="sc-display-lg sc-text-primary mt-6 max-w-[18ch]">
+          This reference has been retired or moved.
+        </h1>
+        <p class="sc-lede sc-text-secondary mt-8 max-w-[52ch]">
+          The page you were looking for is no longer at this address. The rest of the practice remains open — continue below, or write to us if you were expecting something specific.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a href="/" class="sc-btn-primary">Return home</a>
+          <a href="/contact" class="sc-btn-secondary">Write to the practice</a>
+        </div>
+      </div>
+
+      <aside class="col-span-12 md:col-span-4 md:pt-16">
+        <p class="sc-bracket-label mb-4">Directory</p>
+        <ul class="border-t sc-border-hairline">
+          {links.map((l, i) => (
+            <li class="border-b sc-border-hairline">
+              <a href={l.href} class="flex items-center justify-between py-4 sc-text-primary hover:text-[color:var(--sc-text-accent-hover)] transition-colors">
+                <span class="sc-body">{l.label}</span>
+                <span class="sc-slug sc-text-accent-subdued">{String(i + 1).padStart(2, '0')}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

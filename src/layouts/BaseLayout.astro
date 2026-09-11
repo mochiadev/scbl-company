@@ -1,8 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import '@fontsource/playfair-display/500.css';
-import '@fontsource/playfair-display/600.css';
-import '@fontsource/playfair-display/700.css';
+import '@fontsource-variable/fraunces/index.css';
 import '@fontsource-variable/inter/index.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
@@ -12,14 +10,46 @@ import NoiseOverlay from '../components/NoiseOverlay.astro';
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
   bodyClass?: string;
+  canonicalPath?: string;
 }
 
 const {
-  title = 'Signature Crest Builders',
-  description = 'Signature Crest Builders Limited — premium real estate development, construction, and engineering.',
+  title = 'Signature Crest Builders — Distinct by design. Built for legacy.',
+  description = 'Signature Crest Builders Limited is a Ghanaian real-estate development, construction, and engineering practice — six pillars under one accountable roof, built for legacy.',
+  ogImage = '/og.svg',
   bodyClass = '',
+  canonicalPath,
 } = Astro.props;
+
+const siteOrigin = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const path = (canonicalPath ?? Astro.url.pathname.replace(/\/$/, '')) || '/';
+const canonical = `${siteOrigin}${path}`;
+const absoluteOg = ogImage.startsWith('http') ? ogImage : `${siteOrigin}${ogImage}`;
+
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Signature Crest Builders Limited',
+  url: siteOrigin,
+  logo: `${siteOrigin}/og.svg`,
+  description:
+    'A distinguished Ghanaian real-estate development, construction, and engineering practice — six pillars under one accountable roof.',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Airport Residential',
+    addressLocality: 'Accra',
+    addressCountry: 'GH',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'sales',
+    email: 'hello@signaturecrest.com',
+    availableLanguage: ['en'],
+  },
+  sameAs: [] as string[],
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -28,7 +58,28 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#050C16" />
+    <meta name="color-scheme" content="dark" />
     <title>{title}</title>
+
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Signature Crest Builders" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={absoluteOg} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_GH" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOg} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -36,7 +87,7 @@ const {
       rel="preload"
       as="font"
       type="font/woff2"
-      href="/_astro/playfair-display-latin-600-normal.woff2"
+      href="/_astro/fraunces-latin-wght-normal.woff2"
       crossorigin
     />
     <link
@@ -47,10 +98,18 @@ const {
       crossorigin
     />
 
+    <script type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+
     <ClientRouter />
   </head>
   <body class:list={['sc-bg-canvas sc-text-primary', bodyClass]}>
     <NoiseOverlay />
+    <a
+      href="#content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:sc-btn-primary focus:px-4 focus:py-2"
+    >
+      Skip to content
+    </a>
     <Header />
     <main id="content" class="pt-20">
       <slot />
@@ -116,5 +175,25 @@ const {
         init();
       });
     </script>
+
+    <style is:global>
+      .sr-only {
+        position: absolute;
+        width: 1px; height: 1px;
+        padding: 0; margin: -1px;
+        overflow: hidden;
+        clip: rect(0,0,0,0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .focus\:not-sr-only:focus {
+        position: fixed;
+        width: auto; height: auto;
+        padding: 0; margin: 0;
+        overflow: visible;
+        clip: auto;
+        white-space: normal;
+      }
+    </style>
   </body>
 </html>

@@ -2,66 +2,65 @@
 import { Icon } from 'astro-icon/components';
 
 interface Props {
-  eyebrow: string;
+  index: number;                 // 1..6 — pillar ordinal in the practice
   title: string;
   href: string;
   icon: string;
-  span?: 'sm' | 'md' | 'lg';
   tone?: 'navy' | 'ivory';
-  subServices?: string[];
+  short?: string;                // one-line description
+  subServices?: string[];        // inline chips, top 2 rendered
+  emphasis?: 'lead' | 'standard';
 }
 
 const {
-  eyebrow,
+  index,
   title,
   href,
   icon,
-  span = 'md',
   tone = 'navy',
+  short,
   subServices = [],
+  emphasis = 'standard',
 } = Astro.props;
 
-const spanMap = {
-  sm: 'md:col-span-4 md:row-span-1',
-  md: 'md:col-span-6 md:row-span-1',
-  lg: 'md:col-span-8 md:row-span-2',
-} as const;
-
 const surfaceClass = tone === 'ivory' ? 'sc-card-ivory' : 'sc-card-dark';
-const eyebrowClass = tone === 'ivory' ? 'sc-text-accent-subdued' : 'sc-text-accent';
+const slugClass    = tone === 'ivory' ? 'sc-text-accent-subdued' : 'sc-text-accent-subdued';
+const mutedClass   = tone === 'ivory' ? 'sc-text-muted' : 'sc-text-muted';
+const chipBorder   = tone === 'ivory' ? 'sc-border-hairline-light' : 'sc-border-hairline';
 ---
 <a
   href={href}
   class:list={[
-    'group relative flex flex-col justify-between overflow-hidden p-8 transition-all duration-500',
+    'group relative flex flex-col justify-between overflow-hidden transition-colors duration-500',
+    'p-6 md:p-8',
+    emphasis === 'lead' ? 'min-h-[22rem] md:min-h-[26rem]' : 'min-h-[18rem]',
     surfaceClass,
-    spanMap[span],
   ]}
 >
-  <div class="pointer-events-none absolute right-6 top-6 opacity-10 transition-opacity duration-500 group-hover:opacity-25">
-    <Icon name={icon} class="h-24 w-24 sc-text-accent" />
+  <div class="pointer-events-none absolute right-4 top-4 opacity-15 transition-opacity duration-500 group-hover:opacity-30">
+    <Icon name={icon} class="h-16 w-16 md:h-20 md:w-20 sc-text-accent" />
   </div>
 
-  <div class="relative">
-    <p class:list={['tabular text-[11px]', eyebrowClass]}>{eyebrow}</p>
-    <h3 class="mt-4 font-display text-2xl leading-tight md:text-3xl">
+  <header class="relative">
+    <p class:list={['sc-slug', slugClass]}>
+      Pillar {String(index).padStart(2, '0')} — {title.split(' ').slice(-1)[0]}
+    </p>
+    <h3 class:list={['mt-4', emphasis === 'lead' ? 'sc-heading-lg' : 'sc-heading-md']}>
       {title}
     </h3>
-  </div>
+    {short && (
+      <p class:list={['mt-4 max-w-[42ch] sc-body', mutedClass]}>{short}</p>
+    )}
+  </header>
 
-  {subServices.length > 0 && span === 'lg' && (
-    <ul class="relative mt-8 space-y-2 text-sm sc-text-muted">
-      {subServices.slice(0, 4).map((s) => (
-        <li class="flex items-center gap-3">
-          <span class="h-px w-4 bg-[color:var(--sc-accent-divider)]"></span>
+  <footer class="relative mt-8 flex flex-wrap items-end justify-between gap-4">
+    <ul class="flex flex-wrap gap-2">
+      {subServices.slice(0, emphasis === 'lead' ? 3 : 2).map((s) => (
+        <li class:list={['sc-caption px-2.5 py-1 border', chipBorder, mutedClass]}>
           {s}
         </li>
       ))}
     </ul>
-  )}
-
-  <div class="relative mt-10 flex items-center justify-between">
-    <span class="text-xs uppercase tracking-widest sc-text-muted">Explore</span>
-    <span class="sc-text-accent transition-transform duration-500 group-hover:translate-x-2 group-hover:text-[color:var(--sc-text-accent-hover)]">→</span>
-  </div>
+    <span class="sc-small sc-text-accent sc-link">Read the pillar</span>
+  </footer>
 </a>

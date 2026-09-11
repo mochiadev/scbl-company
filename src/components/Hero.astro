@@ -1,79 +1,99 @@
 ---
 import { Image } from 'astro:assets';
-import GridlineFrame from './GridlineFrame.astro';
 import MeshGlow from './MeshGlow.astro';
 import Reveal from './Reveal.astro';
+import RunningHead from './RunningHead.astro';
 
 interface Props {
-  eyebrow: string;
-  title: string;
+  runningHead?: { code?: string; rev?: string; section?: string };
+  title: string;               // may contain <br> / raw HTML
   lede?: string;
-  image: string;
-  imageAlt: string;
+  aside?: string;              // optional side annotation
+  image?: string;
+  imageAlt?: string;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
+  variant?: 'imaged' | 'quiet';
 }
 
 const {
-  eyebrow,
+  runningHead,
   title,
   lede,
+  aside,
   image,
   imageAlt,
   primaryCta,
   secondaryCta,
+  variant = image ? 'imaged' : 'quiet',
 } = Astro.props;
 ---
-<section class="relative isolate overflow-hidden min-h-[92vh] w-full">
-  <GridlineFrame tone="dark" columns={12} />
-  <MeshGlow position="top-right" size="xl" intensity={0.18} />
-  <MeshGlow position="bottom-left" size="lg" intensity={0.10} />
+<section class="relative isolate overflow-hidden">
+  <MeshGlow position="top-right" size="xl" intensity={variant === 'imaged' ? 0.10 : 0.06} />
 
-  <div class="absolute inset-0 -z-10">
-    <Image
-      src={image}
-      alt={imageAlt}
-      width={2400}
-      height={1600}
-      widths={[720, 1200, 1800, 2400]}
-      sizes="100vw"
-      class="h-full w-full object-cover opacity-40"
-      loading="eager"
-      format="webp"
-    />
-    <div class="absolute inset-0 sc-overlay-hero"></div>
+  {variant === 'imaged' && image && (
+    <div class="absolute inset-0 -z-10">
+      <Image
+        src={image}
+        alt={imageAlt ?? ''}
+        width={2400}
+        height={1600}
+        widths={[720, 1200, 1800, 2400]}
+        sizes="100vw"
+        class="h-full w-full object-cover opacity-45"
+        loading="eager"
+        format="webp"
+      />
+      <div class="absolute inset-0 sc-overlay-hero"></div>
+    </div>
+  )}
+
+  <div class="sc-container sc-gutter pt-28 md:pt-36">
+    {runningHead && (
+      <RunningHead
+        code={runningHead.code}
+        rev={runningHead.rev}
+        section={runningHead.section}
+      />
+    )}
   </div>
 
-  <div class="relative z-10 mx-auto flex min-h-[92vh] max-w-[1440px] flex-col justify-end px-6 pb-24 pt-40 md:px-10 md:pb-32" data-reveal-group>
-    <Reveal>
-      <p class="eyebrow">{eyebrow}</p>
-    </Reveal>
-    <Reveal>
-      <h1 class="mt-6 max-w-5xl font-display text-[clamp(2.75rem,7vw,7rem)] leading-[0.98] tracking-tight sc-text-primary">
-        <Fragment set:html={title} />
-      </h1>
-    </Reveal>
-    {lede && (
+  <div
+    class="sc-container sc-gutter pb-20 md:pb-32 pt-12 md:pt-20 grid grid-cols-12 gap-6 md:gap-8"
+    data-reveal-group
+  >
+    <div class="col-span-12 md:col-span-10">
       <Reveal>
-        <p class="mt-8 max-w-xl text-base leading-relaxed sc-text-muted md:text-lg">{lede}</p>
+        <h1 class="sc-display-xl sc-text-primary max-w-[16ch]">
+          <Fragment set:html={title} />
+        </h1>
       </Reveal>
-    )}
-    {(primaryCta || secondaryCta) && (
-      <Reveal>
-        <div class="mt-10 flex flex-wrap items-center gap-4">
-          {primaryCta && (
-            <a href={primaryCta.href} class="sc-btn-primary group">
-              {primaryCta.label}
-              <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </a>
-          )}
-          {secondaryCta && (
-            <a href={secondaryCta.href} class="sc-btn-secondary">
-              {secondaryCta.label}
-              <span>→</span>
-            </a>
-          )}
-        </div>
+      {lede && (
+        <Reveal>
+          <p class="sc-lede-lg sc-text-secondary max-w-[52ch] mt-8 md:mt-10">
+            {lede}
+          </p>
+        </Reveal>
+      )}
+      {(primaryCta || secondaryCta) && (
+        <Reveal>
+          <div class="mt-10 md:mt-12 flex flex-wrap items-center gap-4">
+            {primaryCta && (
+              <a href={primaryCta.href} class="sc-btn-primary">{primaryCta.label}</a>
+            )}
+            {secondaryCta && (
+              <a href={secondaryCta.href} class="sc-btn-secondary">{secondaryCta.label}</a>
+            )}
+          </div>
+        </Reveal>
+      )}
+    </div>
+
+    {aside && (
+      <Reveal class="col-span-12 md:col-span-2 md:pt-24">
+        <aside class="sc-small sc-text-muted border-l sc-border-firm pl-4 md:pl-5" aria-label="Aside">
+          {aside}
+        </aside>
       </Reveal>
     )}
   </div>

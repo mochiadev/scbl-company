@@ -12,11 +12,11 @@ specs:
   breeam: Excellent
   gfa: 12,400 m²
   mep_scope: Full MEP with district cooling
-hero_image: https://picsum.photos/seed/obsidian/1800/1200
+hero_image: https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=2400&q=80
 gallery:
-  - https://picsum.photos/seed/obsidian-1/1200/800
-  - https://picsum.photos/seed/obsidian-2/1200/800
-  - https://picsum.photos/seed/obsidian-3/1200/800
+  - https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=80
+  - https://picsum.photos/seed/obsidian-court/1600/2000
+  - https://picsum.photos/seed/obsidian-facade/1600/1000
 ---
 
 A twenty-eight unit private residential development anchored around a shared arrival court and a discreet residents' amenity level. The masonry envelope is punctuated by a bronzed anodised aluminium fin system that shades the west elevation and modulates solar gain without compromising the interior's cinematic sight-lines.

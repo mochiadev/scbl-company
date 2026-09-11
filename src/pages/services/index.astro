@@ -1,61 +1,72 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import RunningHead from '../../components/RunningHead.astro';
 import PillarBento from '../../components/PillarBento.astro';
-import Reveal from '../../components/Reveal.astro';
-import MeshGlow from '../../components/MeshGlow.astro';
-import GridlineFrame from '../../components/GridlineFrame.astro';
 import { pillars } from '../../lib/pillars.ts';
 
 const services = await getCollection('services');
 services.sort((a, b) => a.data.order - b.data.order);
 
 const bento = pillars.map((p) => {
-  const record = services.find((s) => s.id.startsWith(p.slug));
+  const record = services.find((s) => s.id === p.slug || s.id.startsWith(p.slug));
   return {
-    ...p,
-    subServices: record?.data.sub_services ?? [],
+    slug: p.slug,
+    title: p.title,
+    href: p.href,
+    icon: p.icon,
+    short: p.short,
+    subServices: (record?.data.sub_services ?? []).slice(0, 3),
   };
 });
 ---
 <BaseLayout
   title="Services — Signature Crest Builders"
-  description="Six pillars of practice: property development, construction, engineering, real estate, project management, and specialist services."
+  description="Six pillars of practice: property development, construction, engineering, real-estate advisory, project management, and specialist services — held under one accountable roof."
 >
-  <section class="relative isolate overflow-hidden px-6 pt-32 pb-24 md:px-10 md:pt-48 md:pb-32">
-    <GridlineFrame tone="dark" columns={12} />
-    <MeshGlow position="top-left" size="xl" intensity={0.14} />
-    <div class="relative mx-auto max-w-[1440px]" data-reveal-group>
-      <Reveal>
-        <p class="eyebrow">Suite of Services</p>
-      </Reveal>
-      <Reveal>
-        <h1 class="mt-6 max-w-5xl font-display text-[clamp(2.75rem,7vw,6.5rem)] leading-[0.98] tracking-tight sc-text-primary">
-          Six pillars of practice. <br class="hidden md:block" /><span class="sc-text-accent">One accountable roof.</span>
-        </h1>
-      </Reveal>
-      <Reveal>
-        <p class="mt-10 max-w-2xl text-lg leading-relaxed sc-text-muted">
-          Our integrated model — development, construction, engineering, real estate, project management, and specialist practices — means every project runs on a single line of accountability, one commercial position, and one team paid to hold quality.
-        </p>
-      </Reveal>
-    </div>
-  </section>
+  <Hero
+    runningHead={{ code: 'SCBL · S.00', rev: 'REV 01', section: 'Suite of Services' }}
+    title="Six pillars of practice, held under one roof."
+    lede="One accountable team owns land diligence, design, engineering, construction, real-estate advisory, and post-handover stewardship — with a single commercial position and one senior partner behind every decision."
+    variant="quiet"
+  />
 
-  <section class="relative isolate px-6 py-24 md:px-10 md:py-32">
-    <div class="mx-auto max-w-[1440px]">
+  <section class="relative sc-section">
+    <div class="sc-container sc-gutter">
       <PillarBento pillars={bento} tone="navy" />
     </div>
   </section>
 
-  <section class="relative isolate sc-bg-ivory px-6 py-24 sc-text-primary-light md:px-10 md:py-32">
-    <div class="mx-auto max-w-[1440px]" data-reveal-group>
-      <Reveal>
-        <p class="tabular text-xs sc-text-accent-subdued">A note on the model</p>
-        <p class="mt-6 max-w-3xl font-display text-2xl leading-[1.25] tracking-tight md:text-4xl">
-          We do not treat services as separate businesses that occasionally speak. They are one practice, priced together, held accountable together, and answerable to the same senior team.
+  <section class="relative sc-section sc-bg-ivory sc-text-primary-light">
+    <div class="sc-container sc-gutter grid grid-cols-12 gap-8">
+      <div class="col-span-12 md:col-span-4">
+        <p class="sc-bracket-label sc-text-accent-subdued">A note on the model</p>
+      </div>
+      <div class="col-span-12 md:col-span-8">
+        <p class="sc-heading-lg max-w-[36ch]">
+          We do not treat services as separate businesses that occasionally speak.
         </p>
-      </Reveal>
+        <p class="sc-body sc-text-muted-strong mt-6 max-w-[62ch]">
+          They are one practice, priced together, held accountable together, and answerable to the same senior team. That single-throat-to-hold model is why interface failures — the biggest source of quality erosion in Ghanaian premium builds — do not surface on our projects.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative sc-section-tight">
+    <div class="sc-container sc-gutter">
+      <RunningHead code="SCBL · S.00" rev="END" section="Continue" />
+      <div class="mt-14 grid grid-cols-12 gap-8">
+        <div class="col-span-12 md:col-span-8">
+          <h2 class="sc-display-lg sc-text-primary max-w-[24ch]">
+            Every asset begins with a conversation.
+          </h2>
+        </div>
+        <div class="col-span-12 md:col-span-4 md:pt-8">
+          <a href="/contact#form" class="sc-btn-primary">Begin a project</a>
+        </div>
+      </div>
     </div>
   </section>
 </BaseLayout>

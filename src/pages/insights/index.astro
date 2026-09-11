@@ -1,50 +1,36 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
 import InsightCard from '../../components/InsightCard.astro';
-import Reveal from '../../components/Reveal.astro';
-import MeshGlow from '../../components/MeshGlow.astro';
-import GridlineFrame from '../../components/GridlineFrame.astro';
 
 const insights = await getCollection('insights');
 insights.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
 ---
 <BaseLayout
   title="Insights — Signature Crest Builders"
-  description="Field notes from Signature Crest — investment underwriting, engineering methodology, and long-form thinking about the built environment."
+  description="Field notes from the practice — underwriting, engineering methodology, and long-form thinking on the built environment, written by the people doing the work."
 >
-  <section class="relative isolate overflow-hidden px-6 pt-32 pb-24 md:px-10 md:pt-48 md:pb-32">
-    <GridlineFrame tone="dark" columns={12} />
-    <MeshGlow position="top-left" size="xl" intensity={0.14} />
-    <div class="relative mx-auto max-w-[1440px]" data-reveal-group>
-      <Reveal><p class="eyebrow">Insights</p></Reveal>
-      <Reveal>
-        <h1 class="mt-6 max-w-5xl font-display text-[clamp(2.75rem,7vw,6.5rem)] leading-[0.98] tracking-tight sc-text-primary">
-          Field notes from the <span class="sc-text-accent">practice</span>.
-        </h1>
-      </Reveal>
-      <Reveal>
-        <p class="mt-10 max-w-2xl text-lg leading-relaxed sc-text-muted">
-          Investment underwriting, engineering methodology, and long-form thinking about the built environment — written by the people doing the work.
-        </p>
-      </Reveal>
-    </div>
-  </section>
+  <Hero
+    runningHead={{ code: 'SCBL · I.00', rev: 'REV 01', section: 'Field Notes' }}
+    title="Field notes from the practice."
+    lede="Investment underwriting, engineering methodology, and long-form thinking on the built environment — written by the people doing the work."
+    variant="quiet"
+  />
 
-  <section class="relative isolate px-6 pb-32 md:px-10 md:pb-48">
-    <div class="mx-auto max-w-[1440px]" data-reveal-group>
-      <div class="grid gap-6 md:grid-cols-2">
+  <section class="relative sc-section-tight">
+    <div class="sc-container sc-gutter">
+      <div>
         {insights.map((post) => (
-          <Reveal>
-            <InsightCard
-              title={post.data.title}
-              slug={post.data.slug}
-              pillar={post.data.pillar}
-              published={post.data.published}
-              reading_time={post.data.reading_time}
-              excerpt={post.data.excerpt}
-            />
-          </Reveal>
+          <InsightCard
+            title={post.data.title}
+            slug={post.data.slug}
+            pillar={post.data.pillar}
+            published={post.data.published}
+            reading_time={post.data.reading_time}
+            excerpt={post.data.excerpt}
+            variant="row"
+          />
         ))}
       </div>
     </div>
