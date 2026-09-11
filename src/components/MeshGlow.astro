@@ -1,0 +1,30 @@
+---
+interface Props {
+  position?: 'top-left' | 'top-right' | 'center' | 'bottom-left' | 'bottom-right';
+  size?: 'md' | 'lg' | 'xl';
+  intensity?: number;
+}
+const { position = 'top-right', size = 'lg', intensity = 0.14 } = Astro.props;
+
+const positionMap = {
+  'top-left': 'top-[-15%] left-[-10%]',
+  'top-right': 'top-[-15%] right-[-10%]',
+  'center': 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+  'bottom-left': 'bottom-[-15%] left-[-10%]',
+  'bottom-right': 'bottom-[-15%] right-[-10%]',
+} as const;
+const sizeMap = {
+  md: 'h-[36rem] w-[36rem]',
+  lg: 'h-[52rem] w-[52rem]',
+  xl: 'h-[72rem] w-[72rem]',
+} as const;
+---
+<div
+  class:list={[
+    'pointer-events-none absolute -z-0 rounded-full blur-[120px]',
+    positionMap[position],
+    sizeMap[size],
+  ]}
+  style={`background: radial-gradient(closest-side, color-mix(in oklab, var(--color-sc-gold) ${Math.round(intensity * 100)}%, transparent), transparent 70%);`}
+  aria-hidden="true"
+/>

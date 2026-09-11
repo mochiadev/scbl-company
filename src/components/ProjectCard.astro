@@ -1,0 +1,69 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  title: string;
+  slug: string;
+  location: string;
+  year: number;
+  pillars: string[];
+  image: string;
+  aspect?: 'portrait' | 'landscape' | 'square';
+  flip?: boolean;
+}
+
+const pillarLabels: Record<string, string> = {
+  development: 'Development',
+  construction: 'Construction',
+  engineering: 'Engineering',
+  'real-estate': 'Real Estate',
+  management: 'Management',
+  specialist: 'Specialist',
+};
+
+const {
+  title,
+  slug,
+  location,
+  year,
+  pillars,
+  image,
+  aspect = 'landscape',
+  flip = false,
+} = Astro.props;
+
+const aspectMap = {
+  portrait: 'aspect-[4/5]',
+  landscape: 'aspect-[16/10]',
+  square: 'aspect-square',
+} as const;
+---
+<a
+  href={`/portfolio/${slug}`}
+  class:list={[
+    'group relative grid grid-cols-1 gap-6 md:grid-cols-12',
+    flip ? 'md:[direction:rtl]' : '',
+  ]}
+>
+  <div class:list={['relative overflow-hidden md:col-span-8 [direction:ltr]', aspectMap[aspect]]}>
+    <Image
+      src={image}
+      alt={`${title} — ${location}`}
+      width={1600}
+      height={aspect === 'portrait' ? 2000 : aspect === 'square' ? 1600 : 1000}
+      widths={[600, 900, 1200, 1600]}
+      sizes="(min-width: 768px) 66vw, 100vw"
+      class="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.03]"
+      format="webp"
+    />
+    <div class="absolute inset-0 sc-overlay-image-bottom-to-top"></div>
+  </div>
+  <div class="flex flex-col justify-end md:col-span-4 [direction:ltr]">
+    <p class="tabular text-[11px] sc-text-accent">{pillars.map((p) => pillarLabels[p] ?? p).join(' · ')}</p>
+    <h3 class="mt-3 font-display text-2xl leading-tight sc-text-primary md:text-3xl transition-colors duration-500 group-hover:text-[color:var(--sc-text-accent-hover)]">
+      {title}
+    </h3>
+    <p class="mt-3 text-sm sc-text-muted">{location} — {year}</p>
+    <div class="hairline mt-6 w-16 group-hover:w-24 transition-all duration-500"></div>
+  </div>
+</a>

@@ -1,0 +1,162 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Reveal from '../../components/Reveal.astro';
+import MeshGlow from '../../components/MeshGlow.astro';
+import GridlineFrame from '../../components/GridlineFrame.astro';
+import SpecBlock from '../../components/SpecBlock.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { pillars, pillarBySlug } from '../../lib/pillars.ts';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  return services.map((entry) => ({
+    params: { pillar: entry.id.replace(/\.md$/, '') },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const meta = pillarBySlug.get(entry.id.replace(/\.md$/, '') as any);
+const { Content } = await render(entry);
+
+const currentIndex = pillars.findIndex((p) => p.slug === (entry.id.replace(/\.md$/, '') as any));
+const next = pillars[(currentIndex + 1) % pillars.length];
+
+const portfolio = await getCollection('portfolio');
+const related = portfolio.filter((p) => p.data.pillars.includes(entry.id.replace(/\.md$/, ''))).slice(0, 2);
+---
+<BaseLayout
+  title={`${entry.data.title} — Signature Crest`}
+  description={`Signature Crest ${entry.data.title.toLowerCase()} — ${entry.data.sub_services.slice(0, 3).join(', ').toLowerCase()}, and more.`}
+>
+  <!-- Hero -->
+  <section class="relative isolate overflow-hidden min-h-[80vh] px-6 pt-32 pb-24 md:px-10 md:pt-48 md:pb-32">
+    <GridlineFrame tone="dark" columns={12} />
+    <MeshGlow position="top-right" size="xl" intensity={0.16} />
+    <div class="absolute inset-0 -z-10">
+      <Image
+        src={entry.data.hero_image}
+        alt={`${entry.data.title} — cinematic scene`}
+        width={2400}
+        height={1400}
+        widths={[720, 1200, 1800, 2400]}
+        sizes="100vw"
+        class="h-full w-full object-cover opacity-30"
+        loading="eager"
+        format="webp"
+      />
+      <div class="absolute inset-0 sc-overlay-scrim"></div>
+    </div>
+    <div class="relative mx-auto max-w-[1440px]" data-reveal-group>
+      <Reveal>
+        <p class="tabular text-sm sc-text-accent">{entry.data.eyebrow}</p>
+      </Reveal>
+      <Reveal>
+        <h1 class="mt-6 max-w-5xl font-display text-[clamp(2.75rem,7vw,7rem)] leading-[0.98] tracking-tight sc-text-primary">
+          {entry.data.title}
+        </h1>
+      </Reveal>
+      {meta && (
+        <Reveal>
+          <p class="mt-10 max-w-2xl text-lg leading-relaxed sc-text-muted">{meta.short}</p>
+        </Reveal>
+      )}
+    </div>
+  </section>
+
+  <!-- Sub-services -->
+  <section class="relative isolate px-6 py-24 md:px-10 md:py-32">
+    <div class="mx-auto grid max-w-[1440px] gap-16 md:grid-cols-12" data-reveal-group>
+      <div class="md:col-span-4">
+        <Reveal>
+          <p class="eyebrow">Capabilities</p>
+          <h2 class="mt-4 font-display text-4xl leading-[1.05] tracking-tight sc-text-primary md:text-5xl">
+            What we do <span class="sc-text-accent">inside this pillar</span>.
+          </h2>
+        </Reveal>
+      </div>
+      <div class="md:col-span-8">
+        <ul class="grid gap-px sc-bg-line md:grid-cols-2">
+          {entry.data.sub_services.map((s, i) => (
+            <Reveal>
+              <li class="flex items-start gap-4 sc-bg-canvas p-8">
+                <span class="tabular text-xs sc-text-accent-subdued">{String(i + 1).padStart(2, '0')}</span>
+                <p class="text-lg leading-relaxed sc-text-primary">{s}</p>
+              </li>
+            </Reveal>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Body copy + spec block -->
+  <section class="relative isolate sc-bg-ivory px-6 py-24 sc-text-primary-light md:px-10 md:py-32">
+    <div class="mx-auto grid max-w-[1440px] gap-16 md:grid-cols-12" data-reveal-group>
+      <div class="md:col-span-8">
+        <Reveal>
+          <div class="prose-none max-w-none space-y-6 text-lg leading-relaxed sc-text-primary-light">
+            <Content />
+          </div>
+        </Reveal>
+      </div>
+      <div class="md:col-span-4">
+        {entry.data.tech_specs && entry.data.tech_specs.length > 0 && (
+          <Reveal>
+            <SpecBlock
+              heading="Standards & Methods"
+              specs={entry.data.tech_specs.map((v, i) => ({ label: String(i + 1).padStart(2, '0'), value: v }))}
+            />
+          </Reveal>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Related projects -->
+  {related.length > 0 && (
+    <section class="relative isolate px-6 py-24 md:px-10 md:py-40">
+      <div class="mx-auto max-w-[1440px]" data-reveal-group>
+        <Reveal>
+          <p class="eyebrow">Selected Work</p>
+          <h2 class="mt-4 font-display text-4xl leading-[1.05] tracking-tight sc-text-primary md:text-5xl">
+            {entry.data.title} in the <span class="sc-text-accent">field</span>.
+          </h2>
+        </Reveal>
+        <div class="mt-16 flex flex-col gap-24">
+          {related.map((project, i) => (
+            <Reveal>
+              <ProjectCard
+                title={project.data.title}
+                slug={project.data.slug}
+                location={project.data.location}
+                year={project.data.year}
+                pillars={project.data.pillars}
+                image={project.data.hero_image}
+                aspect={i === 0 ? 'landscape' : 'portrait'}
+                flip={i % 2 === 1}
+              />
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Next pillar -->
+  <section class="relative isolate border-t sc-border-soft px-6 py-16 md:px-10 md:py-20">
+    <div class="mx-auto flex max-w-[1440px] items-end justify-between">
+      <div>
+        <p class="tabular text-xs sc-text-accent-subdued">Next pillar</p>
+        <p class="mt-2 font-display text-3xl sc-text-primary md:text-4xl">{next.title}</p>
+      </div>
+      <a href={next.href} class="group sc-link-accent inline-flex items-center gap-3">
+        <span class="hidden md:inline text-sm tracking-widest uppercase">Continue</span>
+        <Icon name="lucide:arrow-right" class="h-6 w-6 transition-transform group-hover:translate-x-1" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>

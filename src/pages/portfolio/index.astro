@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import Reveal from '../../components/Reveal.astro';
+import MeshGlow from '../../components/MeshGlow.astro';
+import GridlineFrame from '../../components/GridlineFrame.astro';
+import { pillars } from '../../lib/pillars.ts';
+
+const portfolio = await getCollection('portfolio');
+portfolio.sort((a, b) => b.data.year - a.data.year);
+---
+<BaseLayout
+  title="Portfolio — Signature Crest Builders"
+  description="Selected residential, commercial, and heritage projects delivered by Signature Crest Builders Limited."
+>
+  <section class="relative isolate overflow-hidden px-6 pt-32 pb-24 md:px-10 md:pt-48 md:pb-32">
+    <GridlineFrame tone="dark" columns={12} />
+    <MeshGlow position="top-right" size="xl" intensity={0.14} />
+    <div class="relative mx-auto max-w-[1440px]" data-reveal-group>
+      <Reveal>
+        <p class="eyebrow">Portfolio</p>
+      </Reveal>
+      <Reveal>
+        <h1 class="mt-6 max-w-5xl font-display text-[clamp(2.75rem,7vw,6.5rem)] leading-[0.98] tracking-tight sc-text-primary">
+          Selected work — <span class="sc-text-accent">the record.</span>
+        </h1>
+      </Reveal>
+      <Reveal>
+        <p class="mt-10 max-w-2xl text-lg leading-relaxed sc-text-muted">
+          A working sample of what Signature Crest has delivered — private residences, mixed-use civic quarters, and meticulous heritage restoration. Every project is cross-pillar; filter to see how the practice fits together.
+        </p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="relative isolate px-6 pb-16 md:px-10 md:pb-24">
+    <div class="mx-auto max-w-[1440px]">
+      <div class="flex flex-wrap items-center gap-3" data-sc-filter-controls>
+        <button
+          type="button"
+          class="sc-chip-active px-4 py-2 text-xs tracking-widest uppercase"
+          data-filter="all"
+          aria-pressed="true"
+        >
+          All
+        </button>
+        {pillars.map((p) => (
+          <button
+            type="button"
+            class="sc-chip-inactive px-4 py-2 text-xs tracking-widest uppercase"
+            data-filter={p.slug}
+            aria-pressed="false"
+          >
+            {p.title.replace(' Services', '').replace('Property ', '').replace('Project & Construction ', '')}
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative isolate px-6 pb-32 md:px-10 md:pb-48">
+    <div class="mx-auto max-w-[1440px]" data-reveal-group>
+      <div class="flex flex-col gap-24" data-sc-portfolio-grid>
+        {portfolio.map((project, i) => (
+          <Reveal>
+            <div data-project data-pillars={project.data.pillars.join(',')}>
+              <ProjectCard
+                title={project.data.title}
+                slug={project.data.slug}
+                location={project.data.location}
+                year={project.data.year}
+                pillars={project.data.pillars}
+                image={project.data.hero_image}
+                aspect={i % 3 === 1 ? 'portrait' : 'landscape'}
+                flip={i % 2 === 1}
+              />
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const buttons = document.querySelectorAll<HTMLButtonElement>('[data-sc-filter-controls] button[data-filter]');
+    const items = document.querySelectorAll<HTMLElement>('[data-project]');
+
+    function applyFilter(value: string) {
+      items.forEach((item) => {
+        const raw = item.dataset.pillars ?? '';
+        const list = raw.split(',');
+        const visible = value === 'all' || list.includes(value);
+        item.style.display = visible ? '' : 'none';
+      });
+      buttons.forEach((btn) => {
+        const active = btn.dataset.filter === value;
+        btn.setAttribute('aria-pressed', String(active));
+        if (active) {
+          btn.classList.remove('sc-chip-inactive');
+          btn.classList.add('sc-chip-active');
+        } else {
+          btn.classList.remove('sc-chip-active');
+          btn.classList.add('sc-chip-inactive');
+        }
+      });
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => applyFilter(btn.dataset.filter ?? 'all'));
+    });
+  </script>
+</BaseLayout>

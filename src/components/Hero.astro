@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import GridlineFrame from './GridlineFrame.astro';
+import MeshGlow from './MeshGlow.astro';
+import Reveal from './Reveal.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+  image: string;
+  imageAlt: string;
+  primaryCta?: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+}
+
+const {
+  eyebrow,
+  title,
+  lede,
+  image,
+  imageAlt,
+  primaryCta,
+  secondaryCta,
+} = Astro.props;
+---
+<section class="relative isolate overflow-hidden min-h-[92vh] w-full">
+  <GridlineFrame tone="dark" columns={12} />
+  <MeshGlow position="top-right" size="xl" intensity={0.18} />
+  <MeshGlow position="bottom-left" size="lg" intensity={0.10} />
+
+  <div class="absolute inset-0 -z-10">
+    <Image
+      src={image}
+      alt={imageAlt}
+      width={2400}
+      height={1600}
+      widths={[720, 1200, 1800, 2400]}
+      sizes="100vw"
+      class="h-full w-full object-cover opacity-40"
+      loading="eager"
+      format="webp"
+    />
+    <div class="absolute inset-0 sc-overlay-hero"></div>
+  </div>
+
+  <div class="relative z-10 mx-auto flex min-h-[92vh] max-w-[1440px] flex-col justify-end px-6 pb-24 pt-40 md:px-10 md:pb-32" data-reveal-group>
+    <Reveal>
+      <p class="eyebrow">{eyebrow}</p>
+    </Reveal>
+    <Reveal>
+      <h1 class="mt-6 max-w-5xl font-display text-[clamp(2.75rem,7vw,7rem)] leading-[0.98] tracking-tight sc-text-primary">
+        <Fragment set:html={title} />
+      </h1>
+    </Reveal>
+    {lede && (
+      <Reveal>
+        <p class="mt-8 max-w-xl text-base leading-relaxed sc-text-muted md:text-lg">{lede}</p>
+      </Reveal>
+    )}
+    {(primaryCta || secondaryCta) && (
+      <Reveal>
+        <div class="mt-10 flex flex-wrap items-center gap-4">
+          {primaryCta && (
+            <a href={primaryCta.href} class="sc-btn-primary group">
+              {primaryCta.label}
+              <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </a>
+          )}
+          {secondaryCta && (
+            <a href={secondaryCta.href} class="sc-btn-secondary">
+              {secondaryCta.label}
+              <span>→</span>
+            </a>
+          )}
+        </div>
+      </Reveal>
+    )}
+  </div>
+</section>

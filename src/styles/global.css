@@ -1,0 +1,354 @@
+@import "tailwindcss";
+
+/* ============================================================================
+ * SCBL Design System — three-layer tokens
+ *
+ *   L1 Primitives (@theme)   The seven brand colors + two font families.
+ *                            Every downstream value resolves to one of these.
+ *   L2 Semantic (:root)      Intent — surface, text, border, accent, overlay.
+ *   L3 Component (:root)     Recipes — button, input, card, overlay.
+ *   Utilities (@layer)       Short aliases so component markup stays readable.
+ *
+ * Exception: GridlineFrame is allowed border-neutral-800/10 and
+ * border-neutral-200/50 — the one documented break from the palette.
+ * MeshGlow reads --color-sc-gold directly with a parameterised intensity —
+ * a deliberate primitive-level effect, not a token miss.
+ * ==========================================================================*/
+
+@theme {
+  --color-sc-navy: #050C16;
+  --color-sc-gold: #CBA66C;
+  --color-sc-gold-hi: #E6C882;
+  --color-sc-gold-deep: #A0783C;
+  --color-sc-ivory: #F8F5F0;
+  --color-sc-stone: #8C857A;
+  --color-sc-ink: #0E1116;
+
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* L2 — Semantic tokens */
+:root {
+  /* Surface (navy scale) */
+  --sc-surface-canvas:          var(--color-sc-navy);
+  --sc-surface-veil-40:         color-mix(in oklab, var(--color-sc-navy) 40%, transparent);
+  --sc-surface-veil-50:         color-mix(in oklab, var(--color-sc-navy) 50%, transparent);
+  --sc-surface-veil-60:         color-mix(in oklab, var(--color-sc-navy) 60%, transparent);
+  --sc-surface-elevated:        color-mix(in oklab, var(--color-sc-navy) 70%, transparent);
+  --sc-surface-elevated-strong: color-mix(in oklab, var(--color-sc-navy) 95%, transparent);
+  --sc-surface-ivory:           var(--color-sc-ivory);
+  --sc-surface-ink:             var(--color-sc-ink);
+
+  /* Text */
+  --sc-text-primary-on-dark:    var(--color-sc-ivory);
+  --sc-text-secondary-on-dark:  color-mix(in oklab, var(--color-sc-ivory) 85%, transparent);
+  --sc-text-muted:              var(--color-sc-stone);
+  --sc-text-muted-strong:       color-mix(in oklab, var(--color-sc-stone) 85%, transparent);
+  --sc-text-primary-on-light:   var(--color-sc-ink);
+  --sc-text-accent:             var(--color-sc-gold);
+  --sc-text-accent-hover:       var(--color-sc-gold-hi);
+  --sc-text-accent-subdued:     var(--color-sc-gold-deep);
+  --sc-text-placeholder:        color-mix(in oklab, var(--color-sc-stone) 50%, transparent);
+
+  /* Border — dark surfaces */
+  --sc-border-chrome-dark:      color-mix(in oklab, var(--color-sc-gold-deep) 15%, transparent);
+  --sc-border-hairline-dark:    color-mix(in oklab, var(--color-sc-gold) 15%, transparent);
+  --sc-border-hairline-hi-dark: color-mix(in oklab, var(--color-sc-gold) 20%, transparent);
+  --sc-border-soft-dark:        color-mix(in oklab, var(--color-sc-gold-deep) 30%, transparent);
+  --sc-border-firm-dark:        color-mix(in oklab, var(--color-sc-gold-deep) 40%, transparent);
+
+  /* Border — light surfaces */
+  --sc-border-hairline-light:   color-mix(in oklab, var(--color-sc-ink) 10%, transparent);
+
+  /* Border — accent */
+  --sc-border-accent:           var(--color-sc-gold);
+  --sc-border-accent-hi:        var(--color-sc-gold-hi);
+  --sc-border-accent-soft:      color-mix(in oklab, var(--color-sc-gold) 40%, transparent);
+  --sc-border-accent-firm:      color-mix(in oklab, var(--color-sc-gold) 60%, transparent);
+
+  /* Accent scales */
+  --sc-accent-selection:        color-mix(in oklab, var(--color-sc-gold) 40%, transparent);
+  --sc-accent-divider:          color-mix(in oklab, var(--color-sc-gold-deep) 60%, transparent);
+
+  /* Overlays */
+  --sc-overlay-image-bottom:    color-mix(in oklab, var(--color-sc-navy) 50%, transparent);
+}
+
+/* L3 — Component tokens */
+:root {
+  /* Buttons */
+  --sc-btn-primary-bg:            var(--sc-text-accent);
+  --sc-btn-primary-fg:            var(--sc-surface-canvas);
+  --sc-btn-primary-border:        var(--sc-border-accent);
+  --sc-btn-primary-bg-hover:      var(--sc-text-accent-hover);
+  --sc-btn-primary-border-hover:  var(--sc-border-accent-hi);
+
+  --sc-btn-secondary-fg:              var(--sc-text-primary-on-dark);
+  --sc-btn-secondary-border:          var(--sc-border-accent-soft);
+  --sc-btn-secondary-border-hover:    var(--sc-border-accent);
+  --sc-btn-secondary-fg-hover:        var(--sc-text-accent-hover);
+
+  /* Inputs */
+  --sc-input-fg:            var(--sc-text-primary-on-dark);
+  --sc-input-border:        var(--sc-border-firm-dark);
+  --sc-input-border-focus:  var(--sc-border-accent);
+  --sc-input-placeholder:   var(--sc-text-placeholder);
+
+  /* Cards */
+  --sc-card-surface-dark:       var(--sc-surface-canvas);
+  --sc-card-border-dark:        var(--sc-border-hairline-dark);
+  --sc-card-border-dark-hover:  var(--sc-border-accent);
+  --sc-card-surface-light:      var(--sc-surface-ivory);
+  --sc-card-border-light:       var(--sc-border-hairline-light);
+  --sc-card-border-light-hover: var(--sc-border-accent);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    background: var(--sc-surface-canvas);
+    color: var(--sc-text-primary-on-dark);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--sc-accent-selection);
+    color: var(--sc-text-primary-on-dark);
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+  .font-body    { font-family: var(--font-body); }
+
+  .eyebrow {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--sc-text-accent);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: var(--font-body);
+  }
+
+  .hairline {
+    height: 1px;
+    background: var(--sc-accent-divider);
+  }
+
+  /* Surface aliases */
+  .sc-bg-canvas           { background-color: var(--sc-surface-canvas); }
+  .sc-bg-veil-50          { background-color: var(--sc-surface-veil-50); }
+  .sc-bg-veil-60          { background-color: var(--sc-surface-veil-60); }
+  .sc-bg-elevated         { background-color: var(--sc-surface-elevated); }
+  .sc-bg-elevated-strong  { background-color: var(--sc-surface-elevated-strong); }
+  .sc-bg-ivory            { background-color: var(--sc-surface-ivory); }
+
+  /* Text aliases */
+  .sc-text-primary        { color: var(--sc-text-primary-on-dark); }
+  .sc-text-primary-light  { color: var(--sc-text-primary-on-light); }
+  .sc-text-secondary      { color: var(--sc-text-secondary-on-dark); }
+  .sc-text-muted          { color: var(--sc-text-muted); }
+  .sc-text-muted-strong   { color: var(--sc-text-muted-strong); }
+  .sc-text-accent         { color: var(--sc-text-accent); }
+  .sc-text-accent-hover   { color: var(--sc-text-accent-hover); }
+  .sc-text-accent-subdued { color: var(--sc-text-accent-subdued); }
+
+  /* Border aliases */
+  .sc-border-chrome         { border-color: var(--sc-border-chrome-dark); }
+  .sc-border-hairline       { border-color: var(--sc-border-hairline-dark); }
+  .sc-border-hairline-hi    { border-color: var(--sc-border-hairline-hi-dark); }
+  .sc-border-soft           { border-color: var(--sc-border-soft-dark); }
+  .sc-border-firm           { border-color: var(--sc-border-firm-dark); }
+  .sc-border-hairline-light { border-color: var(--sc-border-hairline-light); }
+  .sc-border-accent         { border-color: var(--sc-border-accent); }
+  .sc-border-accent-soft    { border-color: var(--sc-border-accent-soft); }
+  .sc-border-accent-firm    { border-color: var(--sc-border-accent-firm); }
+
+  /* Component recipes — buttons */
+  .sc-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid var(--sc-btn-primary-border);
+    background-color: var(--sc-btn-primary-bg);
+    color: var(--sc-btn-primary-fg);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: background-color 300ms, border-color 300ms;
+  }
+  .sc-btn-primary:hover,
+  .sc-btn-primary:focus-visible {
+    background-color: var(--sc-btn-primary-bg-hover);
+    border-color: var(--sc-btn-primary-border-hover);
+  }
+  .sc-btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .sc-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid var(--sc-btn-secondary-border);
+    color: var(--sc-btn-secondary-fg);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    transition: border-color 300ms, color 300ms;
+  }
+  .sc-btn-secondary:hover,
+  .sc-btn-secondary:focus-visible {
+    border-color: var(--sc-btn-secondary-border-hover);
+    color: var(--sc-btn-secondary-fg-hover);
+  }
+
+  /* Component recipes — inputs */
+  .sc-input {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--sc-input-border);
+    color: var(--sc-input-fg);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    outline: none;
+    transition: border-color 300ms;
+  }
+  .sc-input:focus { border-color: var(--sc-input-border-focus); }
+  .sc-input::placeholder { color: var(--sc-input-placeholder); }
+
+  .sc-textarea {
+    background: transparent;
+    border: 1px solid var(--sc-input-border);
+    color: var(--sc-input-fg);
+    padding: 1rem;
+    outline: none;
+    transition: border-color 300ms;
+  }
+  .sc-textarea:focus { border-color: var(--sc-input-border-focus); }
+  .sc-textarea::placeholder { color: var(--sc-input-placeholder); }
+
+  /* Component recipes — cards */
+  .sc-card-dark {
+    background-color: var(--sc-card-surface-dark);
+    border: 1px solid var(--sc-card-border-dark);
+    color: var(--sc-text-primary-on-dark);
+    transition: border-color 500ms;
+  }
+  .sc-card-dark:hover { border-color: var(--sc-card-border-dark-hover); }
+
+  .sc-card-ivory {
+    background-color: var(--sc-card-surface-light);
+    border: 1px solid var(--sc-card-border-light);
+    color: var(--sc-text-primary-on-light);
+    transition: border-color 500ms;
+  }
+  .sc-card-ivory:hover { border-color: var(--sc-card-border-light-hover); }
+
+  /* Overlays */
+  .sc-overlay-hero {
+    background-image: linear-gradient(
+      to bottom,
+      var(--sc-surface-veil-40),
+      var(--sc-surface-veil-60),
+      var(--sc-surface-canvas)
+    );
+  }
+  .sc-overlay-scrim {
+    background-image: linear-gradient(
+      to bottom,
+      var(--sc-surface-veil-60),
+      var(--sc-surface-elevated),
+      var(--sc-surface-canvas)
+    );
+  }
+  .sc-overlay-image-bottom-to-top {
+    background-image: linear-gradient(to top, var(--sc-overlay-image-bottom), transparent);
+  }
+
+  /* Link — accent with hover to accent-hover */
+  .sc-link-accent {
+    color: var(--sc-text-accent);
+    transition: color 300ms;
+  }
+  .sc-link-accent:hover,
+  .sc-link-accent:focus-visible {
+    color: var(--sc-text-accent-hover);
+  }
+
+  /* Chip — pill-style filter buttons (portfolio filter) */
+  .sc-chip-active {
+    border: 1px solid var(--sc-border-accent);
+    background-color: var(--sc-text-accent);
+    color: var(--sc-surface-canvas);
+  }
+  .sc-chip-inactive {
+    border: 1px solid color-mix(in oklab, var(--color-sc-gold) 30%, transparent);
+    color: var(--sc-text-primary-on-dark);
+    transition: border-color 300ms, color 300ms;
+  }
+  .sc-chip-inactive:hover,
+  .sc-chip-inactive:focus-visible {
+    border-color: var(--sc-border-accent);
+    color: var(--sc-text-accent-hover);
+  }
+
+  /* Line — divider color used as background (grid gap-px trick) */
+  .sc-bg-line       { background-color: var(--sc-border-soft-dark); }
+  .sc-bg-line-light { background-color: var(--sc-border-hairline-light); }
+
+  /* Motion */
+  .sc-reveal {
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .sc-reveal.is-revealed {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .gold-underline {
+    background-image: linear-gradient(to right, var(--sc-text-accent), var(--sc-text-accent));
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 400ms ease-out;
+  }
+  .gold-underline:hover,
+  .gold-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-reveal {
+    transition: none;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

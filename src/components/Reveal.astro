@@ -1,0 +1,18 @@
+---
+interface Props {
+  as?: string;
+  delay?: number;
+  y?: number;
+  class?: string;
+}
+const { as: Tag = 'div', delay = 0, y = 16, class: className = '' } = Astro.props;
+---
+<Tag
+  class:list={['sc-reveal', className]}
+  data-reveal
+  data-reveal-delay={delay}
+  data-reveal-y={y}
+  style={`opacity:0; transform: translate3d(0, ${y}px, 0);`}
+>
+  <slot />
+</Tag>

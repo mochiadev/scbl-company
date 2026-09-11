@@ -1,0 +1,22 @@
+---
+interface Spec {
+  label: string;
+  value: string;
+}
+interface Props {
+  specs: Spec[];
+  heading?: string;
+}
+const { specs, heading = 'Technical Data' } = Astro.props;
+---
+<aside class="relative border sc-border-firm sc-bg-veil-60 p-8 backdrop-blur-sm">
+  <p class="eyebrow mb-6">{heading}</p>
+  <dl class="divide-y divide-[color:var(--sc-border-soft-dark)]">
+    {specs.map((s) => (
+      <div class="grid grid-cols-3 gap-4 py-4">
+        <dt class="tabular text-[11px] sc-text-muted col-span-1">{s.label}</dt>
+        <dd class="tabular text-sm sc-text-primary col-span-2 text-right md:text-left">{s.value}</dd>
+      </div>
+    ))}
+  </dl>
+</aside>

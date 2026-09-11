@@ -1,0 +1,138 @@
+---
+const pillars = [
+  { value: 'development', label: 'Property Development' },
+  { value: 'construction', label: 'Construction Services' },
+  { value: 'engineering', label: 'Engineering Services' },
+  { value: 'real-estate', label: 'Real Estate Services' },
+  { value: 'management', label: 'Project & Construction Management' },
+  { value: 'specialist', label: 'Specialist & Value-Added' },
+];
+
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+---
+<form
+  data-sc-contact
+  data-endpoint={endpoint}
+  class="grid gap-8"
+  novalidate
+>
+  <div class="grid gap-6 md:grid-cols-2">
+    <label class="flex flex-col gap-2">
+      <span class="eyebrow">Your Name</span>
+      <input type="text" name="name" required class="sc-input" placeholder="Full name" />
+    </label>
+    <label class="flex flex-col gap-2">
+      <span class="eyebrow">Email</span>
+      <input type="email" name="email" required class="sc-input" placeholder="you@company.com" />
+    </label>
+  </div>
+
+  <label class="flex flex-col gap-2">
+    <span class="eyebrow">Which pillar is your enquiry about?</span>
+    <select name="pillar" required data-sc-pillar class="sc-input">
+      <option value="" class="sc-bg-canvas">Select a pillar…</option>
+      {pillars.map((p) => (
+        <option value={p.value} class="sc-bg-canvas">{p.label}</option>
+      ))}
+    </select>
+  </label>
+
+  <div data-sc-conditional data-pillar="development,construction,engineering,management,specialist" class="hidden grid gap-6 md:grid-cols-2">
+    <label class="flex flex-col gap-2">
+      <span class="eyebrow">Project Location</span>
+      <input type="text" name="location" class="sc-input" placeholder="City, district" />
+    </label>
+    <label class="flex flex-col gap-2">
+      <span class="eyebrow">Estimated GFA (m²)</span>
+      <input type="text" name="gfa" class="sc-input" placeholder="e.g. 4,200" />
+    </label>
+  </div>
+
+  <div data-sc-conditional data-pillar="real-estate" class="hidden grid gap-6 md:grid-cols-2">
+    <label class="flex flex-col gap-2">
+      <span class="eyebrow">Instruction Type</span>
+      <select name="instruction" class="sc-input">
+        <option value="" class="sc-bg-canvas">Select…</option>
+        <option value="sales" class="sc-bg-canvas">Sales & Marketing</option>
+        <option value="leasing" class="sc-bg-canvas">Leasing & Tenant Rep</option>
+        <option value="advisory" class="sc-bg-canvas">Investment Advisory</option>
+        <option value="valuation" class="sc-bg-canvas">Valuation & Due Diligence</option>
+      </select>
+    </label>
+    <label class="flex flex-col gap-2">
+      <span class="eyebrow">Ticket Size (USD)</span>
+      <input type="text" name="ticket" class="sc-input" placeholder="e.g. 5m–15m" />
+    </label>
+  </div>
+
+  <label class="flex flex-col gap-2">
+    <span class="eyebrow">Tell us more</span>
+    <textarea name="message" rows="5" required class="sc-textarea" placeholder="Programme, budget range, sensitivities, timeline…"></textarea>
+  </label>
+
+  <div class="flex items-center justify-between border-t sc-border-soft pt-6">
+    <p class="text-xs sc-text-muted" data-sc-status role="status" aria-live="polite">
+      Replies within one business day.
+    </p>
+    <button type="submit" class="sc-btn-primary group">
+      <span>Send Enquiry</span>
+      <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+    </button>
+  </div>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-sc-contact]');
+  const status = form?.querySelector<HTMLElement>('[data-sc-status]');
+  const pillarSelect = form?.querySelector<HTMLSelectElement>('[data-sc-pillar]');
+  const conditionals = form?.querySelectorAll<HTMLElement>('[data-sc-conditional]') ?? [];
+
+  function syncConditional() {
+    const value = pillarSelect?.value ?? '';
+    conditionals.forEach((block) => {
+      const raw = block.dataset.pillar ?? '';
+      const allowed = raw.split(',').map((s) => s.trim());
+      if (value && allowed.includes(value)) {
+        block.classList.remove('hidden');
+      } else {
+        block.classList.add('hidden');
+      }
+    });
+  }
+  pillarSelect?.addEventListener('change', syncConditional);
+  syncConditional();
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    button?.setAttribute('disabled', 'true');
+    if (status) status.textContent = 'Sending…';
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    const endpoint = form.dataset.endpoint;
+    try {
+      if (endpoint) {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+      } else {
+        console.log('[Signature Crest] Contact submission (no endpoint configured):', data);
+      }
+      if (status) status.textContent = 'Enquiry received. We’ll be in touch within one business day.';
+      form.reset();
+      syncConditional();
+    } catch (err) {
+      if (status) status.textContent = 'Something went wrong. Please email hello@signaturecrest.com.';
+      console.error(err);
+    } finally {
+      button?.removeAttribute('disabled');
+    }
+  });
+</script>

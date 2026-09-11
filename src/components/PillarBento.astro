@@ -1,0 +1,36 @@
+---
+import PillarCard from './PillarCard.astro';
+
+interface Pillar {
+  slug: string;
+  title: string;
+  eyebrow: string;
+  href: string;
+  icon: string;
+  subServices?: string[];
+}
+
+interface Props {
+  pillars: Pillar[];
+  tone?: 'navy' | 'ivory';
+}
+
+const { pillars, tone = 'navy' } = Astro.props;
+
+const spans: Array<'sm' | 'md' | 'lg'> = ['lg', 'md', 'sm', 'sm', 'md', 'lg'];
+---
+<div class="grid grid-cols-1 gap-4 md:grid-cols-12 md:auto-rows-[minmax(220px,auto)]" data-reveal-group>
+  {pillars.map((p, i) => (
+    <div data-reveal>
+      <PillarCard
+        eyebrow={p.eyebrow}
+        title={p.title}
+        href={p.href}
+        icon={p.icon}
+        span={spans[i % spans.length]}
+        tone={tone}
+        subServices={p.subServices}
+      />
+    </div>
+  ))}
+</div>

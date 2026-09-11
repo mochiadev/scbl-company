@@ -1,0 +1,120 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '@fontsource/playfair-display/500.css';
+import '@fontsource/playfair-display/600.css';
+import '@fontsource/playfair-display/700.css';
+import '@fontsource-variable/inter/index.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import NoiseOverlay from '../components/NoiseOverlay.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  bodyClass?: string;
+}
+
+const {
+  title = 'Signature Crest Builders',
+  description = 'Signature Crest Builders Limited — premium real estate development, construction, and engineering.',
+  bodyClass = '',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#050C16" />
+    <title>{title}</title>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/_astro/playfair-display-latin-600-normal.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/_astro/inter-latin-wght-normal.woff2"
+      crossorigin
+    />
+
+    <ClientRouter />
+  </head>
+  <body class:list={['sc-bg-canvas sc-text-primary', bodyClass]}>
+    <NoiseOverlay />
+    <Header />
+    <main id="content" class="pt-20">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import Lenis from 'lenis';
+      import { animate, inView, stagger } from 'motion';
+
+      let lenis: Lenis | null = null;
+
+      function bootLenis() {
+        if (typeof window === 'undefined') return;
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce) return;
+        lenis?.destroy();
+        lenis = new Lenis({
+          duration: 1.2,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+        });
+        function raf(time: number) {
+          lenis?.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+      }
+
+      function bootReveal() {
+        const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+        if (!targets.length) return;
+        const groups = new Map<HTMLElement, HTMLElement[]>();
+        targets.forEach((el) => {
+          const parent = (el.closest<HTMLElement>('[data-reveal-group]') ?? el.parentElement) as HTMLElement;
+          const list = groups.get(parent) ?? [];
+          list.push(el);
+          groups.set(parent, list);
+        });
+        groups.forEach((els, parent) => {
+          inView(parent, () => {
+            animate(
+              els,
+              { opacity: [0, 1], transform: ['translate3d(0, 16px, 0)', 'translate3d(0, 0, 0)'] },
+              { duration: 0.7, delay: stagger(0.06), easing: [0.16, 1, 0.3, 1] }
+            );
+            els.forEach((el) => el.classList.add('is-revealed'));
+            return () => {};
+          }, { margin: '0px 0px -10% 0px' });
+        });
+      }
+
+      function init() {
+        bootLenis();
+        bootReveal();
+      }
+
+      init();
+
+      document.addEventListener('astro:after-swap', () => {
+        lenis?.destroy();
+        lenis = null;
+        init();
+      });
+    </script>
+  </body>
+</html>

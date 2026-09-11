@@ -1,0 +1,21 @@
+---
+interface Props {
+  tone?: 'dark' | 'light';
+  columns?: number;
+  class?: string;
+}
+const { tone = 'dark', columns = 12, class: className = '' } = Astro.props;
+const line = tone === 'dark' ? 'border-neutral-800/10' : 'border-neutral-200/50';
+---
+<div
+  class:list={['pointer-events-none absolute inset-0 z-0 grid', className]}
+  style={`grid-template-columns: repeat(${columns}, minmax(0, 1fr));`}
+  aria-hidden="true"
+>
+  {Array.from({ length: columns + 1 }).map((_, i) => (
+    <div
+      class:list={['border-l', line]}
+      style={`grid-column-start: ${i + 1}; grid-row: 1 / -1;`}
+    />
+  ))}
+</div>

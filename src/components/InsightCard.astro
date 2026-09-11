@@ -1,0 +1,41 @@
+---
+interface Props {
+  title: string;
+  slug: string;
+  pillar: string;
+  published: Date;
+  reading_time: number;
+  excerpt: string;
+}
+
+const pillarLabels: Record<string, string> = {
+  development: 'Development',
+  construction: 'Construction',
+  engineering: 'Engineering',
+  'real-estate': 'Real Estate',
+  management: 'Management',
+  specialist: 'Specialist',
+};
+
+const { title, slug, pillar, published, reading_time, excerpt } = Astro.props;
+const dateStr = published.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+---
+<a href={`/insights/${slug}`} class="group flex flex-col justify-between border sc-border-soft p-8 transition-colors duration-500 hover:border-[color:var(--sc-border-accent)] min-h-[300px]">
+  <div>
+    <p class="tabular text-[11px] sc-text-accent">
+      {pillarLabels[pillar] ?? pillar} · {reading_time} min
+    </p>
+    <h3 class="mt-4 font-display text-2xl leading-tight sc-text-primary md:text-3xl transition-colors duration-500 group-hover:text-[color:var(--sc-text-accent-hover)]">
+      {title}
+    </h3>
+    <p class="mt-4 text-sm leading-relaxed sc-text-muted">{excerpt}</p>
+  </div>
+  <div class="mt-8 flex items-center justify-between">
+    <span class="tabular text-[11px] sc-text-accent-subdued">{dateStr}</span>
+    <span class="sc-text-accent transition-transform duration-500 group-hover:translate-x-2">→</span>
+  </div>
+</a>
