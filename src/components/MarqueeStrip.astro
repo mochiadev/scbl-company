@@ -1,0 +1,126 @@
+---
+/**
+ * MarqueeStrip — two overlapping tilted ribbons scrolling in opposite
+ * directions, each carrying a repeated phrase separated by a diamond
+ * ornament. Used as a brand-anthem punctuation between sections.
+ *
+ * Design brief: subtext-strip.png (lime/white on black) reworked in the
+ * SCBL palette — gold ribbon over ivory ribbon on the navy canvas, with
+ * the sc-navy / sc-ink text pairing for contrast.
+ */
+interface Props {
+  top?: string;              // top ribbon phrase
+  bottom?: string;           // bottom ribbon phrase
+  duration?: number;         // seconds per full scroll loop
+  repeats?: number;          // how many times each phrase repeats inside the loop
+}
+
+const {
+  top = 'BUILT ON TRUST',
+  bottom = 'DESIGNED FOR LEGACY',
+  duration = 42,
+  repeats = 6,
+} = Astro.props;
+
+// Diamond ornament — echoes the finial in subtext.png
+const ornament = `<svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true" class="scbl-orn"><path d="M10 2 L18 10 L10 18 L2 10 Z M10 6 L14 10 L10 14 L6 10 Z" fill="currentColor"/></svg>`;
+
+const topItems = Array.from({ length: repeats });
+const bottomItems = Array.from({ length: repeats });
+---
+<section
+  class="relative overflow-hidden sc-bg-canvas"
+  aria-label="Signature Crest — built on trust, designed for legacy"
+>
+  <!-- top ribbon: gold, tilts down-to-up from left -->
+  <div class="scbl-ribbon scbl-ribbon-top">
+    <div class="scbl-ribbon-track" style={`animation-duration:${duration}s;`}>
+      {[...topItems, ...topItems].map(() => (
+        <span class="scbl-ribbon-item">
+          <span>{top}</span>
+          <Fragment set:html={ornament} />
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- bottom ribbon: ivory, tilts the opposite way, scrolls the opposite direction -->
+  <div class="scbl-ribbon scbl-ribbon-bottom">
+    <div class="scbl-ribbon-track scbl-ribbon-track-reverse" style={`animation-duration:${duration}s;`}>
+      {[...bottomItems, ...bottomItems].map(() => (
+        <span class="scbl-ribbon-item">
+          <span>{bottom}</span>
+          <Fragment set:html={ornament} />
+        </span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    padding-block: clamp(2.5rem, 6vw, 5rem);
+  }
+
+  .scbl-ribbon {
+    position: relative;
+    width: 108%;
+    left: -4%;
+    padding-block: 0.9rem;
+    box-shadow: 0 8px 28px color-mix(in oklab, var(--color-sc-navy) 60%, transparent);
+    overflow: hidden;
+  }
+  .scbl-ribbon-top {
+    background: var(--color-sc-gold);
+    color: var(--color-sc-navy);
+    transform: rotate(-3deg);
+    z-index: 2;
+  }
+  .scbl-ribbon-bottom {
+    background: var(--color-sc-ivory);
+    color: var(--color-sc-ink);
+    transform: rotate(2.5deg);
+    margin-top: -1.25rem;
+    z-index: 1;
+  }
+
+  .scbl-ribbon-track {
+    display: flex;
+    gap: 2.5rem;
+    width: max-content;
+    animation-name: scbl-marquee;
+    animation-duration: 42s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+  .scbl-ribbon-track-reverse { animation-name: scbl-marquee-reverse; }
+
+  .scbl-ribbon-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 48;
+    font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .scbl-orn { flex-shrink: 0; opacity: 0.9; }
+
+  @keyframes scbl-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @keyframes scbl-marquee-reverse {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scbl-ribbon-track { animation: none; transform: translateX(-25%); }
+  }
+</style>

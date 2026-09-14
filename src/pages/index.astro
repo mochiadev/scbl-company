@@ -5,9 +5,8 @@ import Hero from '../components/Hero.astro';
 import RunningHead from '../components/RunningHead.astro';
 import PillarBento from '../components/PillarBento.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import InsightCard from '../components/InsightCard.astro';
+import MarqueeStrip from '../components/MarqueeStrip.astro';
 import MeshGlow from '../components/MeshGlow.astro';
-import Reveal from '../components/Reveal.astro';
 import { pillars } from '../lib/pillars.ts';
 
 const portfolio = await getCollection('portfolio');
@@ -16,7 +15,7 @@ const featured = portfolio.slice(0, 3);
 
 const insights = await getCollection('insights');
 insights.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
-const notes = insights.slice(0, 2);
+const notes = insights.slice(0, 3);
 
 const services = await getCollection('services');
 const bentoPillars = pillars.map((p) => {
@@ -28,9 +27,14 @@ const bentoPillars = pillars.map((p) => {
     icon: p.icon,
     short: p.short,
     subServices: (record?.data.sub_services ?? []).slice(0, 3),
-    image: p.image,
+    image: (p as any).image,
   };
 });
+
+const monthNames = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+function datestamp(d: Date) {
+  return { m: monthNames[d.getMonth()], d: String(d.getDate()).padStart(2, '0'), y: String(d.getFullYear()) };
+}
 ---
 <BaseLayout
   title="Signature Crest Builders — A single accountable practice"
@@ -82,6 +86,9 @@ const bentoPillars = pillars.map((p) => {
     </div>
   </section>
 
+  <!-- Brand anthem: crossed ribbons carrying the tagline -->
+  <MarqueeStrip top="BUILT ON TRUST" bottom="DESIGNED FOR LEGACY" />
+
   <!-- Selected work -->
   <section class="relative sc-section">
     <MeshGlow position="bottom-right" size="lg" intensity={0.06} />
@@ -112,10 +119,10 @@ const bentoPillars = pillars.map((p) => {
     </div>
   </section>
 
-  <!-- Insights -->
+  <!-- The work behind the work — Field Notes (dated index) + Voices (pull-quote) -->
   <section class="relative sc-section-tight">
     <div class="sc-container sc-gutter">
-      <div class="grid grid-cols-12 gap-8 mb-8 md:mb-12">
+      <div class="grid grid-cols-12 gap-8 mb-12 md:mb-16">
         <div class="col-span-12 md:col-span-4">
           <p class="sc-bracket-label">Field Notes</p>
         </div>
@@ -123,39 +130,113 @@ const bentoPillars = pillars.map((p) => {
           <h2 class="sc-display-lg sc-text-primary max-w-[24ch]">The work behind the work.</h2>
         </div>
       </div>
-      <div>
-        {notes.map((post) => (
-          <InsightCard
-            title={post.data.title}
-            slug={post.data.slug}
-            pillar={post.data.pillar}
-            published={post.data.published}
-            reading_time={post.data.reading_time}
-            excerpt={post.data.excerpt}
-            variant="row"
-          />
-        ))}
+
+      <div class="grid grid-cols-12 gap-10 md:gap-16">
+        <!-- Field Notes column — dated index -->
+        <div class="col-span-12 md:col-span-7">
+          <h3 class="sc-bracket-label mb-6">Notes</h3>
+          <ul class="border-t sc-border-hairline">
+            {notes.map((post) => {
+              const ds = datestamp(post.data.published);
+              return (
+                <li class="border-b sc-border-hairline py-6 md:py-7">
+                  <a
+                    href={`/insights/${post.data.slug}`}
+                    class="group grid grid-cols-12 gap-4 md:gap-6 items-baseline"
+                  >
+                    <div class="col-span-3 md:col-span-2 text-center">
+                      <p class="sc-slug sc-text-accent-subdued">{ds.m}</p>
+                      <p class="font-display sc-text-accent mt-1" style="font-size: 2rem; line-height: 1; font-variation-settings: 'opsz' 48;">{ds.d}</p>
+                      <p class="sc-slug sc-text-accent-subdued mt-1">{ds.y}</p>
+                    </div>
+                    <div class="col-span-9 md:col-span-10">
+                      <h4 class="sc-heading-md sc-text-primary transition-colors duration-500 group-hover:text-[color:var(--sc-text-accent-hover)]">
+                        {post.data.title}
+                      </h4>
+                      <p class="sc-small sc-text-muted mt-3 max-w-[60ch]">{post.data.excerpt}</p>
+                      <span class="sc-link sc-small sc-text-accent inline-block mt-3">Read the note</span>
+                    </div>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <a
+            href="/insights"
+            class="inline-flex items-center gap-3 mt-10 px-6 py-3 border sc-border-accent-firm rounded-full sc-text-accent hover:bg-[color:var(--sc-text-accent)] hover:text-[color:var(--sc-surface-canvas)] transition-colors sc-caption uppercase"
+          >
+            All Field Notes
+          </a>
+        </div>
+
+        <!-- Voices column — placeholder client testimonial slot -->
+        <div class="col-span-12 md:col-span-5 md:pl-8 md:border-l sc-border-hairline">
+          <h3 class="sc-bracket-label mb-6">Voices</h3>
+
+          <svg viewBox="0 0 32 24" width="36" height="27" aria-hidden="true" class="sc-text-accent-subdued opacity-60 mb-6">
+            <path fill="currentColor" d="M0 24V13.6C0 6.1 4.1 1.4 12.2 0v4.8C7.8 6.4 5.6 9.7 5.6 13.6H12V24H0zm20 0V13.6C20 6.1 24.1 1.4 32.2 0v4.8C27.8 6.4 25.6 9.7 25.6 13.6H32V24H20z"/>
+          </svg>
+
+          <blockquote class="font-display sc-text-primary" style="font-size: clamp(1.25rem, 2vw, 1.65rem); line-height: 1.35; font-variation-settings: 'opsz' 48; font-style: italic; font-weight: 500;">
+            Building from abroad shouldn't mean losing sleep over what's happening on site. Documented, on programme, and delivered with the discipline of a practice that thinks in decades, not deals — that is what a Signature Crest engagement looks like.
+          </blockquote>
+
+          <div class="mt-8 flex items-center gap-4">
+            <span class="block h-px w-10 bg-[color:var(--sc-text-accent)]"></span>
+            <p class="sc-slug sc-text-accent">
+              The Practice · Diaspora Engagement Note
+            </p>
+          </div>
+
+          <p class="sc-caption sc-text-muted mt-8 leading-relaxed">
+            A client-testimonial slot. Replace with verbatim quotes as they arrive; the layout accommodates one longform or a rotating shortform.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Anchor — quiet closing invitation -->
-  <section class="relative sc-section">
-    <div class="sc-container sc-gutter">
+  <!-- Anchor — full-bleed image-backed closing invitation -->
+  <section class="relative isolate min-h-[80vh] overflow-hidden">
+    <div class="absolute inset-0 -z-10 sc-final-cta-bg" aria-hidden="true"></div>
+    <div class="absolute inset-0 -z-10 sc-final-cta-scrim" aria-hidden="true"></div>
+
+    <div class="sc-container sc-gutter pt-24 md:pt-32">
       <RunningHead code="SCBL" rev="ANCHOR" section="A conversation" />
-      <div class="grid grid-cols-12 gap-8 mt-16 md:mt-20">
+    </div>
+
+    <div class="sc-container sc-gutter pt-16 md:pt-20 pb-24 md:pb-32">
+      <div class="grid grid-cols-12 gap-8">
         <div class="col-span-12 md:col-span-8">
-          <h2 class="sc-display-lg sc-text-primary max-w-[26ch]">
+          <h2 class="sc-display-xl sc-text-primary max-w-[22ch]">
             A conversation is where every Signature Crest asset begins.
           </h2>
         </div>
-        <div class="col-span-12 md:col-span-4 md:pt-8">
-          <p class="sc-body sc-text-muted">
+        <div class="col-span-12 md:col-span-4 md:pt-10">
+          <p class="sc-lede sc-text-secondary">
             Whether you are on-site in Accra or writing from London, Toronto, or New York — the same partner receives the enquiry and stays with the project through to the fiftieth year of the asset.
           </p>
           <a href="/contact#form" class="sc-btn-primary mt-8">Speak with the practice</a>
         </div>
       </div>
     </div>
+
+    <style>
+      .sc-final-cta-bg {
+        background-image: url('/final-cta.avif');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      .sc-final-cta-scrim {
+        background: linear-gradient(
+          to bottom,
+          color-mix(in oklab, var(--color-sc-navy) 55%, transparent) 0%,
+          color-mix(in oklab, var(--color-sc-navy) 70%, transparent) 45%,
+          color-mix(in oklab, var(--color-sc-navy) 88%, transparent) 100%
+        );
+      }
+    </style>
   </section>
 </BaseLayout>
