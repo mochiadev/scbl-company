@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
 
 interface Props {
   index: number;                 // 1..6 — pillar ordinal in the practice
@@ -10,6 +11,8 @@ interface Props {
   short?: string;                // one-line description
   subServices?: string[];        // inline chips, top 2 rendered
   emphasis?: 'lead' | 'standard';
+  image?: string;                // when set, renders a photo tile (top-row only)
+  imageAlt?: string;
 }
 
 const {
@@ -21,12 +24,16 @@ const {
   short,
   subServices = [],
   emphasis = 'standard',
+  image,
+  imageAlt,
 } = Astro.props;
 
-const surfaceClass = tone === 'ivory' ? 'sc-card-ivory' : 'sc-card-dark';
-const slugClass    = tone === 'ivory' ? 'sc-text-accent-subdued' : 'sc-text-accent-subdued';
-const mutedClass   = tone === 'ivory' ? 'sc-text-muted' : 'sc-text-muted';
-const chipBorder   = tone === 'ivory' ? 'sc-border-hairline-light' : 'sc-border-hairline';
+const imaged = Boolean(image);
+const surfaceClass = imaged ? 'sc-card-dark' : tone === 'ivory' ? 'sc-card-ivory' : 'sc-card-dark';
+const slugClass    = 'sc-text-accent-subdued';
+// Imaged tiles sit on a photo + scrim, so text always uses the on-dark palette regardless of tone.
+const mutedClass   = imaged ? 'sc-text-secondary' : tone === 'ivory' ? 'sc-text-muted' : 'sc-text-muted';
+const chipBorder   = imaged ? 'sc-border-hairline-dark' : tone === 'ivory' ? 'sc-border-hairline-light' : 'sc-border-hairline';
 ---
 <a
   href={href}
@@ -37,15 +44,31 @@ const chipBorder   = tone === 'ivory' ? 'sc-border-hairline-light' : 'sc-border-
     surfaceClass,
   ]}
 >
-  <div class="pointer-events-none absolute right-4 top-4 opacity-15 transition-opacity duration-500 group-hover:opacity-30">
-    <Icon name={icon} class="h-16 w-16 md:h-20 md:w-20 sc-text-accent" />
-  </div>
+  {imaged ? (
+    <div class="absolute inset-0 -z-10">
+      <Image
+        src={image as string}
+        alt={imageAlt ?? `${title} — Signature Crest Builders`}
+        width={1600}
+        height={1200}
+        widths={[600, 900, 1200, 1600]}
+        sizes="(min-width: 768px) 66vw, 100vw"
+        class="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.03]"
+        format="webp"
+      />
+      <div class="absolute inset-0 sc-overlay-scrim"></div>
+    </div>
+  ) : (
+    <div class="pointer-events-none absolute right-4 top-4 opacity-15 transition-opacity duration-500 group-hover:opacity-30">
+      <Icon name={icon} class="h-16 w-16 md:h-20 md:w-20 sc-text-accent" />
+    </div>
+  )}
 
   <header class="relative">
     <p class:list={['sc-slug', slugClass]}>
       Pillar {String(index).padStart(2, '0')} — {title.split(' ').slice(-1)[0]}
     </p>
-    <h3 class:list={['mt-4', emphasis === 'lead' ? 'sc-heading-lg' : 'sc-heading-md']}>
+    <h3 class:list={['mt-4', imaged ? 'sc-text-primary' : '', emphasis === 'lead' ? 'sc-heading-lg' : 'sc-heading-md']}>
       {title}
     </h3>
     {short && (
@@ -56,11 +79,11 @@ const chipBorder   = tone === 'ivory' ? 'sc-border-hairline-light' : 'sc-border-
   <footer class="relative mt-8 flex flex-wrap items-end justify-between gap-4">
     <ul class="flex flex-wrap gap-2">
       {subServices.slice(0, emphasis === 'lead' ? 3 : 2).map((s) => (
-        <li class:list={['sc-caption px-2.5 py-1 border', chipBorder, mutedClass]}>
+        <li class:list={['sc-caption px-2.5 py-1 border', chipBorder, imaged ? 'sc-text-secondary' : mutedClass]}>
           {s}
         </li>
       ))}
     </ul>
-    <span class="sc-small sc-text-accent sc-link">Read the pillar</span>
+    <span class:list={['sc-small sc-link', imaged ? 'sc-text-accent-hover' : 'sc-text-accent']}>Read the pillar</span>
   </footer>
 </a>

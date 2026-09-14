@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import RunningHead from '../components/RunningHead.astro';
@@ -43,6 +44,25 @@ const why = [
         <p>Founded on the principles of excellence and reliability, Signature Crest Builders Limited has grown into a trusted name in premium property development and construction in Ghana.</p>
         <p>Our journey began with a clear purpose: to raise the standard of building and development by uniting design ambition with engineering rigour and disciplined project delivery. Today, we operate across residential, commercial, and mixed-use sectors — offering clients a seamless end-to-end experience from land acquisition and master planning through construction, engineering, and real-estate solutions.</p>
         <p class="sc-text-primary">At the heart of our work is a belief that great buildings are more than structures; they are enduring assets that shape communities and preserve value for generations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photo band — the practice at work, grounding "Airport Residential, Accra" in something real -->
+  <section class="relative sc-section-tight">
+    <div class="sc-container sc-gutter">
+      <div class="relative overflow-hidden aspect-[16/7] md:aspect-[16/6]">
+        <Image
+          src="https://picsum.photos/seed/scbl-about-team/2400/1000"
+          alt="Two Signature Crest engineers reviewing construction plans on site."
+          width={2400}
+          height={1000}
+          widths={[900, 1400, 1900, 2400]}
+          sizes="100vw"
+          class="h-full w-full object-cover"
+          format="webp"
+        />
+        <div class="absolute inset-0 sc-overlay-image-bottom-to-top"></div>
       </div>
     </div>
   </section>

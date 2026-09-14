@@ -5,6 +5,7 @@ export interface PillarMeta {
   href: string;
   icon: string;
   short: string;
+  image?: string;   // only the top-row bento tiles (1–2) render a photo
 }
 
 export const pillars: PillarMeta[] = [
@@ -15,6 +16,7 @@ export const pillars: PillarMeta[] = [
     href: '/services/development',
     icon: 'lucide:landmark',
     short: 'Feasibility, master-plan, and end-to-end delivery of luxury residential, commercial, and mixed-use assets.',
+    image: 'https://picsum.photos/seed/scbl-development/1600/1200',
   },
   {
     slug: 'construction',
@@ -23,6 +25,7 @@ export const pillars: PillarMeta[] = [
     href: '/services/construction',
     icon: 'ph:crane-thin',
     short: 'Design-and-build, high-end residential, commercial, structural works, and luxury refurbishment.',
+    image: 'https://picsum.photos/seed/scbl-construction/1600/1200',
   },
   {
     slug: 'engineering',

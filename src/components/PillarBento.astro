@@ -8,6 +8,7 @@ interface Pillar {
   icon: string;
   short?: string;
   subServices?: string[];
+  image?: string;
 }
 
 interface Props {
@@ -27,12 +28,14 @@ const [p1, p2, p3, p4, p5, p6] = pillars;
     <PillarCard
       index={1} title={p1.title} href={p1.href} icon={p1.icon}
       short={p1.short} subServices={p1.subServices ?? []} tone={tone} emphasis="lead"
+      image={p1.image}
     />
   </div>
   <div class="col-span-12 md:col-span-4">
     <PillarCard
       index={2} title={p2.title} href={p2.href} icon={p2.icon}
       short={p2.short} subServices={p2.subServices ?? []} tone={tone}
+      image={p2.image}
     />
   </div>
 
