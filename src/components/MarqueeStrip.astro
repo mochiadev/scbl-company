@@ -1,13 +1,12 @@
 ---
 /**
- * MarqueeStrip — two ribbons that genuinely cross to form an X, with the
- * crossing point pulled off-centre toward the right side. Each ribbon
- * scrolls its phrase in the opposite direction, separated by a diamond
- * ornament that echoes the finial in subtext.png.
+ * MarqueeStrip — two overlapping tilted ribbons scrolling in opposite
+ * directions, each carrying a repeated phrase separated by a diamond
+ * ornament. Used as a brand-anthem punctuation between sections.
  *
- * Design brief: subtext-strip.png reworked in the SCBL palette —
- * gold ribbon over ivory ribbon on the navy canvas, with the sc-navy
- * / sc-ink text pairing for contrast.
+ * Design brief: subtext-strip.png (lime/white on black) reworked in the
+ * SCBL palette — gold ribbon over ivory ribbon on the navy canvas, with
+ * the sc-navy / sc-ink text pairing for contrast.
  */
 interface Props {
   top?: string;              // top ribbon phrase
@@ -30,73 +29,68 @@ const topItems = Array.from({ length: repeats });
 const bottomItems = Array.from({ length: repeats });
 ---
 <section
-  class="relative sc-bg-canvas"
+  class="relative overflow-hidden sc-bg-canvas"
   aria-label="Signature Crest — built on trust, designed for legacy"
 >
-  <div class="scbl-stage">
-    <!-- top ribbon: gold, tilts down-to-up left→right -->
-    <div class="scbl-ribbon scbl-ribbon-top">
-      <div class="scbl-ribbon-track" style={`animation-duration:${duration}s;`}>
-        {[...topItems, ...topItems].map(() => (
-          <span class="scbl-ribbon-item">
-            <span>{top}</span>
-            <Fragment set:html={ornament} />
-          </span>
-        ))}
-      </div>
+  <!-- top ribbon: gold, tilts down-to-right through an off-centre-left pivot -->
+  <div class="scbl-ribbon scbl-ribbon-top" aria-hidden="true">
+    <div class="scbl-ribbon-track" style={`animation-duration:${duration}s;`}>
+      {[...topItems, ...topItems].map(() => (
+        <span class="scbl-ribbon-item">
+          <span>{top}</span>
+          <Fragment set:html={ornament} />
+        </span>
+      ))}
     </div>
+  </div>
 
-    <!-- bottom ribbon: ivory, tilts up-to-down left→right, scrolls the opposite way -->
-    <div class="scbl-ribbon scbl-ribbon-bottom">
-      <div class="scbl-ribbon-track scbl-ribbon-track-reverse" style={`animation-duration:${duration}s;`}>
-        {[...bottomItems, ...bottomItems].map(() => (
-          <span class="scbl-ribbon-item">
-            <span>{bottom}</span>
-            <Fragment set:html={ornament} />
-          </span>
-        ))}
-      </div>
+  <!-- bottom ribbon: ivory, opposite tilt through the same pivot -->
+  <div class="scbl-ribbon scbl-ribbon-bottom" aria-hidden="true">
+    <div class="scbl-ribbon-track scbl-ribbon-track-reverse" style={`animation-duration:${duration}s;`}>
+      {[...bottomItems, ...bottomItems].map(() => (
+        <span class="scbl-ribbon-item">
+          <span>{bottom}</span>
+          <Fragment set:html={ornament} />
+        </span>
+      ))}
     </div>
   </div>
 </section>
 
 <style>
+  /* Fixed-height stage — the X needs vertical range to actually cross. */
   section {
-    padding-block: clamp(1.5rem, 3vw, 3rem);
-  }
-
-  /* The stage clips the tilted ribbon corners so the X reads as
-     "two ribbons cropped by the viewport", not "two floating bands". */
-  .scbl-stage {
     position: relative;
-    height: clamp(190px, 24vw, 280px);
+    height: clamp(160px, 22vw, 260px);
     overflow: hidden;
   }
 
-  /* Both ribbons: absolute inside the stage, wider than it so their tilted
-     ends run off both edges. Same off-centre transform-origin means their
-     intersection lands near that shared pivot — biased to the right side. */
+  /* Ribbons are absolutely positioned so they share a pivot in space.
+     They extend beyond both container edges so the "right arm" of the X
+     runs full-width and looks properly splayed. */
   .scbl-ribbon {
     position: absolute;
-    left: -12%;
-    width: 124%;
+    top: 50%;
+    left: -15%;
+    width: 130%;
     padding-block: 0.9rem;
-    overflow: hidden;
     box-shadow: 0 8px 28px color-mix(in oklab, var(--color-sc-navy) 60%, transparent);
-    transform-origin: 65% 50%;
+    overflow: hidden;
+    /* Shared pivot: 30% into the ribbon's own width. Because the ribbon
+       spans -15%…115% of the container, this lands at container-x ≈ 24%
+       — the left-of-centre crossover the reference asks for. */
+    transform-origin: 30% center;
   }
   .scbl-ribbon-top {
-    top: 22%;
     background: var(--color-sc-gold);
     color: var(--color-sc-navy);
-    transform: rotate(-7deg);
+    transform: translateY(-50%) rotate(-6deg);
     z-index: 2;
   }
   .scbl-ribbon-bottom {
-    top: 54%;
     background: var(--color-sc-ivory);
     color: var(--color-sc-ink);
-    transform: rotate(7deg);
+    transform: translateY(-50%) rotate(6deg);
     z-index: 1;
   }
 
@@ -118,7 +112,7 @@ const bottomItems = Array.from({ length: repeats });
     gap: 2.5rem;
     font-family: var(--font-display);
     font-variation-settings: "opsz" 48;
-    font-size: clamp(1.4rem, 3vw, 2.4rem);
+    font-size: clamp(1.5rem, 3.4vw, 2.6rem);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -134,13 +128,6 @@ const bottomItems = Array.from({ length: repeats });
   @keyframes scbl-marquee-reverse {
     from { transform: translateX(-50%); }
     to   { transform: translateX(0); }
-  }
-
-  /* Tighten the X on narrow screens so the crossing stays inside the frame. */
-  @media (max-width: 640px) {
-    .scbl-stage { height: clamp(170px, 42vw, 220px); }
-    .scbl-ribbon-top    { transform: rotate(-9deg); top: 20%; }
-    .scbl-ribbon-bottom { transform: rotate(9deg);  top: 52%; }
   }
 
   @media (prefers-reduced-motion: reduce) {
