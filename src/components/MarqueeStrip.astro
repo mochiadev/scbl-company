@@ -1,12 +1,13 @@
 ---
 /**
- * MarqueeStrip — two overlapping tilted ribbons scrolling in opposite
- * directions, each carrying a repeated phrase separated by a diamond
- * ornament. Used as a brand-anthem punctuation between sections.
+ * MarqueeStrip — two ribbons that genuinely cross to form an X, with the
+ * crossing point pulled off-centre toward the right side. Each ribbon
+ * scrolls its phrase in the opposite direction, separated by a diamond
+ * ornament that echoes the finial in subtext.png.
  *
- * Design brief: subtext-strip.png (lime/white on black) reworked in the
- * SCBL palette — gold ribbon over ivory ribbon on the navy canvas, with
- * the sc-navy / sc-ink text pairing for contrast.
+ * Design brief: subtext-strip.png reworked in the SCBL palette —
+ * gold ribbon over ivory ribbon on the navy canvas, with the sc-navy
+ * / sc-ink text pairing for contrast.
  */
 interface Props {
   top?: string;              // top ribbon phrase
@@ -29,58 +30,73 @@ const topItems = Array.from({ length: repeats });
 const bottomItems = Array.from({ length: repeats });
 ---
 <section
-  class="relative overflow-hidden sc-bg-canvas"
+  class="relative sc-bg-canvas"
   aria-label="Signature Crest — built on trust, designed for legacy"
 >
-  <!-- top ribbon: gold, tilts down-to-up from left -->
-  <div class="scbl-ribbon scbl-ribbon-top">
-    <div class="scbl-ribbon-track" style={`animation-duration:${duration}s;`}>
-      {[...topItems, ...topItems].map(() => (
-        <span class="scbl-ribbon-item">
-          <span>{top}</span>
-          <Fragment set:html={ornament} />
-        </span>
-      ))}
+  <div class="scbl-stage">
+    <!-- top ribbon: gold, tilts down-to-up left→right -->
+    <div class="scbl-ribbon scbl-ribbon-top">
+      <div class="scbl-ribbon-track" style={`animation-duration:${duration}s;`}>
+        {[...topItems, ...topItems].map(() => (
+          <span class="scbl-ribbon-item">
+            <span>{top}</span>
+            <Fragment set:html={ornament} />
+          </span>
+        ))}
+      </div>
     </div>
-  </div>
 
-  <!-- bottom ribbon: ivory, tilts the opposite way, scrolls the opposite direction -->
-  <div class="scbl-ribbon scbl-ribbon-bottom">
-    <div class="scbl-ribbon-track scbl-ribbon-track-reverse" style={`animation-duration:${duration}s;`}>
-      {[...bottomItems, ...bottomItems].map(() => (
-        <span class="scbl-ribbon-item">
-          <span>{bottom}</span>
-          <Fragment set:html={ornament} />
-        </span>
-      ))}
+    <!-- bottom ribbon: ivory, tilts up-to-down left→right, scrolls the opposite way -->
+    <div class="scbl-ribbon scbl-ribbon-bottom">
+      <div class="scbl-ribbon-track scbl-ribbon-track-reverse" style={`animation-duration:${duration}s;`}>
+        {[...bottomItems, ...bottomItems].map(() => (
+          <span class="scbl-ribbon-item">
+            <span>{bottom}</span>
+            <Fragment set:html={ornament} />
+          </span>
+        ))}
+      </div>
     </div>
   </div>
 </section>
 
 <style>
   section {
-    padding-block: clamp(2.5rem, 6vw, 5rem);
+    padding-block: clamp(1.5rem, 3vw, 3rem);
   }
 
-  .scbl-ribbon {
+  /* The stage clips the tilted ribbon corners so the X reads as
+     "two ribbons cropped by the viewport", not "two floating bands". */
+  .scbl-stage {
     position: relative;
-    width: 108%;
-    left: -4%;
-    padding-block: 0.9rem;
-    box-shadow: 0 8px 28px color-mix(in oklab, var(--color-sc-navy) 60%, transparent);
+    height: clamp(190px, 24vw, 280px);
     overflow: hidden;
   }
+
+  /* Both ribbons: absolute inside the stage, wider than it so their tilted
+     ends run off both edges. Same off-centre transform-origin means their
+     intersection lands near that shared pivot — biased to the right side. */
+  .scbl-ribbon {
+    position: absolute;
+    left: -12%;
+    width: 124%;
+    padding-block: 0.9rem;
+    overflow: hidden;
+    box-shadow: 0 8px 28px color-mix(in oklab, var(--color-sc-navy) 60%, transparent);
+    transform-origin: 65% 50%;
+  }
   .scbl-ribbon-top {
+    top: 22%;
     background: var(--color-sc-gold);
     color: var(--color-sc-navy);
-    transform: rotate(-3deg);
+    transform: rotate(-7deg);
     z-index: 2;
   }
   .scbl-ribbon-bottom {
+    top: 54%;
     background: var(--color-sc-ivory);
     color: var(--color-sc-ink);
-    transform: rotate(2.5deg);
-    margin-top: -1.25rem;
+    transform: rotate(7deg);
     z-index: 1;
   }
 
@@ -102,7 +118,7 @@ const bottomItems = Array.from({ length: repeats });
     gap: 2.5rem;
     font-family: var(--font-display);
     font-variation-settings: "opsz" 48;
-    font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+    font-size: clamp(1.4rem, 3vw, 2.4rem);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -118,6 +134,13 @@ const bottomItems = Array.from({ length: repeats });
   @keyframes scbl-marquee-reverse {
     from { transform: translateX(-50%); }
     to   { transform: translateX(0); }
+  }
+
+  /* Tighten the X on narrow screens so the crossing stays inside the frame. */
+  @media (max-width: 640px) {
+    .scbl-stage { height: clamp(170px, 42vw, 220px); }
+    .scbl-ribbon-top    { transform: rotate(-9deg); top: 20%; }
+    .scbl-ribbon-bottom { transform: rotate(9deg);  top: 52%; }
   }
 
   @media (prefers-reduced-motion: reduce) {
