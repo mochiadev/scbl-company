@@ -434,18 +434,31 @@
     background-image: linear-gradient(to top, var(--sc-overlay-image-bottom), transparent);
   }
 
-  /* Wayfinding link — no arrow. Subtle underline, colour on hover. */
+  /* Wayfinding link — no arrow.
+     Default: no underline.
+     Hover / focus: gold underline animates in (colour also lifts to accent-hover).
+     [aria-current="page"]: solid gold underline as the active-route marker. */
   .sc-link {
     color: inherit;
-    background-image: linear-gradient(currentColor, currentColor);
-    background-size: 100% 1px;
+    background-image: linear-gradient(var(--sc-text-accent), var(--sc-text-accent));
+    background-size: 0% 1px;
     background-position: 0 100%;
     background-repeat: no-repeat;
     padding-bottom: 2px;
-    transition: color var(--sc-dur-quick) var(--sc-ease-out);
+    transition:
+      color            var(--sc-dur-quick) var(--sc-ease-out),
+      background-size  var(--sc-dur-mid)   var(--sc-ease-out);
   }
   .sc-link:hover,
-  .sc-link:focus-visible { color: var(--sc-text-accent-hover); }
+  .sc-link:focus-visible {
+    color: var(--sc-text-accent-hover);
+    background-size: 100% 1px;
+  }
+  .sc-link[aria-current="page"] {
+    color: var(--sc-text-accent);
+    background-size: 100% 1px;
+    transition: none;
+  }
 
   /* Gold expansion link — kept for legacy footer/inline links. */
   .gold-underline {

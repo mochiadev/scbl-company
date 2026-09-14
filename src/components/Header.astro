@@ -2,23 +2,33 @@
 import { Icon } from 'astro-icon/components';
 
 const nav = [
-  { label: 'Practice',  href: '/about' },
+  { label: 'About',     href: '/about' },
   { label: 'Services',  href: '/services' },
   { label: 'Portfolio', href: '/portfolio' },
   { label: 'Insights',  href: '/insights' },
   { label: 'Contact',   href: '/contact' },
 ];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+function isCurrent(href: string) {
+  return href === currentPath || currentPath.startsWith(href + '/');
+}
 ---
 <header
   class="fixed top-0 left-0 right-0 z-50 sc-bg-elevated backdrop-blur-md border-b sc-border-chrome"
   data-sc-header
 >
   <div class="sc-container sc-gutter flex items-center justify-between h-16 md:h-20">
-    <a href="/" class="group flex items-center gap-3" aria-label="Signature Crest — home">
-      <span class="sc-seal" aria-hidden="true">SC</span>
-      <span class="font-display text-base md:text-lg sc-text-primary" style="font-variation-settings: 'opsz' 18;">
-        Signature Crest
-      </span>
+    <a href="/" class="group flex items-center" aria-label="Signature Crest Builders — home">
+      <img
+        src="/logo.png"
+        alt="Signature Crest Builders Limited"
+        width="520"
+        height="130"
+        class="h-9 md:h-11 w-auto"
+        loading="eager"
+        decoding="async"
+      />
     </a>
 
     <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
@@ -27,6 +37,7 @@ const nav = [
           href={item.href}
           class="sc-small sc-text-secondary sc-link"
           data-index={String(i + 1).padStart(2, '0')}
+          aria-current={isCurrent(item.href) ? 'page' : undefined}
         >
           {item.label}
         </a>
@@ -61,7 +72,8 @@ const nav = [
           <li>
             <a
               href={item.href}
-              class="flex items-center justify-between py-4 sc-text-primary hover:text-[color:var(--sc-text-accent-hover)] transition-colors"
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+              class="flex items-center justify-between py-4 sc-text-primary hover:text-[color:var(--sc-text-accent-hover)] transition-colors aria-[current=page]:text-[color:var(--sc-text-accent)]"
             >
               <span class="font-display text-2xl" style="font-variation-settings: 'opsz' 24;">
                 {item.label}
