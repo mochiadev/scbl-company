@@ -3,11 +3,9 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import RunningHead from '../components/RunningHead.astro';
-import PillarBento from '../components/PillarBento.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import MarqueeStrip from '../components/MarqueeStrip.astro';
 import MeshGlow from '../components/MeshGlow.astro';
-import { pillars } from '../lib/pillars.ts';
 
 const portfolio = await getCollection('portfolio');
 portfolio.sort((a, b) => b.data.year - a.data.year);
@@ -17,19 +15,16 @@ const insights = await getCollection('insights');
 insights.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
 const notes = insights.slice(0, 3);
 
-const services = await getCollection('services');
-const bentoPillars = pillars.map((p) => {
-  const record = services.find((s) => s.id === p.slug || s.id.startsWith(p.slug));
-  return {
-    slug: p.slug,
-    title: p.title,
-    href: p.href,
-    icon: p.icon,
-    short: p.short,
-    subServices: (record?.data.sub_services ?? []).slice(0, 3),
-    image: (p as any).image,
-  };
-});
+// Homepage-only pillar hooks — punchier than the /services `short` copy.
+// One line, verb-forward, written for the diaspora + local HNW reader.
+const pillarTeasers: Array<{ n: string; title: string; hook: string; href: string }> = [
+  { n: '01', title: 'Property Development', href: '/services/development', hook: 'Land search through handover on one commercial line.' },
+  { n: '02', title: 'Construction',         href: '/services/construction', hook: 'Self-perform the trades that decide the finish.' },
+  { n: '03', title: 'Engineering',          href: '/services/engineering',  hook: 'In-house structural, civil, MEP, and geotechnical teams that stand behind every load path.' },
+  { n: '04', title: 'Real Estate',          href: '/services/real-estate',  hook: 'Advisory paired with build capability — the underwrite made real.' },
+  { n: '05', title: 'Project Management',   href: '/services/management',   hook: 'Programme, cost, quality, safety — one accountable governor.' },
+  { n: '06', title: 'Specialist',           href: '/services/specialist',   hook: 'Sustainable, bespoke, heritage, and after-sales stewardship.' },
+];
 
 const monthNames = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 function datestamp(d: Date) {
@@ -51,43 +46,76 @@ function datestamp(d: Date) {
     secondaryCta={{ label: 'See the practice', href: '/services' }}
   />
 
-  <!-- Position statement -->
+  <!-- Brand anthem: crossed ribbons directly under the hero -->
+  <MarqueeStrip top="BUILT ON TRUST" bottom="DESIGNED FOR LEGACY" />
+
+  <!-- Mini-about: hook · position · payoff -->
   <section class="relative sc-section-tight">
     <div class="sc-container sc-gutter grid grid-cols-12 gap-8">
       <div class="col-span-12 md:col-span-4">
-        <p class="sc-bracket-label">The Position</p>
+        <p class="sc-bracket-label">The Practice</p>
+        <p class="sc-caption sc-text-muted mt-4 max-w-[28ch] leading-relaxed">
+          Founded on integrity, excellence, and legacy. Airport Residential, Accra.
+        </p>
       </div>
       <div class="col-span-12 md:col-span-8">
-        <p class="sc-heading-lg sc-text-primary max-w-[24ch]">
-          The Ghanaian premium build market forces principals to coordinate developer, contractor, engineer, and agency across their own time zone. We do that work under one roof — so nothing is lost at the seams.
+        <p class="sc-heading-lg sc-text-primary max-w-[26ch]">
+          Building in Ghana usually means coordinating four vendors across an ocean — and no one holding the outcome.
         </p>
-        <p class="sc-body sc-text-muted mt-8 max-w-[62ch]">
-          Land title, design, engineering, construction, real-estate advisory, and post-handover stewardship are held by one team, on one commercial position, answerable to one senior partner. The result is fewer interface failures, clearer accountability, and an asset whose long-term value is protected by the same practice that built it.
+        <p class="sc-body sc-text-muted-strong mt-8 max-w-[62ch]">
+          Signature Crest Builders is one practice for the whole of it. Land diligence, design, engineering, construction, real-estate advisory, and post-handover care — held by the same team, priced on one commercial position, answerable to one senior partner.
+        </p>
+        <p class="sc-body sc-text-muted mt-5 max-w-[62ch]">
+          In Accra, and for families writing from London, Toronto, and New York, that partner is who receives the enquiry, stands at handover, and is still on the phone in the fiftieth year of the asset.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- Six pillars bento -->
+  <!-- The Suite — compact editorial index of six pillars -->
   <section class="relative sc-section sc-bg-ivory sc-text-primary-light">
     <div class="sc-container sc-gutter">
       <div class="grid grid-cols-12 gap-8 mb-12 md:mb-16">
         <div class="col-span-12 md:col-span-4">
-          <p class="sc-bracket-label sc-text-accent-subdued">Suite of Services</p>
+          <p class="sc-bracket-label sc-text-accent-subdued">The Suite</p>
         </div>
         <div class="col-span-12 md:col-span-8">
-          <h2 class="sc-display-lg">Six pillars. One signature.</h2>
-          <p class="sc-lede sc-text-muted mt-6 max-w-[62ch]">
-            Development, construction, engineering, real-estate advisory, project management, and specialist practices — held under one accountable roof. No hand-offs, no split incentives, no separately-priced surprises.
+          <h2 class="sc-display-lg">Six pillars. One accountable practice.</h2>
+          <p class="sc-lede sc-text-muted mt-6 max-w-[58ch]">
+            Held under one commercial position, priced together, answerable to one senior partner.
           </p>
         </div>
       </div>
-      <PillarBento pillars={bentoPillars} tone="ivory" />
+
+      <ul class="grid grid-cols-1 md:grid-cols-2 border-t sc-border-hairline-light">
+        {pillarTeasers.map((p) => (
+          <li class="border-b sc-border-hairline-light md:[&:nth-child(2n)]:border-l md:[&:nth-child(2n)]:sc-border-hairline-light">
+            <a
+              href={p.href}
+              class="group grid grid-cols-12 gap-4 md:gap-6 items-baseline py-6 md:py-7 md:px-2 transition-colors"
+            >
+              <span
+                class="col-span-2 md:col-span-2 font-display sc-text-accent-subdued"
+                style="font-size: 1.75rem; line-height: 1; font-variation-settings: 'opsz' 48;"
+              >
+                {p.n}
+              </span>
+              <div class="col-span-10 md:col-span-10">
+                <h3 class="sc-heading-md group-hover:text-[color:var(--sc-text-accent)] transition-colors">
+                  {p.title}
+                </h3>
+                <p class="sc-body sc-text-muted mt-2 max-w-[46ch]">{p.hook}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div class="mt-12">
+        <a href="/services" class="sc-link sc-small sc-text-accent-subdued">See the full suite</a>
+      </div>
     </div>
   </section>
-
-  <!-- Brand anthem: crossed ribbons carrying the tagline -->
-  <MarqueeStrip top="BUILT ON TRUST" bottom="DESIGNED FOR LEGACY" />
 
   <!-- Selected work -->
   <section class="relative sc-section">
