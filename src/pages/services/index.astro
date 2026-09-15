@@ -1,24 +1,26 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/Hero.astro';
 import RunningHead from '../../components/RunningHead.astro';
-import PillarBento from '../../components/PillarBento.astro';
 import { pillars } from '../../lib/pillars.ts';
 
 const services = await getCollection('services');
 services.sort((a, b) => a.data.order - b.data.order);
 
-const bento = pillars.map((p) => {
-  const record = services.find((s) => s.id === p.slug || s.id.startsWith(p.slug));
+const spreads = pillars.map((p, i) => {
+  const record = services.find((s) => s.id === p.slug || s.id.startsWith(p.slug + '.'));
   return {
+    n: String(i + 1).padStart(2, '0'),
     slug: p.slug,
     title: p.title,
     href: p.href,
     icon: p.icon,
     short: p.short,
-    subServices: (record?.data.sub_services ?? []).slice(0, 3),
-    image: p.image,
+    subServices: record?.data.sub_services ?? [],
+    image: record?.data.hero_image ?? '',
   };
 });
 ---
@@ -33,12 +35,98 @@ const bento = pillars.map((p) => {
     variant="quiet"
   />
 
-  <section class="relative sc-section">
-    <div class="sc-container sc-gutter">
-      <PillarBento pillars={bento} tone="navy" />
-    </div>
-  </section>
+  <!-- Six chapter spreads -->
+  {spreads.map((p, i) => {
+    const imageRight = i % 2 === 0;
+    return (
+      <section
+        aria-labelledby={`pillar-${p.n}-title`}
+        class="relative py-20 md:py-28 border-t sc-border-hairline"
+      >
+        <div class="sc-container sc-gutter">
+          <div class="grid grid-cols-12 gap-8 md:gap-12 lg:gap-16 items-stretch">
 
+            <!-- Copy side -->
+            <div class:list={[
+              'col-span-12 md:col-span-6 flex flex-col justify-center',
+              imageRight ? 'md:order-1' : 'md:order-2',
+            ]}>
+              <p class="sc-slug sc-text-accent-subdued">Pillar {p.n}</p>
+
+              <div class="flex items-baseline gap-5 mt-6">
+                <span
+                  class="font-display sc-text-accent-subdued"
+                  style="font-size: clamp(3rem, 6vw, 5rem); line-height: 0.9; font-variation-settings: 'opsz' 144;"
+                >
+                  {p.n}
+                </span>
+                {p.icon && (
+                  <Icon
+                    name={p.icon}
+                    class="sc-text-accent shrink-0"
+                    style="width: 2rem; height: 2rem;"
+                    aria-hidden="true"
+                  />
+                )}
+              </div>
+
+              <h2 id={`pillar-${p.n}-title`} class="sc-heading-lg sc-text-primary mt-6">
+                {p.title}
+              </h2>
+
+              <p class="sc-lede sc-text-muted-strong mt-6 max-w-[46ch]">
+                {p.short}
+              </p>
+
+              {p.subServices.length > 0 && (
+                <ul class="mt-10 border-t sc-border-hairline">
+                  {p.subServices.map((s) => (
+                    <li class="border-b sc-border-hairline py-3.5 flex items-start gap-3">
+                      <span class="sc-slug sc-text-accent-subdued mt-1 shrink-0">→</span>
+                      <span class="sc-body sc-text-primary">{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <div class="mt-10">
+                <a href={p.href} class="sc-btn-secondary">Read the pillar</a>
+              </div>
+            </div>
+
+            <!-- Image side -->
+            <div class:list={[
+              'col-span-12 md:col-span-6 flex flex-col',
+              imageRight ? 'md:order-2' : 'md:order-1',
+            ]}>
+              <div class="relative aspect-[5/4] overflow-hidden">
+                <Image
+                  src={p.image}
+                  alt={`${p.title} — a working scene from the practice.`}
+                  width={1600}
+                  height={1280}
+                  widths={[600, 900, 1200, 1600]}
+                  sizes="(min-width: 768px) 45vw, 100vw"
+                  class="h-full w-full object-cover"
+                  loading="lazy"
+                  format="webp"
+                />
+                <div
+                  class="absolute left-4 bottom-4 backdrop-blur-sm px-3 py-1.5 border sc-border-accent-firm"
+                  style="background: color-mix(in oklab, var(--color-sc-navy) 70%, transparent);"
+                >
+                  <p class="sc-slug sc-text-accent">Chapter {p.n} · {p.title.replace(' Services', '').replace('Property ', '').replace('Project & Construction ', '')}</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    );
+  })}
+
+  <!-- A note on the model -->
   <section class="relative sc-section sc-bg-ivory sc-text-primary-light">
     <div class="sc-container sc-gutter grid grid-cols-12 gap-8">
       <div class="col-span-12 md:col-span-4">
@@ -55,6 +143,7 @@ const bento = pillars.map((p) => {
     </div>
   </section>
 
+  <!-- Anchor CTA -->
   <section class="relative sc-section-tight">
     <div class="sc-container sc-gutter">
       <RunningHead code="SCBL · S.00" rev="END" section="Continue" />

@@ -1,0 +1,271 @@
+---
+/**
+ * PillarStickyDirectory — homepage services section.
+ *
+ * Desktop (md+):
+ *   Left column (sticky, 5/12): a large photograph that cross-fades as
+ *   the reader scrolls through the pillar list on the right. A small
+ *   caption chip in the corner names the currently-active pillar.
+ *   Right column (7/12): scrolling list of six pillars; each row carries
+ *   number, name, and a one-line hook.
+ *
+ * IntersectionObserver watches each pillar row; when a row enters the
+ * central 20% band of the viewport, its pillar becomes active and the
+ * sticky image swaps. Reduced-motion snaps rather than fades.
+ *
+ * Mobile: sticky column is hidden; each pillar row renders its own
+ * inline image below the copy so the image cadence still reads.
+ */
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+
+interface Pillar {
+  n: string;
+  title: string;
+  href: string;
+  hook: string;
+  image: string;
+  imageAlt: string;
+  icon?: string;
+  subServices?: string[];
+}
+
+interface Props {
+  pillars: Pillar[];
+  eyebrow?: string;
+  heading?: string;
+  lede?: string;
+}
+
+const {
+  pillars,
+  eyebrow = 'The Suite',
+  heading = 'Six pillars. One accountable practice.',
+  lede = 'Held under one commercial position, priced together, answerable to one senior partner.',
+} = Astro.props;
+
+function shortTitle(t: string): string {
+  return t
+    .replace(' Services', '')
+    .replace('Property ', '')
+    .replace('Project & Construction ', '')
+    .trim();
+}
+---
+<section class="relative sc-section sc-bg-ivory sc-text-primary-light">
+  <div class="sc-container sc-gutter">
+    <!-- Section header -->
+    <div class="grid grid-cols-12 gap-8 mb-14 md:mb-20">
+      <div class="col-span-12 md:col-span-4">
+        <p class="sc-bracket-label sc-text-accent-subdued">{eyebrow}</p>
+      </div>
+      <div class="col-span-12 md:col-span-8">
+        <h2 class="sc-display-lg">{heading}</h2>
+        <p class="sc-lede sc-text-muted mt-6 max-w-[58ch]">{lede}</p>
+        <a
+          href="/services"
+          class="sc-btn-secondary mt-8"
+          style="color: var(--color-sc-ink); border-color: color-mix(in oklab, var(--color-sc-ink) 30%, transparent);"
+        >
+          View all services
+        </a>
+      </div>
+    </div>
+
+    <!-- Sticky directory -->
+    <div class="grid grid-cols-1 md:grid-cols-12 md:gap-x-12 lg:gap-x-16" data-sticky-directory>
+
+      <!-- Sticky image column — desktop only -->
+      <div class="hidden md:block md:col-span-5">
+        <div class="sticky top-24 relative">
+          <!-- Blueprint motif — sits behind the image, spills into the ambient negative space -->
+          <svg
+            viewBox="0 0 400 500"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            aria-hidden="true"
+            class="absolute pointer-events-none sc-text-accent-subdued"
+            style="top: -1.5rem; left: -1.5rem; right: -1.5rem; bottom: -1.5rem; width: calc(100% + 3rem); height: calc(100% + 3rem); opacity: 0.08;"
+            preserveAspectRatio="xMidYMid slice"
+          >
+            <!-- Perimeter -->
+            <rect x="30" y="40" width="340" height="420" />
+            <!-- Room divisions -->
+            <line x1="30"  y1="220" x2="240" y2="220" />
+            <line x1="240" y1="40"  x2="240" y2="300" />
+            <line x1="240" y1="300" x2="370" y2="300" />
+            <line x1="30"  y1="360" x2="240" y2="360" />
+            <!-- Door swings -->
+            <path d="M 220 220 A 20 20 0 0 0 240 240" />
+            <path d="M 240 280 A 20 20 0 0 0 260 300" />
+            <path d="M 150 360 A 22 22 0 0 0 172 382" />
+            <!-- Stair -->
+            <g transform="translate(50 236)">
+              <line x1="0" y1="0"   x2="150" y2="0" />
+              <line x1="0" y1="14"  x2="150" y2="14" />
+              <line x1="0" y1="28"  x2="150" y2="28" />
+              <line x1="0" y1="42"  x2="150" y2="42" />
+              <line x1="0" y1="56"  x2="150" y2="56" />
+              <line x1="0" y1="70"  x2="150" y2="70" />
+              <line x1="0" y1="84"  x2="150" y2="84" />
+              <line x1="0" y1="98"  x2="150" y2="98" />
+              <line x1="75" y1="0"  x2="75"  y2="98" />
+            </g>
+            <!-- Dimension lines -->
+            <line x1="30"  y1="20"  x2="370" y2="20"  stroke-dasharray="3 4" />
+            <line x1="30"  y1="16"  x2="30"  y2="24" />
+            <line x1="370" y1="16"  x2="370" y2="24" />
+            <line x1="390" y1="40"  x2="390" y2="460" stroke-dasharray="3 4" />
+            <line x1="386" y1="40"  x2="394" y2="40" />
+            <line x1="386" y1="460" x2="394" y2="460" />
+          </svg>
+
+          <div class="relative aspect-[4/5] overflow-hidden">
+            {pillars.map((p, i) => (
+              <Image
+                src={p.image}
+                alt={p.imageAlt}
+                width={1200}
+                height={1500}
+                widths={[600, 900, 1200]}
+                sizes="42vw"
+                class="absolute inset-0 h-full w-full object-cover"
+                style={`opacity: ${i === 0 ? 1 : 0}; transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1);`}
+                data-sticky-image={p.n}
+                loading="lazy"
+                format="webp"
+              />
+            ))}
+            <div
+              class="absolute left-4 bottom-4 backdrop-blur-sm px-3 py-1.5 border sc-border-accent-firm"
+              style="background: color-mix(in oklab, var(--color-sc-navy) 70%, transparent);"
+            >
+              <p class="sc-slug sc-text-accent" data-sticky-caption>
+                Pillar {pillars[0].n} — {shortTitle(pillars[0].title)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pillar list -->
+      <div class="col-span-12 md:col-span-7">
+        <ol class="border-t sc-border-hairline-light">
+          {pillars.map((p) => (
+            <li class="border-b sc-border-hairline-light" data-pillar-row data-pillar-n={p.n}>
+              <a
+                href={p.href}
+                class="group block py-12 md:py-16 md:pr-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--sc-text-accent)]"
+              >
+                <div class="grid grid-cols-12 gap-4 md:gap-6">
+                  <!-- Ordinal + icon stack -->
+                  <div class="col-span-2 md:col-span-2 flex flex-col items-start gap-4">
+                    {p.icon && (
+                      <Icon
+                        name={p.icon}
+                        class="sc-text-accent"
+                        style="width: 1.75rem; height: 1.75rem;"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span
+                      class="font-display sc-text-accent-subdued"
+                      style="font-size: clamp(2.25rem, 4vw, 3.5rem); line-height: 0.95; font-variation-settings: 'opsz' 96;"
+                    >
+                      {p.n}
+                    </span>
+                  </div>
+
+                  <!-- Copy -->
+                  <div class="col-span-10 md:col-span-10">
+                    <h3 class="sc-heading-lg group-hover:text-[color:var(--sc-text-accent)] transition-colors">
+                      {p.title}
+                    </h3>
+                    <p class="sc-lede sc-text-muted-strong mt-4 max-w-[54ch]">{p.hook}</p>
+
+                    {p.subServices && p.subServices.length > 0 && (
+                      <p
+                        class="sc-caption sc-text-muted mt-6 uppercase max-w-[60ch]"
+                        style="letter-spacing: 0.08em;"
+                      >
+                        {p.subServices.join('  ·  ')}
+                      </p>
+                    )}
+
+                    <!-- Mobile-only inline image -->
+                    <div class="md:hidden mt-8 relative aspect-[16/10] overflow-hidden">
+                      <Image
+                        src={p.image}
+                        alt={p.imageAlt}
+                        width={1200}
+                        height={750}
+                        widths={[400, 600, 900]}
+                        sizes="100vw"
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                        format="webp"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ol>
+
+        <div class="mt-10">
+          <a href="/services" class="sc-link sc-small sc-text-accent-subdued">See the full suite</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function init() {
+    const dir = document.querySelector<HTMLElement>('[data-sticky-directory]');
+    if (!dir) return;
+    const rows = dir.querySelectorAll<HTMLElement>('[data-pillar-row]');
+    const images = dir.querySelectorAll<HTMLElement>('[data-sticky-image]');
+    const caption = dir.querySelector<HTMLElement>('[data-sticky-caption]');
+    if (!('IntersectionObserver' in window) || rows.length === 0 || images.length === 0) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function activate(n: string, title: string) {
+      images.forEach((img) => {
+        const on = img.dataset.stickyImage === n;
+        img.style.opacity = on ? '1' : '0';
+        if (reduce) img.style.transition = 'none';
+      });
+      if (caption) {
+        const short = title
+          .replace(' Services', '')
+          .replace('Property ', '')
+          .replace('Project & Construction ', '')
+          .trim();
+        caption.textContent = `Pillar ${n} — ${short}`;
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const row = entry.target as HTMLElement;
+            const n = row.dataset.pillarN ?? '01';
+            const title = row.querySelector('h3')?.textContent ?? '';
+            activate(n, title);
+          }
+        });
+      },
+      { rootMargin: '-40% 0px -40% 0px', threshold: 0 },
+    );
+
+    rows.forEach((row) => observer.observe(row));
+  }
+
+  init();
+  document.addEventListener('astro:after-swap', init);
+</script>
