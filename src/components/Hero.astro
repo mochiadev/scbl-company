@@ -40,11 +40,11 @@ const {
         height={1600}
         widths={[720, 1200, 1800, 2400]}
         sizes="100vw"
-        class="h-full w-full object-cover opacity-45"
+        class="h-full w-full object-cover opacity-70"
         loading="eager"
         format="webp"
       />
-      <div class="absolute inset-0 sc-overlay-hero"></div>
+      <div class="absolute inset-0 sc-overlay-hero-horizontal"></div>
     </div>
   )}
 
@@ -87,14 +87,13 @@ const {
           </div>
         </Reveal>
       )}
+      {aside && (
+        <Reveal>
+          <aside class="sc-body sc-text-accent-subdued border-l sc-border-firm pl-4 md:pl-5 mt-8" aria-label="Aside">
+            {aside}
+          </aside>
+        </Reveal>
+      )}
     </div>
-
-    {aside && (
-      <Reveal class="col-span-12 md:col-span-2 md:pt-24">
-        <aside class="sc-small sc-text-muted border-l sc-border-firm pl-4 md:pl-5" aria-label="Aside">
-          {aside}
-        </aside>
-      </Reveal>
-    )}
   </div>
 </section>

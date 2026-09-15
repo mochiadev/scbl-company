@@ -118,10 +118,10 @@
 /* L3 — Component tokens */
 :root {
   /* Buttons */
-  --sc-btn-primary-bg:            var(--sc-text-accent);
+  --sc-btn-primary-bg:            var(--sc-text-accent-hover);
   --sc-btn-primary-fg:            var(--sc-surface-canvas);
   --sc-btn-primary-border:        var(--sc-border-accent);
-  --sc-btn-primary-bg-hover:      var(--sc-text-accent-hover);
+  --sc-btn-primary-bg-hover:      var(--sc-text-accent);
   --sc-btn-primary-border-hover:  var(--sc-border-accent-hi);
 
   --sc-btn-secondary-fg:              var(--sc-text-primary-on-dark);
@@ -326,12 +326,12 @@
     border: 1px solid var(--sc-btn-primary-border);
     background-color: var(--sc-btn-primary-bg);
     color: var(--sc-btn-primary-fg);
-    padding: 0.9rem 1.75rem;
+    padding: 1rem 1.75rem;
     font-family: var(--font-body);
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.02em;
-    min-height: 48px;
+    min-height: 52px;
     transition: background-color var(--sc-dur-quick) var(--sc-ease-out),
                 border-color     var(--sc-dur-quick) var(--sc-ease-out),
                 transform        var(--sc-dur-quick) var(--sc-ease-out);
@@ -450,6 +450,14 @@
       var(--sc-surface-veil-40),
       var(--sc-surface-veil-60),
       var(--sc-surface-canvas)
+    );
+  }
+  .sc-overlay-hero-horizontal {
+    background-image: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-sc-navy) 85%, transparent) 0%,
+      color-mix(in oklab, var(--color-sc-navy) 50%, transparent) 50%,
+      color-mix(in oklab, var(--color-sc-navy) 20%, transparent) 100%
     );
   }
   .sc-overlay-scrim {

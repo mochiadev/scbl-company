@@ -3,14 +3,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import RunningHead from '../components/RunningHead.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import MarqueeStrip from '../components/MarqueeStrip.astro';
-import MeshGlow from '../components/MeshGlow.astro';
 import PillarStickyDirectory from '../components/PillarStickyDirectory.astro';
-
-const portfolio = await getCollection('portfolio');
-portfolio.sort((a, b) => b.data.year - a.data.year);
-const featured = portfolio.slice(0, 3);
 
 const insights = await getCollection('insights');
 insights.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
@@ -129,36 +123,6 @@ function datestamp(d: Date) {
   <!-- The Suite — sticky-image directory of the six pillars -->
   <PillarStickyDirectory pillars={pillarTeasers} />
 
-  <!-- Selected work -->
-  <section class="relative sc-section">
-    <MeshGlow position="bottom-right" size="lg" intensity={0.06} />
-    <div class="sc-container sc-gutter">
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-16">
-        <div>
-          <p class="sc-bracket-label">Selected Work</p>
-          <h2 class="sc-display-lg sc-text-primary mt-4 max-w-[22ch]">Assets built to compound, not to flip.</h2>
-        </div>
-        <a href="/portfolio" class="sc-link sc-small sc-text-accent shrink-0">See the full record</a>
-      </div>
-
-      <div class="flex flex-col gap-14 md:gap-16">
-        {featured.map((project, i) => (
-          <ProjectCard
-            index={i + 1}
-            title={project.data.title}
-            slug={project.data.slug}
-            location={project.data.location}
-            year={project.data.year}
-            pillars={project.data.pillars}
-            image={project.data.hero_image}
-            variant="index"
-            aspect={i === 1 ? 'portrait' : 'landscape'}
-          />
-        ))}
-      </div>
-    </div>
-  </section>
-
   <!-- The work behind the work — Field Notes (dated index) + Voices (pull-quote) -->
   <section class="relative sc-section-tight">
     <div class="sc-container sc-gutter">
@@ -219,19 +183,15 @@ function datestamp(d: Date) {
           </svg>
 
           <blockquote class="font-display sc-text-primary" style="font-size: clamp(1.25rem, 2vw, 1.65rem); line-height: 1.35; font-variation-settings: 'opsz' 48; font-style: italic; font-weight: 500;">
-            Building from abroad shouldn't mean losing sleep over what's happening on site. Documented, on programme, and delivered with the discipline of a practice that thinks in decades, not deals — that is what a Signature Crest engagement looks like.
+            Buying land in Ghana from abroad felt like a huge gamble until I found them. Their legal team removed all the fear, securing my fully registered plot in Oyarifa in just a few weeks. Zero land guards, complete transparency, total peace of mind.
           </blockquote>
 
           <div class="mt-8 flex items-center gap-4">
             <span class="block h-px w-10 bg-[color:var(--sc-text-accent)]"></span>
             <p class="sc-slug sc-text-accent">
-              The Practice · Diaspora Engagement Note
+              Kwame Mensah · UK-Based Healthcare Professional
             </p>
           </div>
-
-          <p class="sc-caption sc-text-muted mt-8 leading-relaxed">
-            A client-testimonial slot. Replace with verbatim quotes as they arrive; the layout accommodates one longform or a rotating shortform.
-          </p>
         </div>
       </div>
     </div>
