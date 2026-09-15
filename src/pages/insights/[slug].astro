@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RunningHead from '../../components/RunningHead.astro';
 import MeshGlow from '../../components/MeshGlow.astro';
@@ -54,10 +55,44 @@ const record = String(index).padStart(2, '0');
       </div>
     </section>
 
+    <!-- Hero image -->
+    <section class="relative">
+      <div class="sc-container sc-gutter">
+        <div class="relative aspect-[16/9] overflow-hidden">
+          <Image
+            src={entry.data.hero_image}
+            alt={`${entry.data.title} — field note illustration.`}
+            width={2400}
+            height={1350}
+            widths={[900, 1400, 1800, 2400]}
+            sizes="(min-width: 1024px) 90vw, 100vw"
+            class="h-full w-full object-cover"
+            loading="eager"
+            format="webp"
+          />
+        </div>
+      </div>
+    </section>
+
     <section class="relative sc-section-tight">
       <div class="sc-container sc-gutter">
         <div class="sc-container-prose mx-auto sc-lede sc-text-secondary sc-article">
           <Content />
+        </div>
+
+        <div class="sc-container-prose mx-auto mt-4">
+          <div class="border sc-border-firm p-6 md:p-8">
+            <p class="sc-bracket-label mb-3">Continue the conversation</p>
+            <p class="sc-lede sc-text-secondary max-w-[52ch]">
+              {entry.data.cta_hook ?? 'If this note is relevant to a project you\'re weighing, we\'re glad to talk it through.'}
+            </p>
+            <div class="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3">
+              <a href="/contact#form" class="sc-btn-secondary">Begin a project</a>
+              <p class="sc-small sc-text-muted">
+                Or call <a href="tel:+233500903792" class="sc-link sc-text-accent">0500 903 792</a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

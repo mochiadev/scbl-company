@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Hero from '../../components/Hero.astro';
+import HeroBlueprint from '../../components/HeroBlueprint.astro';
 import RunningHead from '../../components/RunningHead.astro';
 import { pillars } from '../../lib/pillars.ts';
 
@@ -28,11 +28,14 @@ const spreads = pillars.map((p, i) => {
   title="Services — Signature Crest Builders"
   description="Six pillars of practice: property development, construction, engineering, real-estate advisory, project management, and specialist services — held under one accountable roof."
 >
-  <Hero
+  <HeroBlueprint
+    kind="axonometric"
     runningHead={{ code: 'SCBL · S.00', rev: 'REV 01', section: 'Suite of Services' }}
     title="Six pillars of practice, held under one roof."
     lede="One accountable team owns land diligence, design, engineering, construction, real-estate advisory, and post-handover stewardship — with a single commercial position and one senior partner behind every decision."
-    variant="quiet"
+    detailImage="https://images.unsplash.com/photo-1449844908441-8829872d2607?w=1000&q=80"
+    detailImageAlt="A construction site at golden hour — partially poured concrete frame silhouetted against the sky."
+    detailCaption="On site · a working frame"
   />
 
   <!-- Six chapter spreads -->

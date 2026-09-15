@@ -1,4 +1,15 @@
 ---
+interface Props {
+  tone?: 'dark' | 'light';
+}
+
+const { tone = 'dark' } = Astro.props;
+
+const inputClass    = tone === 'light' ? 'sc-input-light'    : 'sc-input';
+const textareaClass = tone === 'light' ? 'sc-textarea-light' : 'sc-textarea';
+const optionBgClass = tone === 'light' ? 'sc-bg-ivory'       : 'sc-bg-canvas';
+const submitBorderClass = tone === 'light' ? 'sc-border-hairline-light' : 'sc-border-soft';
+
 const pillars = [
   { value: 'development',  label: 'Property Development' },
   { value: 'construction', label: 'Construction Services' },
@@ -28,12 +39,12 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
   <div class="grid gap-6 md:grid-cols-2">
     <label class="flex flex-col gap-2">
       <span class="sc-caption sc-text-accent-subdued">Your name</span>
-      <input type="text" name="name" required class="sc-input" placeholder="Full name" autocomplete="name" />
+      <input type="text" name="name" required class={inputClass} placeholder="Full name" autocomplete="name" />
       <span class="sc-caption sc-text-muted hidden" data-sc-error="name">Please add your name.</span>
     </label>
     <label class="flex flex-col gap-2">
       <span class="sc-caption sc-text-accent-subdued">Email</span>
-      <input type="email" name="email" required class="sc-input" placeholder="you@company.com" autocomplete="email" />
+      <input type="email" name="email" required class={inputClass} placeholder="you@company.com" autocomplete="email" />
       <span class="sc-caption sc-text-muted hidden" data-sc-error="email">A valid email helps us reply.</span>
     </label>
   </div>
@@ -41,19 +52,19 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
   <div class="grid gap-6 md:grid-cols-2">
     <label class="flex flex-col gap-2">
       <span class="sc-caption sc-text-accent-subdued">Where are you writing from?</span>
-      <select name="from" class="sc-input">
-        <option value="" class="sc-bg-canvas">Select…</option>
+      <select name="from" class={inputClass}>
+        <option value="" class={optionBgClass}>Select…</option>
         {locations.map((l) => (
-          <option value={l.value} class="sc-bg-canvas">{l.label}</option>
+          <option value={l.value} class={optionBgClass}>{l.label}</option>
         ))}
       </select>
     </label>
     <label class="flex flex-col gap-2">
       <span class="sc-caption sc-text-accent-subdued">Which pillar is your enquiry about?</span>
-      <select name="pillar" required data-sc-pillar class="sc-input">
-        <option value="" class="sc-bg-canvas">Select a pillar…</option>
+      <select name="pillar" required data-sc-pillar class={inputClass}>
+        <option value="" class={optionBgClass}>Select a pillar…</option>
         {pillars.map((p) => (
-          <option value={p.value} class="sc-bg-canvas">{p.label}</option>
+          <option value={p.value} class={optionBgClass}>{p.label}</option>
         ))}
       </select>
     </label>
@@ -66,11 +77,11 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
   >
     <label class="flex flex-col gap-2">
       <span class="sc-caption sc-text-accent-subdued">Project location</span>
-      <input type="text" name="location" class="sc-input" placeholder="City, district" />
+      <input type="text" name="location" class={inputClass} placeholder="City, district" />
     </label>
     <label class="flex flex-col gap-2">
       <span class="sc-caption sc-text-accent-subdued">Estimated GFA (m²)</span>
-      <input type="text" name="gfa" class="sc-input" placeholder="e.g. 4,200" inputmode="numeric" />
+      <input type="text" name="gfa" class={inputClass} placeholder="e.g. 4,200" inputmode="numeric" />
     </label>
   </div>
 
@@ -81,17 +92,17 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
   >
     <label class="flex flex-col gap-2">
       <span class="sc-caption sc-text-accent-subdued">Instruction type</span>
-      <select name="instruction" class="sc-input">
-        <option value="" class="sc-bg-canvas">Select…</option>
-        <option value="sales" class="sc-bg-canvas">Sales & Marketing</option>
-        <option value="leasing" class="sc-bg-canvas">Leasing & Tenant Rep</option>
-        <option value="advisory" class="sc-bg-canvas">Investment Advisory</option>
-        <option value="valuation" class="sc-bg-canvas">Valuation & Due Diligence</option>
+      <select name="instruction" class={inputClass}>
+        <option value="" class={optionBgClass}>Select…</option>
+        <option value="sales" class={optionBgClass}>Sales & Marketing</option>
+        <option value="leasing" class={optionBgClass}>Leasing & Tenant Rep</option>
+        <option value="advisory" class={optionBgClass}>Investment Advisory</option>
+        <option value="valuation" class={optionBgClass}>Valuation & Due Diligence</option>
       </select>
     </label>
     <label class="flex flex-col gap-2">
       <span class="sc-caption sc-text-accent-subdued">Ticket size (USD)</span>
-      <input type="text" name="ticket" class="sc-input" placeholder="e.g. 5m–15m" />
+      <input type="text" name="ticket" class={inputClass} placeholder="e.g. 5m–15m" />
     </label>
   </div>
 
@@ -101,13 +112,16 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
       name="message"
       rows="5"
       required
-      class="sc-textarea"
+      class={textareaClass}
       placeholder="Programme, budget range, sensitivities, timeline…"
     ></textarea>
     <span class="sc-caption sc-text-muted hidden" data-sc-error="message">A brief note lets us route your enquiry.</span>
   </label>
 
-  <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-t sc-border-soft pt-6">
+  <div class:list={[
+    'flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-6 border-t',
+    submitBorderClass,
+  ]}>
     <p class="sc-small sc-text-muted" data-sc-status role="status" aria-live="polite">
       Replies within one business day from the senior team.
     </p>
@@ -171,7 +185,7 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
       form.reset();
       syncConditional();
     } catch (err) {
-      if (status) status.textContent = 'Something went wrong. Please email hello@signaturecrest.com.';
+      if (status) status.textContent = 'Something went wrong. Please email signaturecrestbuilderslimited@gmail.com.';
       console.error(err);
     } finally {
       button?.removeAttribute('disabled');

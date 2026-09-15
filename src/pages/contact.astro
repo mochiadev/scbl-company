@@ -1,47 +1,56 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
+import HeroBlueprint from '../components/HeroBlueprint.astro';
 import ContactForm from '../components/ContactForm.astro';
 import MeshGlow from '../components/MeshGlow.astro';
 ---
 <BaseLayout
   title="Contact — Signature Crest Builders"
-  description="Begin a project with Signature Crest. Bespoke intake by pillar; replies within one business day. Airport Residential, Accra, Ghana — with clients in the UK, US, and Canada."
+  description="Begin a project with Signature Crest. Bespoke intake by pillar; replies within one business day. Apolonia, Greater Accra, Ghana — with clients in the UK, US, and Canada."
 >
-  <Hero
+  <HeroBlueprint
+    kind="site-plan"
     runningHead={{ code: 'SCBL · C.01', rev: 'REV 01', section: 'Correspondence' }}
     title="Begin a conversation."
     lede="The form below adapts to the pillar you select. If you are directing a project from abroad, tell us — our process is designed for principals who cannot inspect in person."
-    variant="quiet"
+    detailImage="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1000&q=80"
+    detailImageAlt="A considered residence at last light — a signature of what a completed engagement looks like."
+    detailCaption="Handover · a completed engagement"
   />
 
-  <section class="relative sc-section-tight">
-    <MeshGlow position="bottom-right" size="lg" intensity={0.05} />
-    <div class="sc-container sc-gutter grid grid-cols-12 gap-8 md:gap-14">
-      <!-- Practice datasheet -->
-      <aside class="col-span-12 md:col-span-4 space-y-10">
-        <div>
+  <!-- Ivory section: dark card ("The Practice") sits on ivory alongside the form -->
+  <section class="relative sc-bg-ivory sc-text-primary-light py-16 md:py-24 lg:py-32">
+    <div class="sc-container sc-gutter grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-16 items-start">
+
+      <!-- Left: dark card lifted onto the ivory background -->
+      <aside
+        class="relative sc-bg-canvas sc-text-primary p-7 md:p-10 lg:p-12 border sc-border-accent-firm space-y-10 overflow-hidden"
+        style="box-shadow: 0 24px 60px -20px color-mix(in oklab, var(--color-sc-navy) 45%, transparent), 0 8px 20px -10px color-mix(in oklab, var(--color-sc-navy) 30%, transparent);"
+      >
+        <MeshGlow position="bottom-right" size="lg" intensity={0.05} />
+
+        <div class="relative">
           <p class="sc-bracket-label">The Practice</p>
           <p class="sc-heading-md sc-text-primary mt-4 max-w-[28ch]">
             One accountable team from feasibility through the fiftieth year of the asset.
           </p>
         </div>
 
-        <dl class="border-t sc-border-hairline">
+        <dl class="relative border-t sc-border-hairline">
           <div class="grid grid-cols-3 gap-4 py-4 border-b sc-border-hairline">
             <dt class="sc-slug sc-text-accent-subdued col-span-1">Office</dt>
-            <dd class="sc-small sc-text-primary col-span-2">Airport Residential<br />Accra, Ghana</dd>
+            <dd class="sc-small sc-text-primary col-span-2">Apolonia<br />Greater Accra, Ghana</dd>
           </div>
           <div class="grid grid-cols-3 gap-4 py-4 border-b sc-border-hairline">
-            <dt class="sc-slug sc-text-accent-subdued col-span-1">Enquiries</dt>
+            <dt class="sc-slug sc-text-accent-subdued col-span-1">Tel</dt>
             <dd class="sc-small sc-text-primary col-span-2">
-              <a href="mailto:hello@signaturecrest.com" class="sc-link">hello@signaturecrest.com</a>
+              <a href="tel:+233500903792" class="sc-link">0500 903 792</a>
             </dd>
           </div>
           <div class="grid grid-cols-3 gap-4 py-4 border-b sc-border-hairline">
-            <dt class="sc-slug sc-text-accent-subdued col-span-1">Media</dt>
+            <dt class="sc-slug sc-text-accent-subdued col-span-1">Email</dt>
             <dd class="sc-small sc-text-primary col-span-2">
-              <a href="mailto:press@signaturecrest.com" class="sc-link">press@signaturecrest.com</a>
+              <a href="mailto:signaturecrestbuilderslimited@gmail.com" class="sc-link">signaturecrestbuilderslimited@gmail.com</a>
             </dd>
           </div>
           <div class="grid grid-cols-3 gap-4 py-4 border-b sc-border-hairline">
@@ -50,19 +59,20 @@ import MeshGlow from '../components/MeshGlow.astro';
           </div>
         </dl>
 
-        <div class="border sc-border-firm p-5">
+        <div class="relative border sc-border-firm p-5">
           <p class="sc-bracket-label mb-3">Building from abroad?</p>
           <p class="sc-small sc-text-muted-strong leading-relaxed">
-            If you are directing a project from London, Toronto, New York, or elsewhere, note it in the enquiry. Our diaspora engagement includes documented land diligence, scheduled photo and video reports, milestone-based payments, and a single point of contact in your time zone.
+            If you are directing a project from London, Toronto, New York, or elsewhere, note it in the enquiry. Our diaspora engagement includes documented land diligence, scheduled photo and video reports, milestone-based payments tied to verified progress, and a single point of contact in your time zone. Our most recent private residential delivery — the Obsidian Residences, twenty-eight units — landed on programme and inside a fixed guaranteed maximum price; the same commercial discipline applies to every diaspora-directed project.
           </p>
         </div>
       </aside>
 
-      <!-- Form -->
-      <div class="col-span-12 md:col-span-8">
+      <!-- Right: form on ivory -->
+      <div class="relative">
         <p class="sc-bracket-label mb-8">Enquiry — begin</p>
-        <ContactForm />
+        <ContactForm tone="light" />
       </div>
+
     </div>
   </section>
 </BaseLayout>

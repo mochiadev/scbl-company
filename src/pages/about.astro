@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
+import HeroBlueprint from '../components/HeroBlueprint.astro';
 import RunningHead from '../components/RunningHead.astro';
 import MeshGlow from '../components/MeshGlow.astro';
 
@@ -25,12 +25,15 @@ const why = [
   title="About — Signature Crest Builders"
   description="Signature Crest Builders Limited is a Ghanaian real-estate development, construction, and engineering practice defined by integrity, excellence, and legacy."
 >
-  <Hero
+  <HeroBlueprint
+    kind="floor-plan"
     runningHead={{ code: 'SCBL · A.01', rev: 'REV 01', section: 'The Practice' }}
     title="A practice built on craftsmanship, trust, and legacy."
     lede="Signature Crest Builders Limited is a distinguished Ghanaian real-estate development, construction, and engineering company — dedicated to creating exceptional spaces that stand the test of time."
-    aside="Airport Residential, Accra — Ghana."
-    variant="quiet"
+    detailImage="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1000&q=80"
+    detailImageAlt="A tightly-cropped interior detail — warm timber joinery meeting a hand-plastered wall under considered lighting."
+    detailCaption="Interior detail · a working residence"
+    aside="Apolonia, Greater Accra — Ghana."
   />
 
   <!-- Background -->
@@ -48,7 +51,7 @@ const why = [
     </div>
   </section>
 
-  <!-- Photo band — the practice at work, grounding "Airport Residential, Accra" in something real -->
+  <!-- Photo band — the practice at work, grounding "Apolonia, Greater Accra" in something real -->
   <section class="relative sc-section-tight">
     <div class="sc-container sc-gutter">
       <div class="relative overflow-hidden aspect-[16/7] md:aspect-[16/6]">
@@ -73,13 +76,13 @@ const why = [
       <div class="col-span-12 md:col-span-6">
         <p class="sc-bracket-label sc-text-accent-subdued">Mission</p>
         <p class="sc-heading-lg mt-6">
-          To deliver exceptional real-estate developments and construction solutions defined by superior quality, engineering integrity, and unwavering trust — creating spaces that inspire pride and stand as lasting legacies.
+          To hold every stage of a Ghanaian asset — land diligence, design, engineering, construction, and real-estate advisory — under one commercial position and one senior partner, so principals building at home or directing from abroad are never left managing the gaps between contractors who don't answer to each other.
         </p>
       </div>
       <div class="col-span-12 md:col-span-6">
         <p class="sc-bracket-label sc-text-accent-subdued">Vision</p>
         <p class="sc-heading-lg mt-6">
-          To be the most trusted and respected name in premium real-estate development and construction — recognised for setting new benchmarks in quality, innovation, and enduring value.
+          To be the name Ghanaian and diaspora principals default to when the outcome has to be right — not the fastest quote, not the cheapest one, but the practice still standing behind the asset in its fiftieth year.
         </p>
       </div>
     </div>

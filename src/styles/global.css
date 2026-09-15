@@ -396,6 +396,36 @@
   .sc-textarea:focus { border-color: var(--sc-input-border-focus); }
   .sc-textarea::placeholder { color: var(--sc-input-placeholder); }
 
+  /* Light-tone input variants — for forms on ivory surfaces */
+  .sc-input-light {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--sc-border-firm-light);
+    color: var(--sc-text-primary-on-light);
+    padding-block: 0.85rem;
+    outline: none;
+    min-height: 48px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color var(--sc-dur-quick) var(--sc-ease-out);
+  }
+  .sc-input-light:focus { border-color: var(--sc-border-accent); }
+  .sc-input-light::placeholder { color: var(--sc-input-placeholder); }
+
+  .sc-textarea-light {
+    background: transparent;
+    border: 1px solid var(--sc-border-firm-light);
+    color: var(--sc-text-primary-on-light);
+    padding: 1rem;
+    outline: none;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.55;
+    transition: border-color var(--sc-dur-quick) var(--sc-ease-out);
+  }
+  .sc-textarea-light:focus { border-color: var(--sc-border-accent); }
+  .sc-textarea-light::placeholder { color: var(--sc-input-placeholder); }
+
   /* Cards */
   .sc-card-dark {
     background-color: var(--sc-card-surface-dark);

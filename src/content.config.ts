@@ -43,6 +43,8 @@ const insights = defineCollection({
     published: z.coerce.date(),
     reading_time: z.number(),
     excerpt: z.string(),
+    hero_image: z.string(),
+    cta_hook: z.string().optional(),
   }),
 });
 

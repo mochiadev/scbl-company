@@ -1,0 +1,276 @@
+---
+/**
+ * HeroBlueprint — page hero for /about, /services, /contact.
+ *
+ * Composition:
+ *  - Full-width hand-authored architectural line drawing (SVG) at ~10%
+ *    opacity in gold-deep, filling the hero section as ambient texture.
+ *  - Running head strip at top.
+ *  - 12-col grid: 8-col typography (headline + lede), 4-col detail card
+ *    (small textural photograph, optional caption, optional aside).
+ *  - Extends the blueprint motif already used behind the sticky-directory
+ *    image on the homepage — makes the drawing a site-wide signature.
+ *
+ * `kind` picks the blueprint: floor-plan (About), axonometric (Services),
+ * or site-plan (Contact).
+ */
+import { Image } from 'astro:assets';
+import RunningHead from './RunningHead.astro';
+import Reveal from './Reveal.astro';
+import MeshGlow from './MeshGlow.astro';
+
+interface Props {
+  runningHead?: { code?: string; rev?: string; section?: string };
+  title: string;
+  lede?: string;
+  aside?: string;
+  detailImage?: string;
+  detailImageAlt?: string;
+  detailCaption?: string;
+  kind: 'floor-plan' | 'axonometric' | 'site-plan';
+}
+
+const {
+  runningHead,
+  title,
+  lede,
+  aside,
+  detailImage,
+  detailImageAlt,
+  detailCaption,
+  kind,
+} = Astro.props;
+---
+<section class="relative isolate overflow-hidden sc-bg-canvas">
+
+  <!-- Blueprint background layer -->
+  <div
+    class="absolute inset-0 -z-10 pointer-events-none sc-text-accent-subdued flex items-center justify-center"
+    aria-hidden="true"
+    style="opacity: 0.10;"
+  >
+    {kind === 'floor-plan' && (
+      <svg
+        viewBox="0 0 800 500"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        class="w-full h-full max-w-[1800px]"
+      >
+        {/* Perimeter */}
+        <rect x="80" y="60" width="640" height="380" />
+        {/* Interior divisions */}
+        <line x1="400" y1="60" x2="400" y2="260" />
+        <line x1="80" y1="260" x2="720" y2="260" />
+        <line x1="580" y1="260" x2="580" y2="440" />
+        <line x1="80" y1="360" x2="580" y2="360" />
+        <line x1="300" y1="60" x2="300" y2="180" />
+        <line x1="80" y1="180" x2="300" y2="180" />
+        {/* Door swings */}
+        <path d="M 380 260 A 20 20 0 0 1 400 280" />
+        <path d="M 580 300 A 22 22 0 0 1 602 322" />
+        <path d="M 260 180 A 22 22 0 0 1 282 202" />
+        <path d="M 690 380 A 24 24 0 0 1 714 404" />
+        {/* Stair */}
+        <g transform="translate(430, 300)">
+          <line x1="0" y1="0" x2="130" y2="0" />
+          <line x1="0" y1="16" x2="130" y2="16" />
+          <line x1="0" y1="32" x2="130" y2="32" />
+          <line x1="0" y1="48" x2="130" y2="48" />
+          <line x1="0" y1="64" x2="130" y2="64" />
+          <line x1="0" y1="80" x2="130" y2="80" />
+          <line x1="65" y1="0" x2="65" y2="80" />
+        </g>
+        {/* Furniture — living room */}
+        <rect x="120" y="80" width="140" height="60" />
+        <rect x="120" y="220" width="60" height="30" />
+        {/* Bedroom bed */}
+        <rect x="620" y="80" width="80" height="120" />
+        <line x1="620" y1="140" x2="700" y2="140" />
+        {/* Dining table */}
+        <ellipse cx="180" cy="330" rx="50" ry="26" />
+        {/* Dimension lines */}
+        <line x1="80" y1="30" x2="720" y2="30" stroke-dasharray="3 4" />
+        <line x1="80" y1="26" x2="80" y2="34" />
+        <line x1="720" y1="26" x2="720" y2="34" />
+        <line x1="400" y1="26" x2="400" y2="34" />
+        <line x1="740" y1="60" x2="740" y2="440" stroke-dasharray="3 4" />
+        <line x1="736" y1="60" x2="744" y2="60" />
+        <line x1="736" y1="440" x2="744" y2="440" />
+        <line x1="736" y1="260" x2="744" y2="260" />
+        {/* North arrow */}
+        <g transform="translate(60, 470)">
+          <circle cx="0" cy="0" r="14" />
+          <path d="M 0 -10 L 4 6 L 0 3 L -4 6 Z" fill="currentColor" stroke="none" />
+        </g>
+      </svg>
+    )}
+
+    {kind === 'axonometric' && (
+      <svg
+        viewBox="0 0 800 500"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        class="w-full h-full max-w-[1800px]"
+      >
+        {/* Ground plane */}
+        <path d="M 200 380 L 400 300 L 600 380 L 400 460 Z" />
+        {/* Ground level walls (front) */}
+        <line x1="200" y1="380" x2="200" y2="260" />
+        <line x1="200" y1="260" x2="400" y2="180" />
+        <line x1="400" y1="300" x2="400" y2="180" />
+        <line x1="600" y1="380" x2="600" y2="260" />
+        <line x1="600" y1="260" x2="400" y2="180" />
+        {/* Ground floor slab */}
+        <path d="M 200 260 L 400 180 L 600 260 L 400 340 Z" />
+        {/* Second level walls */}
+        <line x1="200" y1="260" x2="200" y2="160" />
+        <line x1="200" y1="160" x2="400" y2="80" />
+        <line x1="400" y1="180" x2="400" y2="80" />
+        <line x1="600" y1="260" x2="600" y2="160" />
+        <line x1="600" y1="160" x2="400" y2="80" />
+        {/* Roof plane */}
+        <path d="M 200 160 L 400 80 L 600 160 L 400 240 Z" />
+        {/* Peak */}
+        <line x1="400" y1="80" x2="400" y2="40" />
+        <line x1="400" y1="40" x2="200" y2="160" />
+        <line x1="400" y1="40" x2="600" y2="160" />
+        {/* Column guides (dashed hidden) */}
+        <line x1="200" y1="380" x2="200" y2="440" stroke-dasharray="3 3" />
+        <line x1="600" y1="380" x2="600" y2="440" stroke-dasharray="3 3" />
+        <line x1="400" y1="460" x2="400" y2="490" stroke-dasharray="3 3" />
+        {/* Scale bar */}
+        <g transform="translate(660, 470)">
+          <line x1="0" y1="0" x2="80" y2="0" />
+          <line x1="0" y1="-4" x2="0" y2="4" />
+          <line x1="40" y1="-4" x2="40" y2="4" />
+          <line x1="80" y1="-4" x2="80" y2="4" />
+        </g>
+        {/* Detail annotation lines */}
+        <line x1="100" y1="100" x2="200" y2="180" stroke-dasharray="3 3" />
+        <circle cx="100" cy="100" r="3" fill="currentColor" stroke="none" />
+      </svg>
+    )}
+
+    {kind === 'site-plan' && (
+      <svg
+        viewBox="0 0 800 500"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        class="w-full h-full max-w-[1800px]"
+      >
+        {/* Plot boundary */}
+        <rect x="120" y="80" width="560" height="340" />
+        {/* Building footprint */}
+        <rect x="250" y="180" width="300" height="180" />
+        {/* Building entrance */}
+        <line x1="400" y1="360" x2="400" y2="420" />
+        <path d="M 385 420 L 415 420" />
+        {/* Approach path */}
+        <path d="M 400 420 L 200 420" stroke-dasharray="4 3" />
+        <path d="M 200 420 L 200 380" stroke-dasharray="4 3" />
+        {/* Landscape edging */}
+        <path d="M 130 105 Q 200 130 260 105" />
+        <path d="M 540 105 Q 600 130 660 105" />
+        {/* Trees */}
+        <circle cx="180" cy="150" r="14" />
+        <circle cx="180" cy="150" r="7" />
+        <circle cx="620" cy="150" r="14" />
+        <circle cx="620" cy="150" r="7" />
+        <circle cx="180" cy="330" r="11" />
+        <circle cx="620" cy="330" r="11" />
+        {/* Compass rose */}
+        <g transform="translate(700, 100)">
+          <circle cx="0" cy="0" r="22" />
+          <path d="M 0 -16 L 5 6 L 0 3 L -5 6 Z" fill="currentColor" stroke="none" />
+          <line x1="-22" y1="0" x2="-28" y2="0" />
+          <line x1="22" y1="0" x2="28" y2="0" />
+          <line x1="0" y1="22" x2="0" y2="28" />
+        </g>
+        {/* Dimension lines */}
+        <line x1="120" y1="50" x2="680" y2="50" stroke-dasharray="3 4" />
+        <line x1="120" y1="46" x2="120" y2="54" />
+        <line x1="680" y1="46" x2="680" y2="54" />
+        <line x1="400" y1="46" x2="400" y2="54" />
+        <line x1="720" y1="80" x2="720" y2="420" stroke-dasharray="3 4" />
+        <line x1="716" y1="80" x2="724" y2="80" />
+        <line x1="716" y1="420" x2="724" y2="420" />
+      </svg>
+    )}
+  </div>
+
+  <MeshGlow position="top-right" size="xl" intensity={0.05} />
+
+  <div class="sc-container sc-gutter pt-28 md:pt-36">
+    {runningHead && (
+      <RunningHead
+        code={runningHead.code}
+        rev={runningHead.rev}
+        section={runningHead.section}
+      />
+    )}
+  </div>
+
+  <div
+    class="sc-container sc-gutter grid grid-cols-12 gap-8 md:gap-10 pt-12 md:pt-16 pb-20 md:pb-28"
+    data-reveal-group
+  >
+    <!-- Copy column -->
+    <div class="col-span-12 md:col-span-8">
+      <Reveal>
+        <h1 class="sc-display-xl sc-text-primary max-w-[18ch]" set:html={title} />
+      </Reveal>
+      {lede && (
+        <Reveal>
+          <p class="sc-lede-lg sc-text-secondary max-w-[48ch] mt-8 md:mt-10">
+            {lede}
+          </p>
+        </Reveal>
+      )}
+    </div>
+
+    <!-- Detail card column -->
+    <div class="col-span-12 md:col-span-4 md:pt-16 flex flex-col gap-6">
+      {detailImage && (
+        <Reveal>
+          <figure class="relative">
+            <div class="relative aspect-[4/5] overflow-hidden border sc-border-accent-firm">
+              <Image
+                src={detailImage}
+                alt={detailImageAlt ?? ''}
+                width={800}
+                height={1000}
+                widths={[400, 600, 800]}
+                sizes="(min-width: 768px) 30vw, 100vw"
+                class="h-full w-full object-cover"
+                loading="eager"
+                format="webp"
+              />
+              <div
+                class="absolute inset-0 pointer-events-none"
+                style="background: color-mix(in oklab, var(--color-sc-navy) 10%, transparent);"
+              ></div>
+            </div>
+            {detailCaption && (
+              <figcaption class="sc-slug sc-text-accent-subdued mt-3">
+                {detailCaption}
+              </figcaption>
+            )}
+          </figure>
+        </Reveal>
+      )}
+      {aside && (
+        <Reveal>
+          <aside class="sc-small sc-text-muted border-l sc-border-firm pl-4">
+            {aside}
+          </aside>
+        </Reveal>
+      )}
+    </div>
+  </div>
+</section>
