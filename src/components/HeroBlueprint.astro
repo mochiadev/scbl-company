@@ -14,7 +14,6 @@
  * `kind` picks the blueprint: floor-plan (About), axonometric (Services),
  * or site-plan (Contact).
  */
-import { Image } from 'astro:assets';
 import RunningHead from './RunningHead.astro';
 import Reveal from './Reveal.astro';
 import MeshGlow from './MeshGlow.astro';
@@ -240,16 +239,12 @@ const {
         <Reveal>
           <figure class="relative">
             <div class="relative aspect-[4/5] overflow-hidden border sc-border-accent-firm">
-              <Image
+              <img
                 src={detailImage}
                 alt={detailImageAlt ?? ''}
-                width={800}
-                height={1000}
-                widths={[400, 600, 800]}
-                sizes="(min-width: 768px) 30vw, 100vw"
                 class="h-full w-full object-cover"
                 loading="eager"
-                format="webp"
+                decoding="async"
               />
               <div
                 class="absolute inset-0 pointer-events-none"

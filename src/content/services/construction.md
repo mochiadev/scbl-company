@@ -8,7 +8,7 @@ sub_services:
   - Commercial & Institutional Construction
   - Structural Construction & Civil Works
   - Luxury Renovations & Refurbishments
-hero_image: https://images.unsplash.com/photo-1449844908441-8829872d2607?w=2400&q=80
+hero_image: /hero/construction.webp
 tech_specs:
   - C40/50 Concrete
   - Post-Tensioned Slabs

@@ -8,7 +8,7 @@ sub_services:
   - Property Valuation & Due Diligence
   - Leasing & Tenant Representation
   - Portfolio Management for Investors
-hero_image: https://picsum.photos/seed/scbl-realestate/1600/1000
+hero_image: /hero/rs.webp
 ---
 
 Our real estate practice exists to make sound decisions faster. From the first feasibility study through disposal, we advise developers, private clients, and institutional investors on where capital compounds and where it quietly erodes.

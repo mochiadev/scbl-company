@@ -7,7 +7,7 @@ sub_services:
   - Mixed-Use & Commercial Developments
   - Land Acquisition & Feasibility Studies
   - Master Planning & Site Development
-hero_image: https://picsum.photos/seed/scbl-development/1600/1000
+hero_image: /hero/airview.webp
 tech_specs:
   - Feasibility Modelling
   - Site Master Plans

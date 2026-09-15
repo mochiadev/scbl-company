@@ -8,7 +8,7 @@ sub_services:
   - Heritage & Luxury Restoration
   - Facilities Management (post-handover)
   - After-Sales Care & Warranty Support
-hero_image: https://picsum.photos/seed/scbl-specialist/1600/1000
+hero_image: /hero/specialist.webp
 tech_specs:
   - BREEAM Excellent
   - Passivhaus

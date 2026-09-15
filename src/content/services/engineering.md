@@ -8,7 +8,7 @@ sub_services:
   - MEP (Mechanical, Electrical & Plumbing) Engineering
   - Geotechnical & Foundation Engineering
   - Value Engineering & Construction Methodology
-hero_image: https://picsum.photos/seed/scbl-engineering/1600/1000
+hero_image: /hero/engineer.webp
 tech_specs:
   - Eurocode 2 / 3 / 7
   - LEED / BREEAM

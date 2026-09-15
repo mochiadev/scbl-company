@@ -8,7 +8,7 @@ sub_services:
   - Quality Assurance & Control
   - Health, Safety & Environmental Management
   - Programme Planning & Risk Management
-hero_image: https://picsum.photos/seed/scbl-management/1600/1000
+hero_image: /hero/proj0.webp
 tech_specs:
   - NEC4 / JCT
   - Primavera P6

@@ -17,9 +17,14 @@ insights.sort((a, b) => b.data.published.getTime() - a.data.published.getTime())
 const notes = insights.slice(0, 3);
 
 const services = await getCollection('services');
+function recordFor(slug: string) {
+  return services.find((s) => s.id === slug || s.id.startsWith(slug + '.'));
+}
 function subServicesFor(slug: string): string[] {
-  const record = services.find((s) => s.id === slug || s.id.startsWith(slug + '.'));
-  return (record?.data.sub_services ?? []).slice(0, 4);
+  return (recordFor(slug)?.data.sub_services ?? []).slice(0, 4);
+}
+function heroImageFor(slug: string): string {
+  return recordFor(slug)?.data.hero_image ?? '';
 }
 
 // Homepage-only pillar hooks — punchier than the /services `short` copy.
@@ -30,7 +35,7 @@ const pillarTeasers = [
     icon: 'lucide:landmark',
     hook: 'Land search through handover on one commercial line.',
     subServices: subServicesFor('development'),
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=80',
+    image: heroImageFor('development'),
     imageAlt: 'A warm-lit modern residence at dusk with clean rectilinear volumes and a lit portico.',
   },
   {
@@ -38,7 +43,7 @@ const pillarTeasers = [
     icon: 'ph:crane-thin',
     hook: 'Self-perform the trades that decide the finish.',
     subServices: subServicesFor('construction'),
-    image: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=1400&q=80',
+    image: heroImageFor('construction'),
     imageAlt: 'A construction site at golden hour with a partially poured concrete frame against the sky.',
   },
   {
@@ -46,7 +51,7 @@ const pillarTeasers = [
     icon: 'ph:blueprint-thin',
     hook: 'In-house structural, civil, MEP, and geotechnical teams that stand behind every load path.',
     subServices: subServicesFor('engineering'),
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1400&q=80',
+    image: heroImageFor('engineering'),
     imageAlt: 'A modern white residence with cantilevered volumes in a manicured landscape.',
   },
   {
@@ -54,7 +59,7 @@ const pillarTeasers = [
     icon: 'lucide:building-2',
     hook: 'Advisory paired with build capability — the underwrite made real.',
     subServices: subServicesFor('real-estate'),
-    image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1400&q=80',
+    image: heroImageFor('real-estate'),
     imageAlt: 'An interior room framed by tall glazing looking out onto a garden.',
   },
   {
@@ -62,7 +67,7 @@ const pillarTeasers = [
     icon: 'lucide:clipboard-check',
     hook: 'Programme, cost, quality, safety — one accountable governor.',
     subServices: subServicesFor('management'),
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1400&q=80',
+    image: heroImageFor('management'),
     imageAlt: 'A carefully appointed interior with warm timber, brass detailing, and considered lighting.',
   },
   {
@@ -70,7 +75,7 @@ const pillarTeasers = [
     icon: 'ph:diamonds-four-thin',
     hook: 'Sustainable, bespoke, heritage, and after-sales stewardship.',
     subServices: subServicesFor('specialist'),
-    image: 'https://picsum.photos/seed/scbl-specialist/1200/1500',
+    image: heroImageFor('specialist'),
     imageAlt: 'A close-in interior study of textured plaster and dark timber, in the language of a heritage restoration.',
   },
 ];
