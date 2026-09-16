@@ -1,0 +1,98 @@
+<!--
+  Signature Crest Builders — enquiry notification email template.
+
+  Paste this into EmailJS: Email Templates → Create New Template → switch
+  the editor to "Code" / HTML view → replace everything with this file →
+  set the template's "To Email" field to the recipient inbox → Save.
+
+  Variables used ({{ }}): from_name, from_email, details, submitted_at
+  These are sent from src/components/ContactForm.astro's submit handler —
+  don't rename them here without updating that file too.
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8F5F0;padding:32px 16px;font-family:Georgia,'Times New Roman',serif;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#F8F5F0;">
+
+        <!-- Header — text wordmark, not an image: keeps this template
+             domain-independent, and avoids the "images blocked by
+             default" problem most email clients apply to remote images. -->
+        <tr>
+          <td style="background-color:#050C16;padding:28px 32px;">
+            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#F8F5F0;">
+              Signature Crest Builders
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background-color:#050C16;padding:0 32px 24px;">
+            <div style="height:1px;background-color:#A0783C;"></div>
+          </td>
+        </tr>
+
+        <!-- Eyebrow + heading -->
+        <tr>
+          <td style="background-color:#050C16;padding:0 32px 32px;">
+            <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#CBA66C;">
+              New Enquiry
+            </p>
+            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#8C857A;">
+              Received {{submitted_at}}
+            </p>
+          </td>
+        </tr>
+
+        <!-- Content card -->
+        <tr>
+          <td style="background-color:#FFFFFF;padding:32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding-bottom:16px;border-bottom:1px solid #E5E0D8;">
+                  <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#A0783C;">
+                    From
+                  </p>
+                  <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#0E1116;">
+                    {{from_name}}
+                  </p>
+                  <p style="margin:4px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+                    <a href="mailto:{{from_email}}" style="color:#A0783C;text-decoration:none;">{{from_email}}</a>
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:20px;">
+                  <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#A0783C;">
+                    Enquiry details
+                  </p>
+                  <p style="margin:0;font-family:'Courier New',monospace;font-size:14px;line-height:1.7;color:#0E1116;white-space:pre-line;">{{details}}</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Reply CTA -->
+        <tr>
+          <td style="background-color:#FFFFFF;padding:0 32px 32px;">
+            <a href="mailto:{{from_email}}" style="display:inline-block;background-color:#CBA66C;color:#050C16;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;text-decoration:none;padding:12px 24px;">
+              Reply to {{from_name}}
+            </a>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background-color:#050C16;padding:24px 32px;">
+            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#8C857A;">
+              Signature Crest Builders Limited · Apolonia, Greater Accra, Ghana
+            </p>
+            <p style="margin:6px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#8C857A;">
+              Automated notification from the website contact form.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>

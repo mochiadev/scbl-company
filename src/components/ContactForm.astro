@@ -27,12 +27,26 @@ const locations = [
   { value: 'other',    label: 'Elsewhere' },
 ];
 
-const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+const emailjsServiceId = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID ?? '';
+const emailjsTemplateId = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID ?? '';
+const emailjsPublicKey = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY ?? '';
+
+const pillarLabelMap = Object.fromEntries(pillars.map((p) => [p.value, p.label]));
+const locationLabelMap = Object.fromEntries(locations.map((l) => [l.value, l.label]));
+const instructionLabelMap: Record<string, string> = {
+  sales: 'Sales & Marketing',
+  leasing: 'Leasing & Tenant Rep',
+  advisory: 'Investment Advisory',
+  valuation: 'Valuation & Due Diligence',
+};
 ---
 <form
   id="form"
   data-sc-contact
-  data-endpoint={endpoint}
+  data-emailjs-service={emailjsServiceId}
+  data-emailjs-template={emailjsTemplateId}
+  data-emailjs-key={emailjsPublicKey}
+  data-labels={JSON.stringify({ pillar: pillarLabelMap, location: locationLabelMap, instruction: instructionLabelMap })}
   class="grid gap-7"
   novalidate
 >
@@ -72,21 +86,6 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
 
   <div
     data-sc-conditional
-    data-pillar="development,construction,engineering,management,specialist"
-    class="hidden grid gap-6 md:grid-cols-2"
-  >
-    <label class="flex flex-col gap-2">
-      <span class="sc-caption sc-text-accent-subdued">Project location</span>
-      <input type="text" name="location" class={inputClass} placeholder="City, district" />
-    </label>
-    <label class="flex flex-col gap-2">
-      <span class="sc-caption sc-text-accent-subdued">Estimated GFA (m²)</span>
-      <input type="text" name="gfa" class={inputClass} placeholder="e.g. 4,200" inputmode="numeric" />
-    </label>
-  </div>
-
-  <div
-    data-sc-conditional
     data-pillar="real-estate"
     class="hidden grid gap-6 md:grid-cols-2"
   >
@@ -113,7 +112,7 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
       rows="5"
       required
       class={textareaClass}
-      placeholder="Programme, budget range, sensitivities, timeline…"
+      placeholder="Project location, size, budget range, timeline, sensitivities…"
     ></textarea>
     <span class="sc-caption sc-text-muted hidden" data-sc-error="message">A brief note lets us route your enquiry.</span>
   </label>
@@ -130,10 +129,13 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
 </form>
 
 <script>
+  import emailjs from '@emailjs/browser';
+
   const form = document.querySelector<HTMLFormElement>('[data-sc-contact]');
   const status = form?.querySelector<HTMLElement>('[data-sc-status]');
   const pillarSelect = form?.querySelector<HTMLSelectElement>('[data-sc-pillar]');
   const conditionals = form?.querySelectorAll<HTMLElement>('[data-sc-conditional]') ?? [];
+  const labels = JSON.parse(form?.dataset.labels ?? '{"pillar":{},"location":{},"instruction":{}}');
 
   function syncConditional() {
     const value = pillarSelect?.value ?? '';
@@ -157,6 +159,24 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
     });
   });
 
+  // Builds one pre-formatted block covering everything after name/email, so
+  // the email template needs no conditional logic of its own — it just
+  // prints this block as-is (real-estate-only fields are simply absent
+  // for every other pillar).
+  function buildDetails(data: Record<string, string>): string {
+    const lines: string[] = [];
+    lines.push(`Writing from: ${labels.location[data.from] ?? 'Not specified'}`);
+    lines.push(`Enquiry about: ${labels.pillar[data.pillar] ?? data.pillar}`);
+    if (data.pillar === 'real-estate') {
+      if (data.instruction) lines.push(`Instruction type: ${labels.instruction[data.instruction] ?? data.instruction}`);
+      if (data.ticket) lines.push(`Ticket size (USD): ${data.ticket}`);
+    }
+    lines.push('');
+    lines.push('Message:');
+    lines.push(data.message ?? '');
+    return lines.join('\n');
+  }
+
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!form.checkValidity()) {
@@ -168,18 +188,23 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
     button?.setAttribute('disabled', 'true');
     if (status) status.textContent = 'Sending…';
 
-    const data = Object.fromEntries(new FormData(form).entries());
-    const endpoint = form.dataset.endpoint;
+    const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+    const { emailjsService, emailjsTemplate, emailjsKey } = form.dataset;
     try {
-      if (endpoint) {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(data),
-        });
-        if (!res.ok) throw new Error(`Status ${res.status}`);
+      if (emailjsService && emailjsTemplate && emailjsKey) {
+        await emailjs.send(
+          emailjsService,
+          emailjsTemplate,
+          {
+            from_name: data.name,
+            from_email: data.email,
+            details: buildDetails(data),
+            submitted_at: new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }),
+          },
+          { publicKey: emailjsKey },
+        );
       } else {
-        console.log('[Signature Crest] Contact submission (no endpoint configured):', data);
+        console.log('[Signature Crest] Contact submission (EmailJS not configured):', data);
       }
       if (status) status.textContent = 'Enquiry received. We will be in touch within one business day.';
       form.reset();
