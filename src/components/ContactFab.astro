@@ -1,0 +1,203 @@
+---
+/**
+ * ContactFab — persistent bottom-right expandable contact button.
+ * Closed: single toggle button. Open: Call + WhatsApp pill options.
+ * Always rendered in the DOM (no-JS visitors still get working tel:/wa.me
+ * links); the toggle only controls the open/closed *visual* state.
+ *
+ * Footer-aware: once the page's <footer data-sc-footer> scrolls into view,
+ * the widget switches to "top" mode — it becomes a back-to-top button
+ * instead, since the footer already repeats the phone number and (once
+ * populated) social links. Avoids the FAB permanently overlapping the
+ * footer's own content on long pages.
+ */
+import { Icon } from 'astro-icon/components';
+
+const telHref = 'tel:+233500903792';
+const phoneDisplay = '+233 500 903 792';
+const waMessage = "Hi, I'd like to speak with Signature Crest Builders about a project.";
+const waHref = `https://wa.me/233500903792?text=${encodeURIComponent(waMessage)}`;
+---
+<div class="sc-fab" data-sc-fab data-fab-mode="contact">
+  <div class="sc-fab-options" data-sc-fab-options>
+    <a href={waHref} target="_blank" rel="noopener noreferrer" class="sc-fab-option">
+      <Icon name="ph:whatsapp-logo-thin" class="sc-fab-option-icon" aria-hidden="true" />
+      <span>WhatsApp us</span>
+    </a>
+    <a href={telHref} class="sc-fab-option">
+      <Icon name="ph:phone-thin" class="sc-fab-option-icon" aria-hidden="true" />
+      <span class="sc-fab-option-text">
+        <span>Call us</span>
+        <span class="sc-fab-option-sub">{phoneDisplay}</span>
+      </span>
+    </a>
+  </div>
+
+  <button
+    type="button"
+    class="sc-fab-toggle"
+    aria-label="Contact options"
+    aria-expanded="false"
+    data-sc-fab-toggle
+  >
+    <Icon name="lucide:message-circle" class="w-6 h-6" data-fab-icon-contact />
+    <Icon name="lucide:x" class="w-6 h-6 hidden" data-fab-icon-close />
+    <Icon name="lucide:arrow-up" class="w-6 h-6 hidden" data-fab-icon-top />
+  </button>
+</div>
+
+<script>
+  function init() {
+    const fab = document.querySelector<HTMLElement>('[data-sc-fab]');
+    const toggle = fab?.querySelector<HTMLButtonElement>('[data-sc-fab-toggle]');
+    const options = fab?.querySelector<HTMLElement>('[data-sc-fab-options]');
+    const iconContact = fab?.querySelector<HTMLElement>('[data-fab-icon-contact]');
+    const iconClose = fab?.querySelector<HTMLElement>('[data-fab-icon-close]');
+    const iconTop = fab?.querySelector<HTMLElement>('[data-fab-icon-top]');
+    const footer = document.querySelector<HTMLElement>('[data-sc-footer]');
+    if (!fab || !toggle || !options) return;
+
+    function setOpen(open: boolean) {
+      toggle!.setAttribute('aria-expanded', String(open));
+      options!.classList.toggle('is-open', open);
+      if (fab!.dataset.fabMode !== 'top') {
+        iconContact?.classList.toggle('hidden', open);
+        iconClose?.classList.toggle('hidden', !open);
+      }
+    }
+
+    function setMode(mode: 'contact' | 'top') {
+      if (fab!.dataset.fabMode === mode) return;
+      fab!.dataset.fabMode = mode;
+      if (mode === 'top') {
+        setOpen(false);
+        toggle!.setAttribute('aria-label', 'Back to top');
+        iconContact?.classList.add('hidden');
+        iconClose?.classList.add('hidden');
+        iconTop?.classList.remove('hidden');
+      } else {
+        toggle!.setAttribute('aria-label', 'Contact options');
+        iconTop?.classList.add('hidden');
+        iconContact?.classList.remove('hidden');
+      }
+    }
+
+    toggle.addEventListener('click', () => {
+      if (fab!.dataset.fabMode === 'top') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    document.addEventListener('astro:before-swap', () => setOpen(false));
+
+    if (footer && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => setMode(entry.isIntersecting ? 'top' : 'contact'));
+        },
+        { threshold: 0 },
+      );
+      observer.observe(footer);
+    }
+  }
+
+  init();
+  document.addEventListener('astro:after-swap', init);
+</script>
+
+<style>
+  .sc-fab {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+  @media (min-width: 768px) {
+    .sc-fab { right: 2rem; bottom: 2rem; }
+  }
+
+  .sc-fab-options {
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem;
+  }
+  .sc-fab-options.is-open {
+    display: flex;
+  }
+
+  .sc-fab-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1.1rem;
+    border-radius: 999px;
+    background: var(--sc-surface-canvas);
+    border: 1px solid var(--sc-border-accent-firm);
+    color: var(--sc-text-primary-on-dark);
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: var(--sc-shadow-lift-sm);
+    transition: border-color var(--sc-dur-quick) var(--sc-ease-out),
+                color var(--sc-dur-quick) var(--sc-ease-out);
+  }
+  .sc-fab-option:hover,
+  .sc-fab-option:focus-visible {
+    border-color: var(--sc-border-accent);
+    color: var(--sc-text-accent-hover);
+  }
+  .sc-fab-option-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--sc-text-accent);
+    flex-shrink: 0;
+  }
+
+  .sc-fab-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    line-height: 1.2;
+  }
+  .sc-fab-option-sub {
+    font-size: 0.6875rem;
+    font-weight: 400;
+    color: var(--sc-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sc-fab-toggle {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--sc-btn-primary-bg);
+    color: var(--sc-btn-primary-fg);
+    border: 1px solid var(--sc-btn-primary-border);
+    box-shadow: var(--sc-shadow-lift-md);
+    transition: background-color var(--sc-dur-quick) var(--sc-ease-out),
+                border-color var(--sc-dur-quick) var(--sc-ease-out),
+                transform var(--sc-dur-quick) var(--sc-ease-out);
+  }
+  .sc-fab-toggle:hover,
+  .sc-fab-toggle:focus-visible {
+    background: var(--sc-btn-primary-bg-hover);
+    border-color: var(--sc-btn-primary-border-hover);
+  }
+  .sc-fab-toggle:active { transform: scale(0.96); }
+  .sc-fab-toggle:focus-visible { outline: 2px solid var(--sc-border-accent-hi); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sc-fab-toggle:active { transform: none; }
+  }
+</style>

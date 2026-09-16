@@ -1,3 +1,4 @@
 allowBuilds:
   esbuild: true
   sharp: true
+  "@remotion/compositor-win32-x64-msvc": true

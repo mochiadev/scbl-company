@@ -9,6 +9,10 @@ sub_services:
   - Leasing & Tenant Representation
   - Portfolio Management for Investors
 hero_image: /hero/rs.webp
+tech_specs:
+  - RICS Valuation Standards
+  - IPMS 2 Measurement
+  - Comparative Market Analysis
 ---
 
 Our real estate practice exists to make sound decisions faster. From the first feasibility study through disposal, we advise developers, private clients, and institutional investors on where capital compounds and where it quietly erodes.

@@ -5,6 +5,7 @@ import { Icon } from 'astro-icon/components';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HeroBlueprint from '../../components/HeroBlueprint.astro';
 import RunningHead from '../../components/RunningHead.astro';
+import BlueprintMark from '../../components/BlueprintMark.astro';
 import { pillars } from '../../lib/pillars.ts';
 
 const services = await getCollection('services');
@@ -30,7 +31,7 @@ const spreads = pillars.map((p, i) => {
 >
   <HeroBlueprint
     kind="axonometric"
-    runningHead={{ code: 'SCBL · S.00', rev: 'REV 01', section: 'Suite of Services' }}
+    runningHead={{ code: 'SCBL', section: 'Suite of Services' }}
     title="Six pillars of practice, held under one roof."
     lede="One accountable team owns land diligence, design, engineering, construction, real-estate advisory, and post-handover stewardship — with a single commercial position and one senior partner behind every decision."
     detailImage="/hero/services.webp"
@@ -74,7 +75,12 @@ const spreads = pillars.map((p, i) => {
               </div>
 
               <h2 id={`pillar-${p.n}-title`} class="sc-heading-lg sc-text-primary mt-6">
-                {p.title}
+                <a
+                  href={p.href}
+                  class="hover:text-[color:var(--sc-text-accent-hover)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--sc-border-accent-hi)]"
+                >
+                  {p.title}
+                </a>
               </h2>
 
               <p class="sc-lede sc-text-muted-strong mt-6 max-w-[46ch]">
@@ -102,7 +108,11 @@ const spreads = pillars.map((p, i) => {
               'col-span-12 md:col-span-6 flex flex-col',
               imageRight ? 'md:order-2' : 'md:order-1',
             ]}>
-              <div class="relative aspect-[5/4] overflow-hidden">
+              <a
+                href={p.href}
+                aria-label={`Read about ${p.title}`}
+                class="group relative block aspect-[5/4] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--sc-border-accent-hi)]"
+              >
                 <Image
                   src={p.image}
                   alt={`${p.title} — a working scene from the practice.`}
@@ -110,7 +120,7 @@ const spreads = pillars.map((p, i) => {
                   height={1280}
                   widths={[600, 900, 1200, 1600]}
                   sizes="(min-width: 768px) 45vw, 100vw"
-                  class="h-full w-full object-cover"
+                  class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   loading="lazy"
                   format="webp"
                 />
@@ -118,9 +128,9 @@ const spreads = pillars.map((p, i) => {
                   class="absolute left-4 bottom-4 backdrop-blur-sm px-3 py-1.5 border sc-border-accent-firm"
                   style="background: color-mix(in oklab, var(--color-sc-navy) 70%, transparent);"
                 >
-                  <p class="sc-slug sc-text-accent">Chapter {p.n} · {p.title.replace(' Services', '').replace('Property ', '').replace('Project & Construction ', '')}</p>
+                  <p class="sc-slug sc-text-accent">{p.n} · {p.title.replace(' Services', '').replace('Property ', '').replace('Project & Construction ', '')}</p>
                 </div>
-              </div>
+              </a>
             </div>
 
           </div>
@@ -147,9 +157,10 @@ const spreads = pillars.map((p, i) => {
   </section>
 
   <!-- Anchor CTA -->
-  <section class="relative sc-section-tight">
-    <div class="sc-container sc-gutter">
-      <RunningHead code="SCBL · S.00" rev="END" section="Continue" />
+  <section class="relative sc-section-tight overflow-hidden">
+    <BlueprintMark class="right-[-2rem] bottom-[-3rem]" />
+    <div class="sc-container sc-gutter relative">
+      <RunningHead code="SCBL" section="Continue" />
       <div class="mt-14 grid grid-cols-12 gap-8">
         <div class="col-span-12 md:col-span-8">
           <h2 class="sc-display-lg sc-text-primary max-w-[24ch]">

@@ -1,0 +1,60 @@
+---
+interface Props {
+  images: string[];
+  interval?: number; // seconds per image
+}
+
+const { images, interval = 6 } = Astro.props;
+---
+
+<div class="ken-burns-container">
+  {images.map((image, index) => (
+    <div
+      class="ken-burns-image"
+      style={`
+        background-image: url(${image});
+        animation-delay: ${index * interval}s;
+        z-index: ${images.length - index};
+      `}
+    />
+  ))}
+</div>
+
+<style>
+  .ken-burns-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .ken-burns-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: kenBurnsEffect 18s ease-in-out infinite;
+  }
+
+  @keyframes kenBurnsEffect {
+    0% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    5% {
+      opacity: 1;
+    }
+    33% {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+    38% {
+      opacity: 0;
+      transform: scale(1.15);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.15);
+    }
+  }
+</style>

@@ -1,4 +1,7 @@
 ---
+import { Icon } from 'astro-icon/components';
+import { liveSocials } from '../lib/socials.ts';
+
 const year = new Date().getFullYear();
 
 const directory = [
@@ -30,7 +33,7 @@ const directory = [
   },
 ];
 ---
-<footer class="relative mt-24 md:mt-32 border-t sc-border-firm sc-bg-canvas sc-text-primary">
+<footer class="relative mt-24 md:mt-32 border-t sc-border-firm sc-bg-canvas sc-text-primary" data-sc-footer>
   <div class="sc-container sc-gutter py-16 md:py-20">
 
     <!-- Colophon head -->
@@ -41,7 +44,26 @@ const directory = [
           A single accountable practice. From feasibility through the fiftieth year of the asset.
         </p>
       </div>
-      <a href="/contact#form" class="sc-btn-secondary shrink-0">Begin a project</a>
+      <div class="flex items-center gap-6 shrink-0">
+        {liveSocials.length > 0 && (
+          <ul class="flex items-center gap-4">
+            {liveSocials.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.name}
+                  class="sc-text-secondary hover:text-[color:var(--sc-text-accent-hover)] transition-colors"
+                >
+                  <Icon name={s.icon} class="w-5 h-5" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+        <a href="/contact#form" class="sc-btn-secondary">Begin a project</a>
+      </div>
     </div>
 
     <!-- Directory -->
@@ -77,7 +99,7 @@ const directory = [
       </div>
       <div>
         <p class="sc-slug sc-text-accent-subdued mb-2">Correspondence</p>
-        <p><a href="tel:+233500903792" class="sc-link">0500 903 792</a></p>
+        <p><a href="tel:+233500903792" class="sc-link">+233 500 903 792</a></p>
         <p><a href="mailto:signaturecrestbuilderslimited@gmail.com" class="sc-link">signaturecrestbuilderslimited@gmail.com</a></p>
       </div>
       <div class="md:text-right">

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Hero from '../../components/Hero.astro';
+import HeroBlueprint from '../../components/HeroBlueprint.astro';
 import InsightCard from '../../components/InsightCard.astro';
 
 const insights = await getCollection('insights');
@@ -9,13 +9,16 @@ insights.sort((a, b) => b.data.published.getTime() - a.data.published.getTime())
 ---
 <BaseLayout
   title="Insights — Signature Crest Builders"
-  description="Field notes from the practice — underwriting, engineering methodology, and long-form thinking on the built environment, written by the people doing the work."
+  description="Our blog — insights on underwriting, engineering, and building in Ghana, written by the SCBL team."
 >
-  <Hero
-    runningHead={{ code: 'SCBL · I.00', rev: 'REV 01', section: 'Field Notes' }}
-    title="Field notes from the practice."
+  <HeroBlueprint
+    kind="axonometric"
+    runningHead={{ code: 'SCBL', section: 'Insights' }}
+    title="Insights from the practice."
     lede="Investment underwriting, engineering methodology, and long-form thinking on the built environment — written by the people doing the work."
-    variant="quiet"
+    detailImage="/hero/engineer.webp"
+    detailImageAlt="Two engineers reading a set of drawings on site."
+    detailCaption="On site · reading the drawings"
   />
 
   <section class="relative sc-section-tight">

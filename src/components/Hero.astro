@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import MeshGlow from './MeshGlow.astro';
 import Reveal from './Reveal.astro';
 import RunningHead from './RunningHead.astro';
+import KenBurnsBackground from './KenBurnsBackground.astro';
 
 interface Props {
   runningHead?: { code?: string; rev?: string; section?: string };
@@ -11,6 +12,7 @@ interface Props {
   aside?: string;              // optional side annotation
   image?: string;
   imageAlt?: string;
+  kenBurnsImages?: string[];   // array of images for Ken Burns effect
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
   variant?: 'imaged' | 'quiet';
@@ -23,27 +25,34 @@ const {
   aside,
   image,
   imageAlt,
+  kenBurnsImages,
   primaryCta,
   secondaryCta,
-  variant = image ? 'imaged' : 'quiet',
+  variant = (image || kenBurnsImages) ? 'imaged' : 'quiet',
 } = Astro.props;
 ---
 <section class="relative isolate overflow-hidden">
   <MeshGlow position="top-right" size="xl" intensity={variant === 'imaged' ? 0.10 : 0.06} />
 
-  {variant === 'imaged' && image && (
+  {variant === 'imaged' && (
     <div class="absolute inset-0 -z-10">
-      <Image
-        src={image}
-        alt={imageAlt ?? ''}
-        width={2400}
-        height={1600}
-        widths={[720, 1200, 1800, 2400]}
-        sizes="100vw"
-        class="h-full w-full object-cover opacity-70"
-        loading="eager"
-        format="webp"
-      />
+      {kenBurnsImages ? (
+        <div class="opacity-70">
+          <KenBurnsBackground images={kenBurnsImages} />
+        </div>
+      ) : image ? (
+        <Image
+          src={image}
+          alt={imageAlt ?? ''}
+          width={2400}
+          height={1600}
+          widths={[720, 1200, 1800, 2400]}
+          sizes="100vw"
+          class="h-full w-full object-cover opacity-70"
+          loading="eager"
+          format="webp"
+        />
+      ) : null}
       <div class="absolute inset-0 sc-overlay-hero-horizontal"></div>
     </div>
   )}

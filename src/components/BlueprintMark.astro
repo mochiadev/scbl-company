@@ -1,0 +1,34 @@
+---
+/**
+ * BlueprintMark — a floor-plan drawing used as a corner watermark.
+ *
+ * The source PNG (public/blueprint/floor-plan.png, 364×345, white on
+ * transparent) is applied as a CSS mask over a gold-deep fill so it renders
+ * in the palette colour, matching the SVG blueprints in HeroBlueprint.
+ * Shown at native size only — the raster is too small to upscale.
+ */
+interface Props {
+  opacity?: number;
+  class?: string;
+}
+const { opacity = 0.10, class: className = '' } = Astro.props;
+---
+<div
+  class:list={['scbl-blueprint-mark pointer-events-none absolute hidden md:block', className]}
+  style={`opacity:${opacity};`}
+  aria-hidden="true"
+/>
+
+<style>
+  .scbl-blueprint-mark {
+    width: 364px;
+    height: 345px;
+    background-color: var(--color-sc-gold-deep);
+    -webkit-mask-image: url('/blueprint/floor-plan.png');
+    mask-image: url('/blueprint/floor-plan.png');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+</style>

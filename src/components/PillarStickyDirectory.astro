@@ -27,7 +27,6 @@ interface Pillar {
   image: string;
   imageAlt: string;
   icon?: string;
-  subServices?: string[];
 }
 
 interface Props {
@@ -183,15 +182,6 @@ function shortTitle(t: string): string {
                       {p.title}
                     </h3>
                     <p class="sc-lede sc-text-muted-strong mt-4 max-w-[54ch]">{p.hook}</p>
-
-                    {p.subServices && p.subServices.length > 0 && (
-                      <p
-                        class="sc-caption sc-text-muted mt-6 uppercase max-w-[60ch]"
-                        style="letter-spacing: 0.08em;"
-                      >
-                        {p.subServices.join('  ·  ')}
-                      </p>
-                    )}
 
                     <!-- Mobile-only inline image -->
                     <div class="md:hidden mt-8 relative aspect-[16/10] overflow-hidden">

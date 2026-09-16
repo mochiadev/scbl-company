@@ -130,6 +130,16 @@ const bottomItems = Array.from({ length: repeats });
     to   { transform: translateX(0); }
   }
 
+  /* Mobile: the ±4° tilt barely separates the ribbons over a ~375px width,
+     so the ivory "legacy" ribbon ends up buried under the gold one. Steepen
+     the X and give the stage more vertical room so both arms clear.
+     Desktop (md+) is untouched. */
+  @media (max-width: 767px) {
+    section { height: 190px; }
+    .scbl-ribbon-top    { transform: translateY(-50%) rotate(-8deg); }
+    .scbl-ribbon-bottom { transform: translateY(-50%) rotate(8deg); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .scbl-ribbon-track { animation: none; transform: translateX(-25%); }
   }

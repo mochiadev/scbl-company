@@ -1,7 +1,7 @@
 ---
 interface Props {
-  code?: string;         // e.g. "SCBL · A.02"
-  rev?: string;          // e.g. "REV 01"
+  code?: string;         // wordmark, e.g. "SCBL"
+  rev?: string;          // optional middle slot; empty by default (avoid draft-sounding "REV 01")
   section?: string;      // e.g. "Portfolio" or "Services / Engineering"
   right?: string;        // optional right-side text, defaults to current year
   as?: 'div' | 'header';
@@ -10,7 +10,7 @@ interface Props {
 
 const {
   code = 'SCBL',
-  rev = 'REV 01',
+  rev = '',
   section = '',
   right,
   as: Tag = 'div',

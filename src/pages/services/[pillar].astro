@@ -6,6 +6,8 @@ import RunningHead from '../../components/RunningHead.astro';
 import MeshGlow from '../../components/MeshGlow.astro';
 import SpecBlock from '../../components/SpecBlock.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import BlueprintMark from '../../components/BlueprintMark.astro';
+import InsightCard from '../../components/InsightCard.astro';
 import Reveal from '../../components/Reveal.astro';
 import { pillars, pillarBySlug } from '../../lib/pillars.ts';
 
@@ -28,7 +30,12 @@ const next = pillars[(currentIndex + 1) % pillars.length];
 const portfolio = await getCollection('portfolio');
 const related = portfolio.filter((p) => p.data.pillars.includes(slug)).slice(0, 2);
 
-const ordinal = String(entry.data.order).padStart(2, '0');
+const insights = await getCollection('insights');
+const relatedNotes = insights
+  .filter((i) => i.data.pillar === slug)
+  .sort((a, b) => b.data.published.getTime() - a.data.published.getTime())
+  .slice(0, 3);
+
 ---
 <BaseLayout
   title={`${entry.data.title} — Signature Crest`}
@@ -53,16 +60,13 @@ const ordinal = String(entry.data.order).padStart(2, '0');
     </div>
 
     <div class="sc-container sc-gutter pt-28 md:pt-36">
-      <RunningHead code={`SCBL · S.${ordinal}`} rev="REV 01" section={entry.data.title} />
+      <RunningHead code="SCBL" section={entry.data.title} />
     </div>
 
     <div class="sc-container sc-gutter grid grid-cols-12 gap-8 pt-16 md:pt-20 pb-20 md:pb-24" data-reveal-group>
       <div class="col-span-12 md:col-span-9">
         <Reveal>
-          <p class="sc-slug sc-text-accent-subdued">Pillar {ordinal} — {entry.data.title.replace('Services', '').replace('Property ', '').trim()}</p>
-        </Reveal>
-        <Reveal>
-          <h1 class="sc-display-xl sc-text-primary mt-6 max-w-[16ch]">{entry.data.title}</h1>
+          <h1 class="sc-display-xl sc-text-primary max-w-[16ch]">{entry.data.title}</h1>
         </Reveal>
         {meta && (
           <Reveal>
@@ -139,6 +143,46 @@ const ordinal = String(entry.data.order).padStart(2, '0');
       </div>
     </section>
   )}
+
+  <!-- Blog posts tagged to this pillar -->
+  {relatedNotes.length > 0 && (
+    <section class="relative sc-section-tight">
+      <div class="sc-container sc-gutter">
+        <p class="sc-bracket-label mb-6">Blog Posts</p>
+        <div>
+          {relatedNotes.map((note) => (
+            <InsightCard
+              title={note.data.title}
+              slug={note.data.slug}
+              pillar={note.data.pillar}
+              published={note.data.published}
+              reading_time={note.data.reading_time}
+              excerpt={note.data.excerpt}
+              variant="row"
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="relative sc-section-tight overflow-hidden">
+    <BlueprintMark class="right-[-2rem] bottom-[-3rem]" />
+    <div class="sc-container sc-gutter relative">
+      <RunningHead code="SCBL" section="Begin a project" />
+      <div class="mt-14 grid grid-cols-12 gap-8">
+        <div class="col-span-12 md:col-span-8">
+          <h2 class="sc-display-lg sc-text-primary max-w-[24ch]">
+            {meta?.ctaHeading ?? 'Begin a project with the practice.'}
+          </h2>
+        </div>
+        <div class="col-span-12 md:col-span-4 md:pt-8">
+          <a href="/contact#form" class="sc-btn-primary">Begin a project</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Next pillar -->
   <section class="relative border-t sc-border-soft">

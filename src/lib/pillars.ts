@@ -5,6 +5,7 @@ export interface PillarMeta {
   href: string;
   icon: string;
   short: string;
+  ctaHeading: string;
   image?: string;   // only the top-row bento tiles (1–2) render a photo
 }
 
@@ -16,6 +17,7 @@ export const pillars: PillarMeta[] = [
     href: '/services/development',
     icon: 'lucide:landmark',
     short: 'Feasibility, master-plan, and end-to-end delivery of luxury residential, commercial, and mixed-use assets.',
+    ctaHeading: 'Begin a development with the practice.',
     image: 'https://picsum.photos/seed/scbl-development/1600/1200',
   },
   {
@@ -23,8 +25,9 @@ export const pillars: PillarMeta[] = [
     title: 'Construction Services',
     eyebrow: '02 — Construction',
     href: '/services/construction',
-    icon: 'ph:crane-thin',
+    icon: 'ph:hard-hat-thin',
     short: 'Design-and-build, high-end residential, commercial, structural works, and luxury refurbishment.',
+    ctaHeading: 'Begin a build with the practice.',
     image: 'https://picsum.photos/seed/scbl-construction/1600/1200',
   },
   {
@@ -34,6 +37,7 @@ export const pillars: PillarMeta[] = [
     href: '/services/engineering',
     icon: 'ph:blueprint-thin',
     short: 'Structural, civil, MEP, geotechnical, and value-engineering practices under one accountable roof.',
+    ctaHeading: 'Bring us in before ground breaks.',
   },
   {
     slug: 'real-estate',
@@ -42,6 +46,7 @@ export const pillars: PillarMeta[] = [
     href: '/services/real-estate',
     icon: 'lucide:building-2',
     short: 'Sales, leasing, valuation, advisory, and long-term portfolio stewardship — all on one underwriting discipline.',
+    ctaHeading: 'Talk to the advisory team.',
   },
   {
     slug: 'management',
@@ -50,6 +55,7 @@ export const pillars: PillarMeta[] = [
     href: '/services/management',
     icon: 'lucide:clipboard-check',
     short: 'Independent project governance — cost, programme, quality, HSE, and risk, from mobilisation to handover.',
+    ctaHeading: 'Put governance on your project.',
   },
   {
     slug: 'specialist',
@@ -58,6 +64,7 @@ export const pillars: PillarMeta[] = [
     href: '/services/specialist',
     icon: 'ph:diamonds-four-thin',
     short: 'Sustainability, bespoke design, heritage restoration, facilities, and after-sales care.',
+    ctaHeading: 'Ask about the specialist scope.',
   },
 ];
 

@@ -12,11 +12,11 @@ export async function getStaticPaths() {
   insights.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
   return insights.map((entry, i) => {
     const next = insights[(i + 1) % insights.length];
-    return { params: { slug: entry.data.slug }, props: { entry, next, index: i + 1 } };
+    return { params: { slug: entry.data.slug }, props: { entry, next } };
   });
 }
 
-const { entry, next, index } = Astro.props;
+const { entry, next } = Astro.props;
 const { Content } = await render(entry);
 const pillarMeta = pillarBySlug.get(entry.data.pillar as any);
 const dateStr = entry.data.published.toLocaleDateString('en-GB', {
@@ -24,7 +24,6 @@ const dateStr = entry.data.published.toLocaleDateString('en-GB', {
   month: 'long',
   year: 'numeric',
 });
-const record = String(index).padStart(2, '0');
 ---
 <BaseLayout
   title={`${entry.data.title} — Signature Crest`}
@@ -34,7 +33,7 @@ const record = String(index).padStart(2, '0');
     <section class="relative sc-section-tight">
       <MeshGlow position="top-right" size="lg" intensity={0.05} />
       <div class="sc-container sc-gutter pt-12 md:pt-16" data-reveal-group>
-        <RunningHead code={`SCBL · I.${record}`} rev="REV 01" section="Field Note" />
+        <RunningHead code="SCBL" section="Insights" />
         <div class="sc-container-prose mx-auto pt-14 md:pt-20">
           <Reveal>
             <p class="sc-slug sc-text-accent-subdued">
@@ -89,7 +88,7 @@ const record = String(index).padStart(2, '0');
             <div class="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3">
               <a href="/contact#form" class="sc-btn-secondary">Begin a project</a>
               <p class="sc-small sc-text-muted">
-                Or call <a href="tel:+233500903792" class="sc-link sc-text-accent">0500 903 792</a>
+                Or call <a href="tel:+233500903792" class="sc-link sc-text-accent">+233 500 903 792</a>
               </p>
             </div>
           </div>
