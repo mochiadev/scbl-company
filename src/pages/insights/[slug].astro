@@ -60,7 +60,7 @@ const dateStr = entry.data.published.toLocaleDateString('en-GB', {
         <div class="relative aspect-[16/9] overflow-hidden">
           <Image
             src={entry.data.hero_image}
-            alt={`${entry.data.title} — field note illustration.`}
+            alt={entry.data.hero_image_alt ?? entry.data.title}
             width={2400}
             height={1350}
             widths={[900, 1400, 1800, 2400]}

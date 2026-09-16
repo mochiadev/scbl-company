@@ -5,7 +5,8 @@ pillar: real-estate
 published: 2026-01-14
 reading_time: 5
 excerpt: Location is the single line item that shows up in every part of a real estate return — appreciation, yield, liquidity, and quality of life. A short field note on how to actually weigh it.
-hero_image: https://picsum.photos/seed/scbl-prime-location/2400/1350
+hero_image: /insights/4-ways-location.webp
+hero_image_alt: A couple in a café marking up a neighbourhood map beside a tablet and a location-returns brochure.
 cta_hook: If you're comparing addresses for an investment, our real-estate advisory can underwrite the specific parcel against all four of these axes.
 ---
 

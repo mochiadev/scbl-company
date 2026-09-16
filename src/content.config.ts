@@ -44,6 +44,7 @@ const insights = defineCollection({
     reading_time: z.number(),
     excerpt: z.string(),
     hero_image: z.string(),
+    hero_image_alt: z.string().optional(),
     cta_hook: z.string().optional(),
   }),
 });

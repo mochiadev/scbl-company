@@ -5,7 +5,8 @@ pillar: real-estate
 published: 2025-12-01
 reading_time: 6
 excerpt: Land is one of the more durable ways to hold wealth in Ghana, and one of the easier ways to lose it quietly. Five checks we run on any parcel before advising a client to proceed.
-hero_image: https://picsum.photos/seed/scbl-land-diligence/2400/1350
+hero_image: /insights/5-checks-land.webp
+hero_image_alt: A surveyor and clients checking title documents and a site plan beside a boundary peg on a plot in Accra.
 cta_hook: If you're weighing a parcel from abroad, our real-estate advisory runs this exact checklist before any client proceeds.
 ---
 
