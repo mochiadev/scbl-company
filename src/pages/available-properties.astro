@@ -16,12 +16,12 @@ const types = [...new Set(properties.map((p) => p.data.type))];
 ---
 <BaseLayout
   title="Available Properties — Signature Crest Builders"
-  description="Land currently available through Signature Crest Builders in Greater Accra — registered, litigation-free, and ready to build on."
+  description="Land currently available through Signature Crest Builders across Greater Accra — Apolonia, Oyibi, Dawhenya, Kasoa, Prampram, and more. Enquire directly on any parcel."
 >
   <HeroBlueprint
     kind="site-plan"
     runningHead={{ code: 'SCBL · P.00', section: 'Available Properties' }}
-    title="Land ready to build on, today."
+    title="Land for sale across Greater Accra, ready to build on."
     lede="Every parcel below is registered and litigation-free before it's listed here — the same five checks we publish for anyone buying land in Ghana, applied to our own inventory first."
   />
 
@@ -40,7 +40,16 @@ const types = [...new Set(properties.map((p) => p.data.type))];
               allowfullscreen
             ></iframe>
           ) : (
-            <video src={videoUrl} class="h-full w-full object-cover" controls preload="metadata"></video>
+            <video
+              src={videoUrl}
+              class="h-full w-full object-cover"
+              controls
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            ></video>
           )}
         </div>
       </div>

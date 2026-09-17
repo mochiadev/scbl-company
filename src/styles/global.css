@@ -155,14 +155,16 @@
     font-optical-sizing: auto;
   }
 
-  /* Horizontal overflow safety net. `overflow-x: hidden` on body alone is
-     ignored by mobile browsers; `clip` on the root is honoured and, unlike
-     `hidden`, does not create a scroll container (so sticky keeps working). */
+  /* Horizontal overflow safety net — on the ROOT only. `clip` is honoured by
+     mobile browsers and does not create a scroll container.
+     Do not add overflow to body: once html has a non-visible overflow, body's
+     value stops propagating to the viewport and applies to body itself, which
+     turns body into the scroll container and silently breaks position: sticky
+     (the pillar directory image column stops pinning). */
   html { overflow-x: clip; }
   body {
     position: relative;
     min-height: 100vh;
-    overflow-x: hidden;
   }
 
   ::selection {
