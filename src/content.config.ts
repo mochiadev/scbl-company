@@ -49,4 +49,25 @@ const insights = defineCollection({
   }),
 });
 
-export const collections = { services, portfolio, insights };
+const properties = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/properties' }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    // Free-form, not an enum — a new property type (house, commercial…)
+    // needs zero code changes, just a new value here.
+    type: z.string(),
+    location: z.string(),
+    price: z.string().default('Price on application'),
+    status: z.string().default('Available'),
+    summary: z.string(),
+    hero_image: z.string(),
+    gallery: z.array(z.string()).default([]),
+    // Flexible label/value pairs so land ("Size", "Title status") and a
+    // future house listing ("Bedrooms", "Bathrooms") share one schema.
+    specs: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = { services, portfolio, insights, properties };

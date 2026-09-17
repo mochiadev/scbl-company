@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+
+interface Spec {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  title: string;
+  slug: string;
+  location: string;
+  price: string;
+  status: string;
+  summary: string;
+  hero_image: string;
+  specs?: Spec[];
+}
+
+const { title, slug, location, price, status, summary, hero_image, specs = [] } = Astro.props;
+
+const statusClass =
+  status.toLowerCase() === 'available'
+    ? 'sc-text-accent'
+    : status.toLowerCase() === 'reserved'
+      ? 'sc-text-muted-strong'
+      : 'sc-text-muted';
+
+const enquireHref = `/contact?property=${encodeURIComponent(title)}#form`;
+---
+<div class="sc-card-dark flex flex-col overflow-hidden">
+  <div class="relative aspect-[4/3] overflow-hidden">
+    <Image
+      src={hero_image}
+      alt={`${title} — ${location}`}
+      width={800}
+      height={600}
+      widths={[400, 600, 800]}
+      sizes="(min-width: 768px) 33vw, 100vw"
+      class="h-full w-full object-cover"
+      loading="lazy"
+      format="webp"
+    />
+    <div
+      class="absolute left-3 top-3 backdrop-blur-sm px-2.5 py-1 border sc-border-accent-firm"
+      style="background: color-mix(in oklab, var(--color-sc-navy) 70%, transparent);"
+    >
+      <p class:list={['sc-caption', statusClass]} style="letter-spacing: 0.08em;">{status}</p>
+    </div>
+  </div>
+
+  <div class="p-6 flex flex-col flex-1">
+    <p class="sc-slug sc-text-accent-subdued">{location}</p>
+    <h3 class="sc-heading-md sc-text-primary mt-2">{title}</h3>
+    <p class="sc-body sc-text-muted mt-3 flex-1">{summary}</p>
+
+    {specs.length > 0 && (
+      <ul class="mt-5 border-t sc-border-hairline pt-4 space-y-1.5">
+        {specs.map((s) => (
+          <li class="flex items-baseline justify-between gap-4">
+            <span class="sc-caption sc-text-muted">{s.label}</span>
+            <span class="sc-small sc-text-primary text-right">{s.value}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <div class="mt-6 flex items-center justify-between gap-4 pt-4 border-t sc-border-hairline">
+      <span class="sc-heading-sm sc-text-accent">{price}</span>
+      <a href={enquireHref} class="sc-btn-secondary" style="padding: 0.6rem 1.2rem; min-height: auto;">
+        Enquire
+      </a>
+    </div>
+  </div>
+</div>

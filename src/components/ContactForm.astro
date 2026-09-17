@@ -137,6 +137,21 @@ const instructionLabelMap: Record<string, string> = {
   const conditionals = form?.querySelectorAll<HTMLElement>('[data-sc-conditional]') ?? [];
   const labels = JSON.parse(form?.dataset.labels ?? '{"pillar":{},"location":{},"instruction":{}}');
 
+  // Pre-fill from a property card's "Enquire" link (?property=<title>),
+  // and default the pillar to Property Development since that's what
+  // available-land enquiries are about.
+  const propertyParam = new URLSearchParams(window.location.search).get('property');
+  if (propertyParam && form) {
+    const message = form.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
+    if (message && !message.value) {
+      message.value = `Enquiring about: ${propertyParam}\n\n`;
+    }
+    if (pillarSelect && !pillarSelect.value) {
+      pillarSelect.value = 'development';
+      pillarSelect.dispatchEvent(new Event('change'));
+    }
+  }
+
   function syncConditional() {
     const value = pillarSelect?.value ?? '';
     conditionals.forEach((block) => {
