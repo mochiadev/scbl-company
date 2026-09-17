@@ -15,9 +15,10 @@ interface Props {
   summary: string;
   hero_image: string;
   specs?: Spec[];
+  showPrice?: boolean;
 }
 
-const { title, slug, location, price, status, summary, hero_image, specs = [] } = Astro.props;
+const { title, slug, location, price, status, summary, hero_image, specs = [], showPrice = true } = Astro.props;
 
 const statusClass =
   status.toLowerCase() === 'available'
@@ -65,8 +66,8 @@ const enquireHref = `/contact?property=${encodeURIComponent(title)}#form`;
       </ul>
     )}
 
-    <div class="mt-6 flex items-center justify-between gap-4 pt-4 border-t sc-border-hairline">
-      <span class="sc-heading-sm sc-text-accent">{price}</span>
+    <div class:list={['mt-6 flex items-center gap-4 pt-4 border-t sc-border-hairline', showPrice ? 'justify-between' : 'justify-end']}>
+      {showPrice && <span class="sc-heading-sm sc-text-accent">{price}</span>}
       <a href={enquireHref} class="sc-btn-secondary" style="padding: 0.6rem 1.2rem; min-height: auto;">
         Enquire
       </a>
